@@ -3,27 +3,27 @@ atmega32-mcal.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000072  00000000  00000000  00000054  2**1
+  0 .text         00000078  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  000000c6  2**0
+  1 .data         00000000  00800060  00800060  000000cc  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  000000c6  2**0
+  2 .comment      00000030  00000000  00000000  000000cc  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000000f8  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000000fc  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000020  00000000  00000000  00000134  2**0
+  4 .debug_aranges 00000020  00000000  00000000  00000138  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000007c  00000000  00000000  00000154  2**0
+  5 .debug_info   00000087  00000000  00000000  00000158  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000046  00000000  00000000  000001d0  2**0
+  6 .debug_abbrev 00000053  00000000  00000000  000001df  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000041  00000000  00000000  00000216  2**0
+  7 .debug_line   000000bf  00000000  00000000  00000232  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000024  00000000  00000000  00000258  2**2
+  8 .debug_frame  00000024  00000000  00000000  000002f4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000142  00000000  00000000  0000027c  2**0
+  9 .debug_str    0000014a  00000000  00000000  00000318  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000010  00000000  00000000  000003be  2**0
+ 10 .debug_ranges 00000010  00000000  00000000  00000462  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -59,7 +59,7 @@ Disassembly of section .text:
   5c:	de bf       	out	0x3e, r29	; 62
   5e:	cd bf       	out	0x3d, r28	; 61
   60:	0e 94 36 00 	call	0x6c	; 0x6c <main>
-  64:	0c 94 37 00 	jmp	0x6e	; 0x6e <_exit>
+  64:	0c 94 3a 00 	jmp	0x74	; 0x74 <_exit>
 
 00000068 <__bad_interrupt>:
   68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -70,11 +70,16 @@ int main(void)
 {
     while (1) 
     {
+		DDRC  = 0b00000001;
+  6c:	81 e0       	ldi	r24, 0x01	; 1
+  6e:	84 bb       	out	0x14, r24	; 20
+		PORTC = 0b00000001;
+  70:	85 bb       	out	0x15, r24	; 21
     }
-  6c:	ff cf       	rjmp	.-2      	; 0x6c <main>
+  72:	fd cf       	rjmp	.-6      	; 0x6e <main+0x2>
 
-0000006e <_exit>:
-  6e:	f8 94       	cli
+00000074 <_exit>:
+  74:	f8 94       	cli
 
-00000070 <__stop_program>:
-  70:	ff cf       	rjmp	.-2      	; 0x70 <__stop_program>
+00000076 <__stop_program>:
+  76:	ff cf       	rjmp	.-2      	; 0x76 <__stop_program>
