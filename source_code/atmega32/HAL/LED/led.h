@@ -25,9 +25,9 @@ typedef enum
 
 typedef enum
 {
-  LED_STATE_SUCCESS,
-  LED_STATE_INVALID_CURRENT,
-  LED_GPIO_ERROR
+  LED_GPIO_STATE_SUCCESS,
+  LED_GPIO_INVALID_CURRENT,
+  LED_GPIO_STATE_ERROR
 } led_error_t;
 
 typedef struct

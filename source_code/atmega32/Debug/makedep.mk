@@ -12,6 +12,8 @@ mcal\gpio\gpio.c
 
 mcal\e_interrupt\e_interrupt.c
 
+mcal\port\port.c
+
 programs\einterrupts\e_interrupts_program.c
 
 programs\gpio\gpio_program.c

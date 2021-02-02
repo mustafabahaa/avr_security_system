@@ -100,6 +100,7 @@
       <Value>../programs/gpio</Value>
       <Value>../programs/eInterrupts</Value>
       <Value>../MCAL/e_interrupt</Value>
+      <Value>../MCAL/port</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -150,6 +151,12 @@
     <Compile Include="mcal\e_interrupt\e_interrupt.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="mcal\port\port.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="mcal\port\port.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="programs\einterrupts\e_interrupts_program.c">
       <SubType>compile</SubType>
     </Compile>
@@ -171,6 +178,7 @@
     <Folder Include="HAL" />
     <Folder Include="MCAL\GPIO" />
     <Folder Include="mcal\e_interrupt" />
+    <Folder Include="mcal\port" />
     <Folder Include="programs" />
     <Folder Include="programs\gpio" />
     <Folder Include="programs\eInterrupts" />

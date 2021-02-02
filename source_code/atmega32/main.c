@@ -28,7 +28,7 @@ typedef enum
 /*************************************************************************/
 int main(void)
 {
-  operationMode mode = INTERRUPT_PROGRAM;
+  operationMode mode = GPIO_PROGRAM;
 
   switch (mode)
   {

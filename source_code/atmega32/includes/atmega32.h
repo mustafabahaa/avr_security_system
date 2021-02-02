@@ -22,38 +22,21 @@
 /*************************************************************************/
 /*                      Register Access Functions Macros                 */
 /*************************************************************************/
-#define REGISTER (*((volatile u8_t *)(u16_t)reg_addr))
 
-inline void set_bit(u8_t reg_addr, u8_t bit_num)
-{
-	REGISTER |= (1 << bit_num);
-}
-inline void clr_bit(u8_t reg_addr, u8_t bit_num)
-{
-	REGISTER &= ~(1 << bit_num);
-}
-inline void tog_bit(u8_t reg_addr, u8_t bit_num)
-{
-	REGISTER ^= (1 << bit_num);
-}
+#define set_bit(register, bit) ((*((volatile u8_t *)(u16_t) register)) |= (1 << bit))
+#define tog_bit(register, bit) ((*((volatile u8_t *)(u16_t) register)) ^= (1 << bit))
+#define clr_bit(register, bit) ((*((volatile u8_t *)(u16_t) register)) &= ~(1 << bit))
+#define bit_is_set(register, bit) (((*((volatile u8_t *)(u16_t) register)) & (1 << bit)) ? HIGH : LOW);
+#define bit_is_clr(register, bit) (((*((volatile u8_t *)(u16_t) register)) & (1 << bit)) ? LOW : HIGH);
 
-inline void reg_write(u8_t reg_addr, u8_t value)
+inline void reg_write(u8_t reg, u8_t value)
 {
-	REGISTER = value;
+	(*((volatile u8_t *)(u16_t)reg)) = value;
 }
-inline void reg_read(u8_t reg_addr, u8_t *value)
+inline void reg_read(u8_t reg, u8_t *value)
 {
-	*value = REGISTER;
-}
-
-inline u8_t bit_is_set(u8_t reg_addr, u8_t bit_num)
-{
-	return (REGISTER & (1 << bit_num)) ? HIGH : LOW;
-}
-inline u8_t bit_is_clr(u8_t reg_addr, u8_t bit_num)
-{
-	return (REGISTER & (1 << bit_num)) ? LOW : HIGH;
+	*value = (*((volatile u8_t *)(u16_t)reg));
 }
 
 #endif /* ATMEGA_32_H_ */
-/*************************************************************************/
+
