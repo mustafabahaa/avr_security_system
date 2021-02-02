@@ -12,6 +12,7 @@
 #include "led.h"
 #include "button.h"
 #include "interrupt.h"
+
 /*************************************************************************/
 /*                   Static Functions Prototype                          */
 /**************************************************************************
@@ -55,8 +56,8 @@ static void init_interrupts();
 /*                      Interrupts vector callbacks                      */
 /*************************************************************************/
 void __vector_1(void) __attribute__((signal, used, externally_visible));
-void __vector_2(void) __attribute__((signal, used, externally_visible));
-void __vector_3(void) __attribute__((signal, used, externally_visible));
+//void __vector_2(void) __attribute__((signal, used, externally_visible));
+//void __vector_3(void) __attribute__((signal, used, externally_visible));
 
 /*************************************************************************/
 /*                        Global Declerations                            */
@@ -73,6 +74,7 @@ int main(void)
 
   while (1)
   {
+#if 0
     hal_button_get_state(&button_1, &button_states);
 
     switch (button_states)
@@ -82,13 +84,14 @@ int main(void)
       break;
 
     case BUTTON_NOT_PRESSED:
-      hal_led_set_state(&red_led, OFF);
+      // hal_led_set_state(&red_led, OFF);
       break;
 
     default:
       /*Error Unkown button states */
       break;
     }
+#endif
   }
 
   return 0;
@@ -99,9 +102,9 @@ int main(void)
 /*************************************************************************/
 static void systemInit()
 {
+  init_interrupts();
   init_led();
   init_button();
-  init_interrupts();
 }
 
 static void init_led()
@@ -110,6 +113,7 @@ static void init_led()
   red_led.pin_num = 0;
   red_led.wiring = CURRENT_SOURCING;
   hal_led_init(&red_led);
+  hal_led_set_state(&red_led, OFF);
 }
 
 static void init_button()
@@ -129,7 +133,6 @@ static void init_interrupts()
 /*            External Interrupts ISR Implementations                    */
 /*************************************************************************/
 
-/* INT0_vect */
 void __vector_1(void)
 {
   hal_led_set_state(&red_led, ON);

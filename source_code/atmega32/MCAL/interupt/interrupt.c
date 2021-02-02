@@ -26,6 +26,9 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
 
   case INT0:
   {
+    /*enable interrupt 0 */
+    set_bit(GICR, INT0);
+
     switch (mode)
     {
     case RISING_EDGE:
@@ -51,6 +54,9 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
 
   case INT1:
   {
+    /*enable interrupt 1 */
+    set_bit(GICR, INT1);
+
     switch (mode)
     {
     case RISING_EDGE:
@@ -76,6 +82,9 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
 
   case INT2:
   {
+    /*enable interrupt 2 */
+    set_bit(GICR, INT2);
+
     switch (mode)
     {
     case RISING_EDGE:
