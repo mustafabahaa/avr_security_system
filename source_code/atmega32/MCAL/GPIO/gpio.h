@@ -38,26 +38,26 @@
 /*************************************************************************/
 typedef enum
 {
-	DIR_INPUT_PULLUP,
-	DIR_INPUT_PULLDOWN,
-	DIR_OUTPUT
+  DIR_INPUT_PULLUP,
+  DIR_INPUT_PULLDOWN,
+  DIR_OUTPUT
 } pinState;
 
 typedef enum
 {
-	DIR_PORT_INPUT_PULLUP,
-	DIR_PORT_INPUT_PULLDOWN,
-	DIR_PORT_OUTPUT
+  DIR_PORT_INPUT_PULLUP,
+  DIR_PORT_INPUT_PULLDOWN,
+  DIR_PORT_OUTPUT
 } portState;
 
 typedef enum gpio_error
 {
-	STATE_SUCCESS,
-	STATE_ERROR,
-	STATE_INVALID_ADDR,
-	STATE_INVAILD_PIN,
-	STATE_INVALID_DIR,
-	STATE_INVALID_VALUE
+  STATE_SUCCESS,
+  STATE_ERROR,
+  STATE_INVALID_ADDR,
+  STATE_INVAILD_PIN,
+  STATE_INVALID_DIR,
+  STATE_INVALID_VALUE
 } gpio_error_t;
 
 /*************************************************************************/
@@ -85,6 +85,17 @@ gpio_error_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState dir);
 ** this function is used write a value to gpio pin
 **************************************************************************/
 gpio_error_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value);
+
+/**************************************************************************
+** mcal_gpio_pin_toggle()
+**
+** parameters: u8_t base
+** parameters: u8_t pin
+** return    : gpio_error_t
+***************************************************************************
+** this function is used to toggle gpio pin
+**************************************************************************/
+gpio_error_t mcal_gpio_pin_toggle(u8_t base, u8_t pin);
 
 /**************************************************************************
 ** mcal_gpio_pin_read()

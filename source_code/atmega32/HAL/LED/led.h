@@ -19,22 +19,22 @@
 /*************************************************************************/
 typedef enum
 {
-	CURRENT_SOURCING,
-	CURRENT_SINKING
+  CURRENT_SOURCING,
+  CURRENT_SINKING
 } current_t;
 
 typedef enum
 {
-	LED_STATE_SUCCESS,
-	LED_STATE_INVALID_CURRENT,
-	LED_GPIO_ERROR
+  LED_STATE_SUCCESS,
+  LED_STATE_INVALID_CURRENT,
+  LED_GPIO_ERROR
 } led_error_t;
 
 typedef struct
 {
-	u8_t base_addr;
-	u8_t pin_num;
-	current_t wiring;
+  u8_t base_addr;
+  u8_t pin_num;
+  current_t wiring;
 } led_t;
 
 /*************************************************************************/
@@ -59,6 +59,16 @@ led_error_t hal_led_init(led_t *the_led);
 ** this function set the states of the LED on or off
 **************************************************************************/
 led_error_t hal_led_set_state(led_t *the_led, u8_t value);
+
+/**************************************************************************
+** hal_led_toggle_state()
+**
+** parameters: led_t* the_led
+** return    : led_error_t
+***************************************************************************
+** this function toggle the led states
+**************************************************************************/
+led_error_t hal_led_toggle_state(led_t *the_led);
 
 /**************************************************************************
 ** hal_led_get_state()

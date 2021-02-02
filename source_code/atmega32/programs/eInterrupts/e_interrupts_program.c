@@ -107,15 +107,15 @@ static void init_interrupts()
 
 void __vector_1(void)
 {
-  hal_led_set_state(&green_led, ON);
+  hal_led_toggle_state(&green_led);
 }
 
 void __vector_2(void)
 {
-  hal_led_set_state(&blue_led, ON);
+  hal_led_toggle_state(&blue_led);
 }
 
 void __vector_3(void)
 {
-  hal_led_set_state(&red_led, ON);
+  hal_led_toggle_state(&red_led);
 }
