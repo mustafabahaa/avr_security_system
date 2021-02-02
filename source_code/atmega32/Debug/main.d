@@ -6,8 +6,10 @@ main.d main.o: .././main.c ../includes/standardtypes.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
- ../HAL/LED/led.h ../includes/standardTypes.h ../MCAL/GPIO/gpio.h \
- ../HAL/BUTTON/button.h ../MCAL/interupt/interrupt.h
+ ../programs/gpio/gpio_program.h ../HAL/LED/led.h \
+ ../includes/standardTypes.h ../MCAL/GPIO/gpio.h ../HAL/BUTTON/button.h \
+ ../MCAL/e_interrupt/e_interrupt.h \
+ ../programs/eInterrupts/e_interrupts_program.h
 
 ../includes/standardtypes.h:
 
@@ -25,6 +27,8 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
 
+../programs/gpio/gpio_program.h:
+
 ../HAL/LED/led.h:
 
 ../includes/standardTypes.h:
@@ -33,4 +37,6 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 ../HAL/BUTTON/button.h:
 
-../MCAL/interupt/interrupt.h:
+../MCAL/e_interrupt/e_interrupt.h:
+
+../programs/eInterrupts/e_interrupts_program.h:

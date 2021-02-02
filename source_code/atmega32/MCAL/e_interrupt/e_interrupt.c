@@ -3,11 +3,11 @@
 ** technical support,  and with no  warranty, express or implied, as to its
 ** usefulness for any purpose.
 
-** interrupt.c
+** e_interrupt.c
 ***************************************************************************
 **                              Includes                                 **
 **************************************************************************/
-#include "interrupt.h"
+#include "e_interrupt.h"
 
 /*************************************************************************/
 /*                     Functions Implementation                          */

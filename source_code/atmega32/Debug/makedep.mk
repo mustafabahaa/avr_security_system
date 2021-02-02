@@ -10,5 +10,9 @@ main.c
 
 mcal\gpio\gpio.c
 
-mcal\interupt\interrupt.c
+mcal\e_interrupt\e_interrupt.c
+
+programs\einterrupts\e_interrupts_program.c
+
+programs\gpio\gpio_program.c
 

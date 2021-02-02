@@ -97,7 +97,9 @@
       <Value>../HAL/BUTTON</Value>
       <Value>../HAL/LED</Value>
       <Value>../MCAL/GPIO</Value>
-      <Value>../MCAL/interupt</Value>
+      <Value>../programs/gpio</Value>
+      <Value>../programs/eInterrupts</Value>
+      <Value>../MCAL/e_interrupt</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -142,10 +144,22 @@
     <Compile Include="mcal\gpio\gpio.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="mcal\interupt\interrupt.c">
+    <Compile Include="mcal\e_interrupt\e_interrupt.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="mcal\interupt\interrupt.h">
+    <Compile Include="mcal\e_interrupt\e_interrupt.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="programs\einterrupts\e_interrupts_program.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="programs\einterrupts\e_interrupts_program.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="programs\gpio\gpio_program.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="programs\gpio\gpio_program.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
@@ -156,7 +170,10 @@
     <Folder Include="MCAL" />
     <Folder Include="HAL" />
     <Folder Include="MCAL\GPIO" />
-    <Folder Include="mcal\interupt" />
+    <Folder Include="mcal\e_interrupt" />
+    <Folder Include="programs" />
+    <Folder Include="programs\gpio" />
+    <Folder Include="programs\eInterrupts" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

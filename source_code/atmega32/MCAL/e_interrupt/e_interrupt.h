@@ -3,10 +3,10 @@
 ** technical support,  and with no  warranty, express or implied, as to its
 ** usefulness for any purpose.
 
-** interrupt.h
+** e_interrupt.h
 **************************************************************************/
-#ifndef INTERRUPT_H_
-#define INTERRUPT_H_
+#ifndef E_INTERRUPT_H_
+#define E_INTERRUPT_H_
 
 /*************************************************************************/
 /*                              Includes                                 */
@@ -98,4 +98,4 @@ interrupt_error mcal_interrupt_read_flag(u8_t flag , u8_t *result);
 **************************************************************************/
 interrupt_error mcal_interrupt_clear_flag(u8_t flag);
 
-#endif /* INTERRUPT_H_ */
+#endif /* E_INTERRUPT_H_ */
