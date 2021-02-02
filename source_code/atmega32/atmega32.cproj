@@ -129,10 +129,10 @@
     <Compile Include="hal\led\led.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="includes\app_init.h">
+    <Compile Include="includes\atmega32.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="includes\standardtypes.h">
+    <Compile Include="includes\types.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
