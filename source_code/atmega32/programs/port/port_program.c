@@ -3,11 +3,11 @@
 ** technical support,  and with no  warranty, express or implied, as to its
 ** usefulness for any purpose.
 
-** gpio_program.c
+** port_program.c
 **************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
-#include "gpio_program.h"
+#include "port_program.h"
 /*************************************************************************/
 /*                   Static Functions Prototype                          */
 /**************************************************************************
@@ -20,56 +20,25 @@
 **************************************************************************/
 static void systemInit();
 
-/** init_led()
+/** init_port()
 **
 ** parameters: void
 ** return    : void
 ***************************************************************************
-** this function is used to initialize all the necessary sequence for led
+** this function is used to initialize all the necessary sequence for port
 **************************************************************************/
-static void init_led();
+static void init_port();
 
-/** init_button()
-**
-** parameters: void
-** return    : void
-***************************************************************************
-** this function is used to initialize all the necessary sequence for button
-**************************************************************************/
-static void init_button();
-
-/*************************************************************************/
-/*                        Global Declerations                            */
-/*************************************************************************/
-led_t red_led;
-button_t button_1;
 /*************************************************************************/
 /*                             Application                               */
 /*************************************************************************/
-void execute_gpio_program(void)
+void execute_port_program(void)
 {
-  button_states_t button_states;
   systemInit();
 
+  mcal_port_write(BASE_C, PORT_ON);
   while (1)
   {
-
-    hal_button_get_state(&button_1, &button_states);
-
-    switch (button_states)
-    {
-    case BUTTON_PRESSED:
-      hal_led_set_state(&red_led, ON);
-      break;
-
-    case BUTTON_NOT_PRESSED:
-      hal_led_set_state(&red_led, OFF);
-      break;
-
-    default:
-      /*Error Unkown button states */
-      break;
-    }
   }
 }
 
@@ -78,23 +47,13 @@ void execute_gpio_program(void)
 /*************************************************************************/
 static void systemInit()
 {
-  init_led();
-  init_button();
+  init_port();
 }
 
-static void init_led()
+static void init_port()
 {
-  red_led.base_addr = BASE_C;
-  red_led.pin_num = 0;
-  red_led.wiring = CURRENT_SOURCING;
-  hal_led_init(&red_led);
-  hal_led_set_state(&red_led, OFF);
-}
-
-static void init_button()
-{
-  button_1.base_addr = BASE_C;
-  button_1.pin_num = 1;
-  button_1.connection = PULLDOWN_CONNECTION;
-  hal_button_init(&button_1);
+  mcal_port_init(BASE_A, DIR_PORT_OUTPUT);
+  mcal_port_init(BASE_B, DIR_PORT_OUTPUT);
+  mcal_port_init(BASE_C, DIR_PORT_OUTPUT);
+  mcal_port_init(BASE_D, DIR_PORT_INPUT_PULLDOWN);
 }

@@ -39,14 +39,13 @@ typedef enum
   DIR_PORT_OUTPUT
 } portState;
 
-typedef enum port_error_t 
+typedef enum port_error_t
 {
   PORT_STATE_SUCCESS,
   PORT_STATE_ERROR,
   PORT_STATE_INVALID_ADDR,
   PORT_STATE_INVALID_DIR,
 } port_error_t;
-
 
 /*************************************************************************/
 /*                           Public Functions                            */
@@ -82,6 +81,5 @@ port_error_t mcal_port_write(u8_t base, u8_t value);
 ** this function is used to read a value from all port
 **************************************************************************/
 port_error_t mcal_port_read(u8_t base, u8_t *value);
-
 
 #endif /* PORT_H_ */

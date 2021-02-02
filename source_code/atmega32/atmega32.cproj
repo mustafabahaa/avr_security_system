@@ -101,6 +101,7 @@
       <Value>../programs/eInterrupts</Value>
       <Value>../MCAL/e_interrupt</Value>
       <Value>../MCAL/port</Value>
+      <Value>../programs/port</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -169,6 +170,12 @@
     <Compile Include="programs\gpio\gpio_program.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="programs\port\port_program.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="programs\port\port_program.h">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="HAL\LED" />
@@ -182,6 +189,7 @@
     <Folder Include="programs" />
     <Folder Include="programs\gpio" />
     <Folder Include="programs\eInterrupts" />
+    <Folder Include="programs\port" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

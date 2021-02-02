@@ -13,6 +13,7 @@
 /*************************************************************************/
 /*                          Programs Includes                            */
 /*************************************************************************/
+#include "port_program.h"
 #include "gpio_program.h"
 #include "e_interrupts_program.h"
 /*************************************************************************/
@@ -20,6 +21,7 @@
 /*************************************************************************/
 typedef enum
 {
+  PORT_PROGRAM,
   GPIO_PROGRAM,
   INTERRUPT_PROGRAM,
 } operationMode;
@@ -28,10 +30,16 @@ typedef enum
 /*************************************************************************/
 int main(void)
 {
-  operationMode mode = GPIO_PROGRAM;
+  operationMode mode = PORT_PROGRAM;
 
   switch (mode)
   {
+  case PORT_PROGRAM:
+  {
+    execute_port_program();
+    break;
+  }
+
   case GPIO_PROGRAM:
   {
     execute_gpio_program();
