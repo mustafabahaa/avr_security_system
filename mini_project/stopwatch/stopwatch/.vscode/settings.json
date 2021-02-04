@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "types.h": "c",
-        "e_interrupt.h": "c",
-        "timer.h": "c"
-    }
-}
