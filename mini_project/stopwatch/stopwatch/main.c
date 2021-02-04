@@ -7,6 +7,7 @@
 #include "types.h"
 #include "display.h"
 #include "timer.h"
+#include "e_interrupt.h"
 /*************************************************************************/
 /*                   Static Functions Prototype                          */
 /**************************************************************************
@@ -36,14 +37,13 @@ static void updateTime();
 ** this function is used to update 7 segment according to current time
 **************************************************************************/
 static void updateDisplay();
-
-
 /*************************************************************************/
 /*                            Global Variables                           */
 /*************************************************************************/
 volatile u8_t seconds = 0;
 volatile u8_t minutes = 0;
 volatile u8_t hours = 0;
+
 /*************************************************************************/
 /*                            Main Program                               */
 /*************************************************************************/
@@ -64,8 +64,9 @@ int main(void)
 
 static void system_init()
 {
-  display_initialization();
+  e_interrupt_initialization();
   timer_initialization();
+  display_initialization();
 }
 
 static void updateTime()
@@ -94,38 +95,61 @@ static void updateDisplay()
 {
   if (seconds < 10)
   {
-    display_write(seconds, 0);
+    display_write(seconds, SECONDS_DIGIT_1);
   }
   else
   {
-    display_write(seconds % 10, 0);
-    display_write((seconds / 10) % 10, 1);
+    display_write(seconds % 10, SECONDS_DIGIT_1);
+    display_write((seconds / 10) % 10, SECONDS_DIGIT_2);
   }
   if (minutes < 10)
   {
-    display_write(minutes, 2);
+    display_write(minutes, MINUTES_DIGIT_1);
   }
   else
   {
-    display_write(minutes % 10, 2);
-    display_write((minutes / 10) % 10, 3);
+    display_write(minutes % 10, MINUTES_DIGIT_1);
+    display_write((minutes / 10) % 10, MINUTES_DIGIT_2);
   }
   if (hours < 10)
   {
-    display_write(hours, 4);
+    display_write(hours, HOURS_DIGIT_1);
   }
   else
   {
-    display_write(hours % 10, 2);
-    display_write((hours / 10) % 10, 5);
+    display_write(hours % 10, HOURS_DIGIT_1);
+    display_write((hours / 10) % 10, HOURS_DIGIT_2);
   }
 }
-
 
 /*************************************************************************/
 /*                            Interrupt Handlers                         */
 /*************************************************************************/
+
+/*Time monitor */
 ISR(TIMER1_COMPA_vect)
 {
   seconds++;
+}
+
+/*Reset stopwatch*/
+ISR(INT0_vect)
+{
+  seconds = 0;
+  minutes = 0;
+  hours = 0;
+}
+
+/*Pause stopwatch*/
+ISR(INT1_vect)
+{
+  /* Disable timer 1 compare register interrupt */
+  clr_bit(TIMSK, OCIE1A);
+}
+
+/*resume stopwatch*/
+ISR(INT2_vect)
+{
+  /* Disable timer 1 compare register interrupt */
+  set_bit(TIMSK, OCIE1A);
 }

@@ -4,6 +4,8 @@
 
 display\display.c
 
+e_interrupt\e_interrupt.c
+
 main.c
 
 timer\timer.c

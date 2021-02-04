@@ -5,7 +5,7 @@ void timer_initialization()
 {
 
   /* enable global interrupts */
-  SREG |= (1 << 7);
+  set_bit(SREG, 7);
 
   /*init the counter register*/
   TCNT1 = 0;
@@ -17,12 +17,14 @@ void timer_initialization()
   OCR1A = 976;
 
   /* enable timer 1 compare register interrupt */
-  TIMSK |= (1 << OCIE1A);
+  set_bit(TIMSK, OCIE1A);
 
   /*init configuration register to enable
   CTC Mode
   prescaller 1024
   */
-  TCCR1A = (1 << FOC1A);
-  TCCR1B = (1 << WGM12) | (1 << CS10) | (1 << CS12);
+   set_bit(TCCR1A, FOC1A);
+   set_bit(TCCR1B, WGM12);
+   set_bit(TCCR1B, CS10);
+   set_bit(TCCR1B, CS12);
 }

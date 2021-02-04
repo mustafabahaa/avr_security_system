@@ -87,6 +87,7 @@
       <Value>../display</Value>
       <Value>../includes</Value>
       <Value>../timer</Value>
+      <Value>../e_interrupt</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
   <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
@@ -115,6 +116,12 @@
     <Compile Include="display\display.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="e_interrupt\e_interrupt.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="e_interrupt\e_interrupt.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="includes\atmega16.h">
       <SubType>compile</SubType>
     </Compile>
@@ -134,6 +141,7 @@
   <ItemGroup>
     <Folder Include="display" />
     <Folder Include="includes" />
+    <Folder Include="e_interrupt" />
     <Folder Include="timer" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />

@@ -13,6 +13,17 @@
 #define SEGMENT_ENABLE_PORT PORTA
 #define SEGMENT_CONTROL_DDR DDRC
 #define SEGMENT_CONTROL_PORT PORTC
+
+#define SECONDS_DIGIT_1 0
+#define SECONDS_DIGIT_2 1
+
+#define MINUTES_DIGIT_1 2
+#define MINUTES_DIGIT_2 3
+
+#define HOURS_DIGIT_1 4
+#define HOURS_DIGIT_2 5
+
+#define TOTAL_DIGITS 5
 /*************************************************************************/
 /*                                 Types                                 */
 /*************************************************************************/
