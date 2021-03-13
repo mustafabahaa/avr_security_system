@@ -1,2 +1,5 @@
 2_sourceCode\AVR_BSP\Debug
 *.o
+2_sourceCode/.metadata
+2_sourceCode/AVR_BSP/Debug/MCAL/GPIO/subdir.mk
+2_sourceCode/AVR_BSP/Debug
