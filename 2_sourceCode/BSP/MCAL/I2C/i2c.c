@@ -18,14 +18,14 @@ i2c_error_t TWI_init(void)
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
 	/* Bit Rate: 400.000 kbps using zero pre-scaler TWPS=00 and F_CPU=8Mhz */
-	TWBR = 0x02;
-	TWSR = 0x00;
+	register(TWBR) = 0x02;
+	register(TWSR) = 0x00;
 
 	/* Two Wire Bus address my address if any master device want to call me:
 	 * 0x1 (used in case this MC is a slave device)
        General Call Recognition: Off */
 
-	TWAR = 0b00000010; // my address = 0x01 :)
+	register(TWAR) = 0b00000010; // my address = 0x01 :)
 
 	/* enable TWI */
 	set_bit(TWCR,TWEN);
@@ -74,7 +74,7 @@ i2c_error_t TWI_write(u8_t data)
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
 	/* Put data On TWI data Register */
-	TWDR = data;
+	register(TWDR) = data;
 	/*
 	 * Clear the TWINT flag before sending the data TWINT=1
 	 * Enable TWI Module TWEN=1
@@ -137,7 +137,7 @@ i2c_error_t TWI_getStatus(u8_t* status)
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
 	/* masking to eliminate first 3 bits and get the last 5 bits (status bits) */
-	*status = TWSR & 0xF8;
+	*status = register(TWSR) & 0xF8;
 
 	return error;
 

@@ -13,13 +13,16 @@
 /*                     Functions Implementation                           */
 /**************************************************************************/
 
-pwm_error_t  mcal_pwm_initialization(pwm_channel_t channel)
+pwm_error_t  mcal_pwm_initialization(pwm_channel_t* channel)
 {
 	pwm_error_t error = PWM_STATE_SUCCESS;
 
-	switch(channel)
+	/* making the pin of pwm output */
+	set_bit(channel->channel_port + OFFSET_DIR,channel->channel_pin);
+
+	switch(channel->channel_pin)
 	{
-	case CHANNEL_1 :
+	case CHANNEL_1_PIN :
 	{
 		/* choosing mode of operation fast pwm */
 		set_bit(TCCR0,WGM00);
@@ -34,12 +37,10 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t channel)
 		clear_bit(TCCR0,CS01);
 		set_bit(TCCR0,CS00);
 
-		/* making the pin of pwm output */
-		set_bit(BASE_B + OFFSET_DIR,3);
 		break;
 	}
 
-	case CHANNEL_2 :
+	case CHANNEL_2_PIN :
 	{
 		/* choosing mode of operation fast pwm */
 		set_bit(TCCR1A,WGM11);
@@ -54,12 +55,10 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t channel)
 		clear_bit(TCCR1B,CS11);
 		set_bit(TCCR1B,CS10);
 
-		/* making the pin of pwm output */
-		set_bit(BASE_D + OFFSET_DIR,5);
 		break;
 	}
 
-	case CHANNEL_3 :
+	case CHANNEL_3_PIN :
 	{
 		/* choosing mode of operation fast pwm */
 		set_bit(TCCR1A,WGM11);
@@ -74,12 +73,10 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t channel)
 		clear_bit(TCCR1B,CS11);
 		set_bit(TCCR1B,CS10);
 
-		/* making the pin of pwm output */
-		set_bit(BASE_D + OFFSET_DIR,4);
 		break;
 	}
 
-	case CHANNEL_4 :
+	case CHANNEL_4_PIN :
 	{
 		/* choosing mode of operation fast pwm */
 		set_bit(TCCR2,WGM20);
@@ -94,8 +91,6 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t channel)
 		clear_bit(TCCR2,CS21);
 		set_bit(TCCR2,CS20);
 
-		/* making the pin of pwm output */
-		set_bit(BASE_D + OFFSET_DIR,7);
 		break;
 	}
 
@@ -107,51 +102,51 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t channel)
 	return error;
 }
 
-pwm_error_t  mcal_pwm_output(pwm_channel_t channel , u16_t duty)
+pwm_error_t  mcal_pwm_output(pwm_channel_t* channel , u16_t duty)
 {
 	pwm_error_t error = PWM_STATE_SUCCESS;
 
-	switch(channel)
+	switch(channel->channel_pin)
 	{
-	case CHANNEL_1 :
+	case CHANNEL_1_PIN :
 	{
 		/* OCR0 holds a value from 0 to 255
 		       that vary the output of ON PIN PB3
 		       between 0 and v maximum (5v)
 		 */
-		OCR0 = (u8_t)duty;
+		register(OCR0) = (u8_t)duty;
 		break;
 	}
 
-	case CHANNEL_2 :
+	case CHANNEL_2_PIN :
 	{
 		/* OCR1A holds a value from 0 to 1023
 	       that vary the output of ON PIN PD5
 	       between 0 and v maximum (5v)
 		 */
-		OCR1A = duty;
+		register(OCR1A) = duty;
 		break;
 	}
 
-	case CHANNEL_3 :
+	case CHANNEL_3_PIN :
 	{
 		/* OCR1B holds a value from 0 to 1023
 		       that vary the output of ON PIN PD5
 		       between 0 and v maximum (5v)
 		 */
 
-		OCR1BL = duty & 0x0F;
-		OCR1BH = duty & 0xF0;
+		register(OCR1BL) = duty & 0x0F;
+		register(OCR1BH) = duty & 0xF0;
 		break;
 	}
 
-	case CHANNEL_4 :
+	case CHANNEL_4_PIN :
 	{
 		/* OCR2 holds a value from 0 to 255
 		       that vary the output of ON PIN PB3
 		       between 0 and v maximum (5v)
 		 */
-		OCR2 = (u8_t)duty;
+		register(OCR2) = (u8_t)duty;
 		break;
 	}
 

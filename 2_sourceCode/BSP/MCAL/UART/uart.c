@@ -1,4 +1,4 @@
-/*
+
 /**************************************************************************
  ** This  software  is  in  the  public  domain , furnished "as is", without
  ** technical support,  and with no  warranty, express or implied, as to its
@@ -44,8 +44,8 @@ uart_error_t mcal_UART_init(void)
 	set_bit(UCSRC,UCSZ1);
 
 	/* First 8 bits from the BAUD_PRESCALE inside UBRRL and last 4 bits in UBRRH*/
-	UBRRH = BAUD_PRESCALE>>8;
-	UBRRL = BAUD_PRESCALE;
+	register(UBRRH) = BAUD_PRESCALE>>8;
+	register(UBRRL) = BAUD_PRESCALE;
 
 	return error;
 }
@@ -56,14 +56,14 @@ uart_error_t mcal_UART_sendByte(const u8_t data)
 
 	/* UDRE flag is set when the Tx buffer (UDR) is empty and ready for
 	 * transmitting a new byte so wait until this flag is set to one */
-	while(bit_is_clear(UCSRA,UDRE)){}
+	while(bit_is_clr(UCSRA,UDRE)){}
 	/* Put the required data in the UDR register and it also clear the UDRE flag as
 	 * the UDR register is not empty now */
-	UDR = data;
+	register(UDR) = data;
 
 	/************************* Another Method *************************
 	UDR = data;
-	while(BIT_IS_CLEAR(UCSRA,TXC)){}
+	while(bit_is_clr(UCSRA,TXC)){}
 	// Wait until the transimission is complete TXC = 1
 	SET_BIT(UCSRA,TXC); // Clear the TXC flag
 	 *******************************************************************/
@@ -77,10 +77,10 @@ uart_error_t mcal_UART_recieveByte(u8_t* data)
 
 	/* RXC flag is set when the UART receive data so wait until this
 	 * flag is set to one */
-	while(bit_is_clear(UCSRA,RXC)){}
+	while(bit_is_clr(UCSRA,RXC)){}
 	/* Read the received data from the Rx buffer (UDR) and the RXC flag
 	   will be cleared after read this data */
-	*data = UDR;
+	*data = register(UDR);
 
 	return error;
 }
@@ -119,12 +119,12 @@ uart_error_t mcal_UART_receiveString(u8_t *str)
 	uart_error_t error = UART_STATE_SUCCESS;
 
 	u8_t i = 0;
-	if (UART_STATE_SUCCESS == mcal_UART_recieveByte(str[i]))
+	if (UART_STATE_SUCCESS == mcal_UART_recieveByte(&str[i]))
 	{
 		while(str[i] != '\0')
 		{
 			i++;
-			if (UART_STATE_SUCCESS == mcal_UART_recieveByte(str[i]))
+			if (UART_STATE_SUCCESS == mcal_UART_recieveByte(&str[i]))
 			{
 				// do nothing
 			}
