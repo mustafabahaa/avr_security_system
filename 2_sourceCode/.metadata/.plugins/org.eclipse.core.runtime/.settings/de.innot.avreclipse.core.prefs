@@ -1,9 +1,0 @@
-avrpaths//systempath/AVRDUDE=C\:\\Program Files\\bin
-avrpaths//systempath/AVRGCC=C\:\\Program Files\\bin
-avrpaths//systempath/AVRINCLUDE=C\:\\Program Files\\avr\\include
-avrpaths//systempath/MAKE=C\:\\Program Files\\utils\\bin
-avrpaths//systempath/PDFPATH=
-avrpaths/AVRGCC=C\:\\Program Files\\WinAVR-20100110\\bin
-avrpaths/AVRINCLUDE=C\:\\Program Files\\WinAVR-20100110\\avr\\include
-avrpaths/MAKE=C\:\\Program Files\\WinAVR-20100110\\utils\\bin
-eclipse.preferences.version=1
