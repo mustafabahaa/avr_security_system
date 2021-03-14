@@ -10,30 +10,35 @@
 
 #include <stdlib.h>
 
-#include "../../INCLUDE/common_macros.h"
-#include "../../INCLUDE/micro_config.h"
-#include"../../INCLUDE/std_types.h"
+#include "../../includes/types.h"
+#include "../../includes/atmega16.h"
 
 /*******************************************************************************
  *                      Preprocessor Macros                                    *
  *******************************************************************************/
 /* LCD Data bits mode configuration */
-#define DATA_BITS_MODE 4
+#define DATA_BITS_MODE 8
 
 /* Use higher 4 bits in the data port */
 #if (DATA_BITS_MODE == 4)
 #define UPPER_PORT_PINS
 #endif
 
+#define PORTD   (0x32)
+
+#define PD4     4
+#define PD5     5
+#define PD6     6
+
 /* LCD HW Pins */
 #define RS PD4
 #define RW PD5
 #define E  PD6
-#define LCD_CTRL_PORT PORTD
-#define LCD_CTRL_PORT_DIR DDRD
+#define LCD_CTRL_PORT (BASE_D + OFFSET_PORT)
+#define LCD_CTRL_PORT_DIR (BASE_D + OFFSET_DIR)
 
-#define LCD_DATA_PORT PORTC
-#define LCD_DATA_PORT_DIR DDRC
+#define LCD_DATA_PORT (BASE_C + OFFSET_PORT)
+#define LCD_DATA_PORT_DIR (BASE_C + OFFSET_DIR)
 
 /* LCD Commands */
 #define CLEAR_COMMAND 0x01
@@ -47,13 +52,13 @@
 /*******************************************************************************
  *                      Functions Prototypes                                   *
  *******************************************************************************/
-void LCD_sendCommand(uint8 command);
-void LCD_displayCharacter(uint8 data);
-void LCD_displayString(const char *Str);
+void LCD_sendCommand(u8_t command);
+void LCD_displayCharacter(u8_t data);
+void LCD_displaystring(const char *str);
 void LCD_init(void);
 void LCD_clearScreen(void);
-void LCD_displayStringRowColumn(uint8 row,uint8 col,const char *Str);
-void LCD_goToRowColumn(uint8 row,uint8 col);
+void LCD_displaystringRowColumn(u8_t row,u8_t col,const char *str);
+void LCD_goToRowColumn(u8_t row,u8_t col);
 void LCD_intgerToString(int data);
 
 

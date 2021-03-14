@@ -8,9 +8,8 @@
 #ifndef HAL_KEYPAD_H_
 #define HAL_KEYPAD_H_
 
-#include "../../INCLUDE/common_macros.h"
-#include "../../INCLUDE/micro_config.h"
-#include"../../INCLUDE/std_types.h"
+#include "../../includes/types.h"
+#include "../../includes/atmega16.h"
 
 /*******************************************************************************
  *                      Preprocessor Macros                                    *
@@ -21,9 +20,9 @@
 #define N_row 4
 
 /* Keypad Port Configurations */
-#define KEYPAD_PORT_OUT PORTA
-#define KEYPAD_PORT_IN  PINA
-#define KEYPAD_PORT_DIR DDRA
+#define KEYPAD_PORT_OUT (BASE_A + OFFSET_PORT)
+#define KEYPAD_PORT_IN  (BASE_A + OFFSET_PIN)
+#define KEYPAD_PORT_DIR (BASE_A + OFFSET_DIR)
 
 /*******************************************************************************
  *                      Functions Prototypes                                   *
@@ -32,7 +31,7 @@
 /*
  * Function responsible for getting the pressed keypad key
  */
-uint8 KeyPad_getPressedKey(void);
+u8_t KeyPad_getPressedKey(void);
 
 
 #endif /* HAL_KEYPAD_H_ */

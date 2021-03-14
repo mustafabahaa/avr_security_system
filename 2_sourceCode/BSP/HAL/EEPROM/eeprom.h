@@ -5,10 +5,12 @@
  *      Author: Lenovo
  */
 
-#ifndef HAL_EEPROM_EEPROM_H_
-#define HAL_EEPROM_EEPROM_H_
+#ifndef HAL_EEPROM_H_
+#define HAL_EEPROM_H_
 
-#include "../../INCLUDE/std_types.h"
+#include "../../includes/types.h"
+#include "../../includes/atmega16.h"
+#include "../../MCAL/I2C/i2c.h"
 
 /*******************************************************************************
  *                      Preprocessor Macros                                    *
@@ -20,8 +22,8 @@
  *                      Functions Prototypes                                   *
  *******************************************************************************/
 void EEPROM_init(void);
-uint8 EEPROM_writeByte(uint16 u16addr,uint8 u8data);
-uint8 EEPROM_readByte(uint16 u16addr,uint8 *u8data);
+u8_t EEPROM_writeByte(u16_t u16addr,u8_t u8data);
+u8_t EEPROM_readByte(u16_t u16addr,u8_t *u8data);
 
 
-#endif /* HAL_EEPROM_EEPROM_H_ */
+#endif /* HAL_EEPROM_H_ */

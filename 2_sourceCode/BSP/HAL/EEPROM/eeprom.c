@@ -6,7 +6,6 @@
  */
 
 
-#include "../../MCAL/I2C/i2c.h"
 #include "eeprom.h"
 
 void EEPROM_init(void)
@@ -15,7 +14,7 @@ void EEPROM_init(void)
 	TWI_init();
 }
 
-uint8 EEPROM_writeByte(uint16 u16addr, uint8 u8data)
+u8_t EEPROM_writeByte(u16_t u16addr, u8_t u8data)
 {
 	/* Send the Start Bit */
 	TWI_start();
@@ -24,12 +23,12 @@ uint8 EEPROM_writeByte(uint16 u16addr, uint8 u8data)
 
 	/* Send the device address, we need to get A8 A9 A10 address bits from the
 	 * memory location address and R/W=0 (write) */
-	TWI_write((uint8)(0xA0 | ((u16addr & 0x0700)>>7)));
+	TWI_write((u8_t)(0xA0 | ((u16addr & 0x0700)>>7)));
 	if (TWI_getStatus() != TW_MT_SLA_W_ACK)
 		return ERROR;
 
 	/* Send the required memory location address */
-	TWI_write((uint8)(u16addr));
+	TWI_write((u8_t)(u16addr));
 	if (TWI_getStatus() != TW_MT_DATA_ACK)
 		return ERROR;
 
@@ -44,7 +43,7 @@ uint8 EEPROM_writeByte(uint16 u16addr, uint8 u8data)
 	return SUCCESS;
 }
 
-uint8 EEPROM_readByte(uint16 u16addr, uint8 *u8data)
+u8_t EEPROM_readByte(u16_t u16addr, u8_t *u8data)
 {
 	/* Send the Start Bit */
 	TWI_start();
@@ -53,12 +52,12 @@ uint8 EEPROM_readByte(uint16 u16addr, uint8 *u8data)
 
 	/* Send the device address, we need to get A8 A9 A10 address bits from the
 	 * memory location address and R/W=0 (write) */
-	TWI_write((uint8)((0xA0) | ((u16addr & 0x0700)>>7)));
+	TWI_write((u8_t)((0xA0) | ((u16addr & 0x0700)>>7)));
 	if (TWI_getStatus() != TW_MT_SLA_W_ACK)
 		return ERROR;
 
 	/* Send the required memory location address */
-	TWI_write((uint8)(u16addr));
+	TWI_write((u8_t)(u16addr));
 	if (TWI_getStatus() != TW_MT_DATA_ACK)
 		return ERROR;
 
@@ -69,7 +68,7 @@ uint8 EEPROM_readByte(uint16 u16addr, uint8 *u8data)
 
 	/* Send the device address, we need to get A8 A9 A10 address bits from the
 	 * memory location address and R/W=1 (Read) */
-	TWI_write((uint8)((0xA0) | ((u16addr & 0x0700)>>7) | 1));
+	TWI_write((u8_t)((0xA0) | ((u16addr & 0x0700)>>7) | 1));
 	if (TWI_getStatus() != TW_MT_SLA_R_ACK)
 		return ERROR;
 

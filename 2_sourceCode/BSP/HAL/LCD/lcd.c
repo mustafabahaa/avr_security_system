@@ -22,38 +22,38 @@ void LCD_init(void)
 	LCD_sendCommand(CLEAR_COMMAND); /* clear LCD at the beginning */
 }
 
-void LCD_sendCommand(uint8 command)
+void LCD_sendCommand(u8_t command)
 {
-	CLEAR_BIT(LCD_CTRL_PORT,RS); /* Instruction Mode RS=0 */
-	CLEAR_BIT(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
+	clr_bit(LCD_CTRL_PORT,RS); /* Instruction Mode RS=0 */
+	clr_bit(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
 	_delay_ms(1); /* delay for processing Tas = 50ns */
-	SET_BIT(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
+	set_bit(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
 	_delay_ms(1); /* delay for processing Tpw - Tdws = 190ns */
 	LCD_DATA_PORT = command; /* out the required command to the data bus D0 --> D7 */
 	_delay_ms(1); /* delay for processing Tdsw = 100ns */
-	CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
+	clr_bit(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	_delay_ms(1); /* delay for processing Th = 13ns */
 }
 
-void LCD_displayCharacter(uint8 data)
+void LCD_displayCharacter(u8_t data)
 {
-	SET_BIT(LCD_CTRL_PORT,RS); /* Data Mode RS=1 */
-	CLEAR_BIT(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
+	set_bit(LCD_CTRL_PORT,RS); /* Data Mode RS=1 */
+	clr_bit(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
 	_delay_ms(1); /* delay for processing Tas = 50ns */
-	SET_BIT(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
+	set_bit(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
 	_delay_ms(1); /* delay for processing Tpw - Tdws = 190ns */
 	LCD_DATA_PORT = data; /* out the required data char to the data bus D0 --> D7 */
 	_delay_ms(1); /* delay for processing Tdsw = 100ns */
-	CLEAR_BIT(LCD_CTRL_PORT,E); /* disable LCD E=0 */
+	clr_bit(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	_delay_ms(1); /* delay for processing Th = 13ns */
 }
 
-void LCD_displayString(const char *Str)
+void LCD_displayString(const char *str)
 {
-	uint8 i = 0;
-	while(Str[i] != '\0')
+	u8_t i = 0;
+	while(str[i] != '\0')
 	{
-		LCD_displayCharacter(Str[i]);
+		LCD_displayCharacter(str[i]);
 		i++;
 	}
 	/***************** Another Method ***********************
@@ -62,45 +62,45 @@ void LCD_displayString(const char *Str)
 		LCD_displayCharacter(*Str);
 		Str++;
 	}
-	*********************************************************/
+	 *********************************************************/
 }
 
-void LCD_goToRowColumn(uint8 row,uint8 col)
+void LCD_goToRowColumn(u8_t row,u8_t col)
 {
-	uint8 Address;
+	u8_t Address;
 
 	/* first of all calculate the required address */
 	switch(row)
 	{
-		case 0:
-				Address=col;
-				break;
-		case 1:
-				Address=col+0x40;
-				break;
-		case 2:
-				Address=col+0x10;
-				break;
-		case 3:
-				Address=col+0x50;
-				break;
+	case 0:
+		Address=col;
+		break;
+	case 1:
+		Address=col+0x40;
+		break;
+	case 2:
+		Address=col+0x10;
+		break;
+	case 3:
+		Address=col+0x50;
+		break;
 	}
 	/* to write to a specific address in the LCD
 	 * we need to apply the corresponding command 0b10000000+Address */
 	LCD_sendCommand(Address | SET_CURSOR_LOCATION);
 }
 
-void LCD_displayStringRowColumn(uint8 row,uint8 col,const char *Str)
+void LCD_displayStringRowColumn(u8_t row,u8_t col,const char *str)
 {
 	LCD_goToRowColumn(row,col); /* go to to the required LCD position */
-	LCD_displayString(Str); /* display the string */
+	LCD_displayString(str); /* display the string */
 }
 
 void LCD_intgerToString(int data)
 {
-   char buff[16]; /* String to hold the ascii result */
-   itoa(data,buff,10); /* 10 for decimal */
-   LCD_displayString(buff);
+	char buff[16]; /* String to hold the ascii result */
+	itoa(data,buff,10); /* 10 for decimal */
+	LCD_displayString(buff);
 }
 
 void LCD_clearScreen(void)
