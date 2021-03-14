@@ -16,6 +16,7 @@
 #include "./programs/port/port_program.h"
 #include "./programs/gpio/gpio_program.h"
 #include "./programs/eInterrupts/e_interrupts_program.h"
+#include "./programs/final_project/final_project_program.h"
 /*************************************************************************/
 /*                       Programs Configurations                         */
 /*************************************************************************/
@@ -24,13 +25,14 @@ typedef enum
 	PORT_PROGRAM,
 	GPIO_PROGRAM,
 	INTERRUPT_PROGRAM,
+	FINAL_PROJECT_PROGRAM,
 } operationMode;
 /*************************************************************************/
 /*                               Main test                               */
 /*************************************************************************/
 int main(void)
 {
-	operationMode mode = GPIO_PROGRAM;
+	operationMode mode = FINAL_PROJECT_PROGRAM;
 
 	switch (mode)
 	{
@@ -49,6 +51,12 @@ int main(void)
 	case INTERRUPT_PROGRAM:
 	{
 		execute_interrupt_program();
+		break;
+	}
+
+	case FINAL_PROJECT_PROGRAM:
+	{
+		execute_final_program();
 		break;
 	}
 
