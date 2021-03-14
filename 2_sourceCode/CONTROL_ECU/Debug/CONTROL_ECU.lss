@@ -7,7 +7,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
   1 .stab         00001adc  00000000  00000000  00000b44  2**2
                   CONTENTS, READONLY, DEBUGGING
-  2 .stabstr      0000162a  00000000  00000000  00002620  2**0
+  2 .stabstr      00001ae8  00000000  00000000  00002620  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1917,7 +1917,7 @@ button_error_t hal_button_get_state(
  ad8:	08 95       	ret
 
 00000ada <main>:
-#include "./includes/atmega32.h"
+#include "./../BSP/includes/atmega32.h"
 /*************************************************************************/
 /*                               Main test                               */
 /*************************************************************************/

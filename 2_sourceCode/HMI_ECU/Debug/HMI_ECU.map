@@ -17,11 +17,11 @@ signature        0x00840000         0x00000400         rw !x
 Linker script and memory map
 
 LOAD c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16.o
-LOAD ./MCAL/port/port.o
-LOAD ./MCAL/e_interrupt/e_interrupt.o
-LOAD ./MCAL/GPIO/gpio.o
-LOAD ./HAL/LED/led.o
-LOAD ./HAL/BUTTON/button.o
+LOAD ./BSP/MCAL/port/port.o
+LOAD ./BSP/MCAL/e_interrupt/e_interrupt.o
+LOAD ./BSP/MCAL/GPIO/gpio.o
+LOAD ./BSP/HAL/LED/led.o
+LOAD ./BSP/HAL/BUTTON/button.o
 LOAD ./main.o
 LOAD c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 LOAD c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5\libc.a
@@ -190,62 +190,62 @@ LOAD c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00000068                __vector_16
                 0x00000068                __vector_18
                 0x00000068                __vector_20
- .text          0x0000006c        0x0 ./MCAL/port/port.o
- .text          0x0000006c        0x0 ./MCAL/e_interrupt/e_interrupt.o
- .text          0x0000006c        0x0 ./MCAL/GPIO/gpio.o
- .text          0x0000006c        0x0 ./HAL/LED/led.o
- .text          0x0000006c        0x0 ./HAL/BUTTON/button.o
+ .text          0x0000006c        0x0 ./BSP/MCAL/port/port.o
+ .text          0x0000006c        0x0 ./BSP/MCAL/e_interrupt/e_interrupt.o
+ .text          0x0000006c        0x0 ./BSP/MCAL/GPIO/gpio.o
+ .text          0x0000006c        0x0 ./BSP/HAL/LED/led.o
+ .text          0x0000006c        0x0 ./BSP/HAL/BUTTON/button.o
  .text          0x0000006c        0x0 ./main.o
  .text          0x0000006c        0x0 c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
                 0x0000006c                . = ALIGN (0x2)
  *(.text.*)
  .text.mcal_port_init
-                0x0000006c       0xb6 ./MCAL/port/port.o
+                0x0000006c       0xb6 ./BSP/MCAL/port/port.o
                 0x0000006c                mcal_port_init
  .text.mcal_port_write
-                0x00000122       0x4c ./MCAL/port/port.o
+                0x00000122       0x4c ./BSP/MCAL/port/port.o
                 0x00000122                mcal_port_write
  .text.mcal_port_read
-                0x0000016e       0x52 ./MCAL/port/port.o
+                0x0000016e       0x52 ./BSP/MCAL/port/port.o
                 0x0000016e                mcal_port_read
  .text.mcal_interrupt_initialize
-                0x000001c0      0x1e8 ./MCAL/e_interrupt/e_interrupt.o
+                0x000001c0      0x1e8 ./BSP/MCAL/e_interrupt/e_interrupt.o
                 0x000001c0                mcal_interrupt_initialize
  .text.mcal_interrupt_read_flag
-                0x000003a8       0xbc ./MCAL/e_interrupt/e_interrupt.o
+                0x000003a8       0xbc ./BSP/MCAL/e_interrupt/e_interrupt.o
                 0x000003a8                mcal_interrupt_read_flag
  .text.mcal_interrupt_clear_flag
-                0x00000464       0x7e ./MCAL/e_interrupt/e_interrupt.o
+                0x00000464       0x7e ./BSP/MCAL/e_interrupt/e_interrupt.o
                 0x00000464                mcal_interrupt_clear_flag
  .text.mcal_gpio_pin_init
-                0x000004e2      0x154 ./MCAL/GPIO/gpio.o
+                0x000004e2      0x154 ./BSP/MCAL/GPIO/gpio.o
                 0x000004e2                mcal_gpio_pin_init
  .text.mcal_gpio_pin_write
-                0x00000636       0xe2 ./MCAL/GPIO/gpio.o
+                0x00000636       0xe2 ./BSP/MCAL/GPIO/gpio.o
                 0x00000636                mcal_gpio_pin_write
  .text.mcal_gpio_pin_toggle
-                0x00000718       0x70 ./MCAL/GPIO/gpio.o
+                0x00000718       0x70 ./BSP/MCAL/GPIO/gpio.o
                 0x00000718                mcal_gpio_pin_toggle
  .text.mcal_gpio_pin_read
-                0x00000788       0x7e ./MCAL/GPIO/gpio.o
+                0x00000788       0x7e ./BSP/MCAL/GPIO/gpio.o
                 0x00000788                mcal_gpio_pin_read
  .text.hal_led_init
-                0x00000806       0x56 ./HAL/LED/led.o
+                0x00000806       0x56 ./BSP/HAL/LED/led.o
                 0x00000806                hal_led_init
  .text.hal_led_set_state
-                0x0000085c       0x96 ./HAL/LED/led.o
+                0x0000085c       0x96 ./BSP/HAL/LED/led.o
                 0x0000085c                hal_led_set_state
  .text.hal_led_toggle_state
-                0x000008f2       0x44 ./HAL/LED/led.o
+                0x000008f2       0x44 ./BSP/HAL/LED/led.o
                 0x000008f2                hal_led_toggle_state
  .text.hal_led_get_state
-                0x00000936       0x8e ./HAL/LED/led.o
+                0x00000936       0x8e ./BSP/HAL/LED/led.o
                 0x00000936                hal_led_get_state
  .text.hal_button_init
-                0x000009c4       0x88 ./HAL/BUTTON/button.o
+                0x000009c4       0x88 ./BSP/HAL/BUTTON/button.o
                 0x000009c4                hal_button_init
  .text.hal_button_get_state
-                0x00000a4c       0x8e ./HAL/BUTTON/button.o
+                0x00000a4c       0x8e ./BSP/HAL/BUTTON/button.o
                 0x00000a4c                hal_button_get_state
  .text.main     0x00000ada       0x12 ./main.o
                 0x00000ada                main
@@ -281,11 +281,11 @@ LOAD c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800060        0x0 c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16.o
- .data          0x00800060        0x0 ./MCAL/port/port.o
- .data          0x00800060        0x0 ./MCAL/e_interrupt/e_interrupt.o
- .data          0x00800060        0x0 ./MCAL/GPIO/gpio.o
- .data          0x00800060        0x0 ./HAL/LED/led.o
- .data          0x00800060        0x0 ./HAL/BUTTON/button.o
+ .data          0x00800060        0x0 ./BSP/MCAL/port/port.o
+ .data          0x00800060        0x0 ./BSP/MCAL/e_interrupt/e_interrupt.o
+ .data          0x00800060        0x0 ./BSP/MCAL/GPIO/gpio.o
+ .data          0x00800060        0x0 ./BSP/HAL/LED/led.o
+ .data          0x00800060        0x0 ./BSP/HAL/BUTTON/button.o
  .data          0x00800060        0x0 ./main.o
  .data          0x00800060        0x0 c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.data*)
@@ -300,11 +300,11 @@ LOAD c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
                 0x00800060                PROVIDE (__bss_start, .)
  *(.bss)
  .bss           0x00800060        0x0 c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr5/crtm16.o
- .bss           0x00800060        0x0 ./MCAL/port/port.o
- .bss           0x00800060        0x0 ./MCAL/e_interrupt/e_interrupt.o
- .bss           0x00800060        0x0 ./MCAL/GPIO/gpio.o
- .bss           0x00800060        0x0 ./HAL/LED/led.o
- .bss           0x00800060        0x0 ./HAL/BUTTON/button.o
+ .bss           0x00800060        0x0 ./BSP/MCAL/port/port.o
+ .bss           0x00800060        0x0 ./BSP/MCAL/e_interrupt/e_interrupt.o
+ .bss           0x00800060        0x0 ./BSP/MCAL/GPIO/gpio.o
+ .bss           0x00800060        0x0 ./BSP/HAL/LED/led.o
+ .bss           0x00800060        0x0 ./BSP/HAL/BUTTON/button.o
  .bss           0x00800060        0x0 ./main.o
  .bss           0x00800060        0x0 c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a(_exit.o)
  *(.bss*)
@@ -338,21 +338,21 @@ LOAD c:/program files/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr5\libgcc.a
 
 .stab           0x00000000     0x1adc
  *(.stab)
- .stab          0x00000000      0x588 ./MCAL/port/port.o
- .stab          0x00000588      0x4e0 ./MCAL/e_interrupt/e_interrupt.o
+ .stab          0x00000000      0x588 ./BSP/MCAL/port/port.o
+ .stab          0x00000588      0x4e0 ./BSP/MCAL/e_interrupt/e_interrupt.o
                                 0x678 (size before relaxing)
- .stab          0x00000a68      0x558 ./MCAL/GPIO/gpio.o
+ .stab          0x00000a68      0x558 ./BSP/MCAL/GPIO/gpio.o
                                 0x6f0 (size before relaxing)
- .stab          0x00000fc0      0x540 ./HAL/LED/led.o
+ .stab          0x00000fc0      0x540 ./BSP/HAL/LED/led.o
                                 0x6d8 (size before relaxing)
- .stab          0x00001500      0x420 ./HAL/BUTTON/button.o
+ .stab          0x00001500      0x420 ./BSP/HAL/BUTTON/button.o
                                 0x5b8 (size before relaxing)
  .stab          0x00001920      0x1bc ./main.o
                                 0x354 (size before relaxing)
 
-.stabstr        0x00000000     0x162a
+.stabstr        0x00000000     0x1ae8
  *(.stabstr)
- .stabstr       0x00000000     0x162a ./MCAL/port/port.o
+ .stabstr       0x00000000     0x1ae8 ./BSP/MCAL/port/port.o
 
 .stab.excl
  *(.stab.excl)
