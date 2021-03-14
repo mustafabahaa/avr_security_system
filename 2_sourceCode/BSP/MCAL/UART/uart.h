@@ -5,55 +5,16 @@
 
  ** uart.h
  **************************************************************************/
-#ifndef MCAL_UART_H_
-#define MCAL_UART_H_
+#ifndef _UART_H_
+#define _UART_H_
 /*************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
 #include "./../../includes/types.h"
-#include "./../../includes/atmega32.h"
+#include "../../includes/atmega16.h"
 /*************************************************************************/
 /*                              Macros                                   */
 /*************************************************************************/
-
-#define UCSRA 0x2B
-#define MPCM    0
-#define U2X     1
-#define PE      2
-#define DOR     3
-#define FE      4
-#define UDRE    5
-#define TXC     6
-#define RXC     7
-
-#define UCSRB 0x2A
-#define TXB8    0
-#define RXB8    1
-#define UCSZ2   2
-#define TXEN    3
-#define RXEN    4
-#define UDRIE   5
-#define TXCIE   6
-#define RXCIE   7
-
-#define UCSRC 0x40
-#define UCPOL   0
-#define UCSZ0   1
-#define UCSZ1   2
-#define USBS    3
-#define UPM0    4
-#define UPM1    5
-#define UMSEL   6
-#define URSEL   7
-
-#define UBRRH   0x40
-#define URSEL   7
-
-#define UBRRL   0x29
-
-#define UDR 0x2c
-
-
 /* UART Driver Baud Rate */
 #define USART_BAUDRATE 9600
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 8UL))) - 1)
@@ -120,4 +81,4 @@ uart_error_t mcal_UART_sendString(const u8_t *str);
  **************************************************************************/
 uart_error_t mcal_UART_recieveString (u8_t *str);
 
-#endif /* MCAL_UART_H_ */
+#endif /* _UART_H_ */

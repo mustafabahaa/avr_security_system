@@ -19,7 +19,7 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState dir)
 
 	if (base == BASE_A || base == BASE_B || base == BASE_C || base == BASE_D)
 	{
-		if (pin < MAX_PIN_NUMBER)
+		if (pin < ECU_PORT_PINS_NUMBER)
 		{
 			switch (dir)
 			{
@@ -59,7 +59,7 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value)
 
 	if (base == BASE_A || base == BASE_B || base == BASE_C || base == BASE_D)
 	{
-		if (pin < MAX_PIN_NUMBER)
+		if (pin < ECU_PORT_PINS_NUMBER)
 		{
 			switch (value)
 			{
@@ -112,7 +112,7 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_read(u8_t base, u8_t pin, u8_t *value)
 
 	if (base == BASE_A || base == BASE_B || base == BASE_C || base == BASE_D)
 	{
-		if (pin < MAX_PIN_NUMBER)
+		if (pin < ECU_PORT_PINS_NUMBER)
 		{
 			*value = bit_is_set(base + OFFSET_PIN, pin);
 		}

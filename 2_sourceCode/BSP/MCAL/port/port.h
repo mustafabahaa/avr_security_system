@@ -11,20 +11,10 @@
 /*                              Includes                                 */
 /*************************************************************************/
 #include "./../../includes/types.h"
-#include "./../../includes/atmega32.h"
+#include "../../includes/atmega16.h"
 /*************************************************************************/
 /*                              Macros                                   */
 /*************************************************************************/
-#define BASE_A 0x39
-#define BASE_B 0x36
-#define BASE_C 0x33
-#define BASE_D 0x30
-
-#define OFFSET_PIN 0x00
-#define OFFSET_DIR 0x01
-#define OFFSET_PORT 0x02
-
-#define MAX_PIN_NUMBER 8
 #define PORT_ON 0xFF
 #define PORT_OFF 0x00
 #define PORT_OUTPUT_DIR 0xFF
