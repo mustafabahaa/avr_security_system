@@ -27,7 +27,17 @@
 		<link>
 			<name>BSP</name>
 			<type>2</type>
-			<location>C:/Users/Mustafa/Desktop/atmega32/2_sourceCode/BSP</location>
+			<locationURI>PROJECT_PATH/BSP</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>PROJECT_PATH</name>
+			<value>file:/C:/Users/Mustafa/Desktop/atmega32/2_sourceCode</value>
+		</variable>
+		<variable>
+			<name>ROOT_PATH</name>
+			<value>file:/C:/Users/Mustafa/Desktop/atmega32/2_sourceCode</value>
+		</variable>
+	</variableList>
 </projectDescription>

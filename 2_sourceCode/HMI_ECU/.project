@@ -27,7 +27,7 @@
 		<link>
 			<name>BSP</name>
 			<type>2</type>
-			<location>C:/Users/Mustafa/Desktop/atmega32/2_sourceCode/BSP</location>
+			<locationURI>WORKSPACE_LOC/BSP</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
