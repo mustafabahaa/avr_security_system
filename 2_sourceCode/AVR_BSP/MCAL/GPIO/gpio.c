@@ -80,8 +80,6 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value)
 		{
 			error = GPIO_STATE_INVAILD_PIN;
 		}
-
-
 	}
 	else
 	{

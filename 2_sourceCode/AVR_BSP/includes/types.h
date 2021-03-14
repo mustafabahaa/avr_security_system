@@ -1,10 +1,10 @@
 /*************************************************************************
-** This  software  is  in  the  public  domain , furnished "as is", without
-** technical support,  and with no  warranty, express or implied, as to its
-** usefulness for any purpose.
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
 
-** types.h
-**************************************************************************/
+ ** types.h
+ **************************************************************************/
 #ifndef TYPES_H_
 #define TYPES_H_
 /*************************************************************************/
@@ -24,4 +24,3 @@ typedef unsigned long long u64_t; // Define unsigned long long u64_t
 typedef long long s64_t;          // Define  long long as s64_t
 
 #endif /* TYPES_H_ */
-  

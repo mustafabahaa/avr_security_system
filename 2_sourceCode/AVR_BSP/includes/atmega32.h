@@ -1,10 +1,10 @@
 /*************************************************************************
-** This  software  is  in  the  public  domain , furnished "as is", without 
-** technical support,  and with no  warranty, express or implied, as to its
-** usefulness for any purpose.
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
 
-** atmega32.h
-**************************************************************************/
+ ** atmega32.h
+ **************************************************************************/
 #ifndef ATMEGA_32_H_
 #define ATMEGA_32_H_
 /*************************************************************************/

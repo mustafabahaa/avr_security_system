@@ -1,10 +1,10 @@
 /**************************************************************************
-** This  software  is  in  the  public  domain , furnished "as is", without
-** technical support,  and with no  warranty, express or implied, as to its
-** usefulness for any purpose.
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
 
-** button.h
-**************************************************************************/
+ ** button.h
+ **************************************************************************/
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
@@ -46,26 +46,26 @@ typedef struct button
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
-** hal_button_init()
-**
-** parameters: button_t *the_button
-** return    : button_error_t
-***************************************************************************
-** this function is used to initialize all the necessary sequence for button
-**************************************************************************/
+ ** hal_button_init()
+ **
+ ** parameters: button_t *the_button
+ ** return    : button_error_t
+ ***************************************************************************
+ ** this function is used to initialize all the necessary sequence for button
+ **************************************************************************/
 button_error_t hal_button_init(button_t *the_button);
 
 /**************************************************************************
-** hal_button_init()
-**
-** parameters: button_t *the_button
-** parameters: button_states_t *result
-** return    : button_error_t
-***************************************************************************
-** this function return the states of the button On or off
-**************************************************************************/
+ ** hal_button_init()
+ **
+ ** parameters: button_t *the_button
+ ** parameters: button_states_t *result
+ ** return    : button_error_t
+ ***************************************************************************
+ ** this function return the states of the button On or off
+ **************************************************************************/
 button_error_t hal_button_get_state(button_t *the_button,
-									button_states_t *result);
+		button_states_t *result);
 
 #endif /*_BUTTON_H_*/
 /*************************************************************************/
