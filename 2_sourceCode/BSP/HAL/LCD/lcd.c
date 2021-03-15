@@ -104,19 +104,24 @@ lcd_error_t LCD_init(lcd_t *lcd)
 
 lcd_error_t LCD_sendCommand(u8_t command)
 {
-	clr_bit(LCD_CTRL_PORT,RS); /* Instruction Mode RS=0 */
-	clr_bit(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
-	_delay_ms(1); /* delay for processing Tas = 50ns */
-	set_bit(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
-	_delay_ms(1); /* delay for processing Tpw - Tdws = 190ns */
-	register (LCD_DATA_PORT) = command; /* out the required command to the data bus D0 --> D7 */
-	_delay_ms(1); /* delay for processing Tdsw = 100ns */
-	clr_bit(LCD_CTRL_PORT,E); /* disable LCD E=0 */
-	_delay_ms(1); /* delay for processing Th = 13ns */
+	lcd_t lcd;
+	lcd_error_t error = LCD_SUCCESS;
+	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRS ,LOW);	 /* Instruction Mode RS=0 */
+	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRW ,LOW); 	 /* write data to LCD so RW=0 */
+	_delay_ms(1);												 /* delay for processing Tas = 50ns */
+	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,HIGH);	 /* Enable LCD E=1 */
+	_delay_ms(1); 												 /* delay for processing Tpw - Tdws = 190ns */
+	mcal_port_write(lcd->lcdDataPort) = command; 				 /* out the required command to the data bus D0 --> D7 */
+	_delay_ms(1); 												 /* delay for processing Tdsw = 100ns */
+	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,LOW);	 /* disable LCD E=0 */
+	_delay_ms(1); 												 /* delay for processing Th = 13ns */
+	return error;
 }
 
-void LCD_displayCharacter(u8_t data)
+lcd_error_t LCD_displayCharacter(u8_t data)
 {
+	lcd_error_t error = LCD_SUCCESS;
+
 	set_bit(LCD_CTRL_PORT,RS); /* Data Mode RS=1 */
 	clr_bit(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */
 	_delay_ms(1); /* delay for processing Tas = 50ns */
@@ -126,10 +131,12 @@ void LCD_displayCharacter(u8_t data)
 	_delay_ms(1); /* delay for processing Tdsw = 100ns */
 	clr_bit(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	_delay_ms(1); /* delay for processing Th = 13ns */
+	return error;
 }
 
-void LCD_displayString(const char *str)
+lcd_error_t LCD_displayString(const char *str)
 {
+	lcd_error_t error = LCD_SUCCESS;
 	u8_t i = 0;
 	while(str[i] != '\0')
 	{
@@ -143,10 +150,12 @@ void LCD_displayString(const char *str)
 		Str++;
 	}
 	 *********************************************************/
+	return error;
 }
 
-void LCD_goToRowColumn(u8_t row,u8_t col)
+lcd_error_t LCD_goToRowColumn(u8_t row,u8_t col)
 {
+	lcd_error_t error = LCD_SUCCESS;
 	u8_t Address;
 
 	/* first of all calculate the required address */
@@ -168,23 +177,30 @@ void LCD_goToRowColumn(u8_t row,u8_t col)
 	/* to write to a specific address in the LCD
 	 * we need to apply the corresponding command 0b10000000+Address */
 	LCD_sendCommand(Address | SET_CURSOR_LOCATION);
+	return error;
 }
 
-void LCD_displayStringRowColumn(u8_t row,u8_t col,const char *str)
+lcd_error_t LCD_displayStringRowColumn(u8_t row,u8_t col,const char *str)
 {
+	lcd_error_t error = LCD_SUCCESS;
 	LCD_goToRowColumn(row,col); /* go to to the required LCD position */
 	LCD_displayString(str); /* display the string */
+	return error;
 }
 
-void LCD_intgerToString(int data)
+lcd_error_t LCD_intgerToString(int data)
 {
+	lcd_error_t error = LCD_SUCCESS;
 	char buff[16]; /* String to hold the ascii result */
 	itoa(data,buff,10); /* 10 for decimal */
 	LCD_displayString(buff);
+	return error;
 }
 
-void LCD_clearScreen(void)
+lcd_error_t LCD_clearScreen(void)
 {
+	lcd_error_t error = LCD_SUCCESS;
 	LCD_sendCommand(CLEAR_COMMAND); //clear display
+	return error;
 }
 
