@@ -23,6 +23,7 @@ port_error_t mcal_port_init(u8_t base, portState dir)
 		{
 		case DIR_PORT_OUTPUT:
 			reg_write(base + OFFSET_DIR, PORT_OUTPUT_DIR);
+			reg_write(base + OFFSET_PORT, PORT_OFF);
 			break;
 
 		case DIR_PORT_INPUT_PULLDOWN:
@@ -33,6 +34,11 @@ port_error_t mcal_port_init(u8_t base, portState dir)
 		case DIR_PORT_INPUT_PULLUP:
 			reg_write(base + OFFSET_DIR, PORT_INPUT_DIR);
 			reg_write(base + OFFSET_PORT, PORT_ON);
+			break;
+
+		case DIR_HIGH_ORDER_PORT_OUTPUT:
+			register(base + OFFSET_DIR) = HIGH & PORT_HIGH_ORDER_OUTPUT_DIR;
+			register(base + OFFSET_DIR) = HIGH & PORT_HIGH_ORDER_OFF;
 			break;
 
 		default:

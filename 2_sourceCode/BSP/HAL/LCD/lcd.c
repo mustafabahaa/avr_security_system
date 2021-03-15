@@ -7,26 +7,92 @@
 
 #include "lcd.h"
 
+
 /*******************************************************************************
  *                      Functions Definitions                                  *
  *******************************************************************************/
 lcd_error_t LCD_init(lcd_t *lcd)
 {
 	lcd_error_t error = LCD_SUCCESS;
+	GPIO_STATE_ERROR_t gpioError = GPIO_STATE_SUCCESS;
 
-	/* Configure the data port as output port */
-	if (PORT_STATE_SUCCESS == 	 mcal_port_init(lcd->lcdDataPort , DIR_PORT_OUTPUT))
+	/* Configure the control pins(E,RS,RW) as output pins */
+	gpioError = mcal_gpio_pin_init(lcd->lcdControlPort, lcd->lcdE, DIR_OUTPUT);
+	gpioError = mcal_gpio_pin_init(lcd->lcdControlPort, lcd->lcdRW, DIR_OUTPUT);
+	gpioError = mcal_gpio_pin_init(lcd->lcdControlPort, lcd->lcdRS, DIR_OUTPUT);
+
+	if (gpioError == GPIO_STATE_SUCCESS)
 	{
-		mcal_gpio_pin_init(lcd->lcdControlPort, lcd->lcdE, DIR_OUTPUT);
+		if (lcd->lcdMode == MODE_8_BIT)
+		{
+			/* Configure the data port as output port */
+			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_PORT_OUTPUT))
+			{
+				/* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
+				if (LCD_SUCCESS == LCD_sendCommand(TWO_LINE_LCD_Eight_BIT_MODE))
+				{
+					/* 8 bit mode is configured */
+				}
+				else
+				{
+					error = LCD_command_ERROR;
+				}
+			}
+			else
+			{
+				error = LCD_ERROR;
+			}
+		}
+		else if (lcd->lcdMode == MODE_4_BIT)
+		{
+			/* Configure the data port as output port */
+			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_HIGH_ORDER_PORT_OUTPUT))
+			{
+				/* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
+				if (LCD_SUCCESS == LCD_sendCommand(TWO_LINE_LCD_Four_BIT_MODE))
+				{
+					/* 5 bit mode is configured */
+				}
+				else
+				{
+					error = LCD_command_ERROR;
+				}
+			}
+			else
+			{
+				error = LCD_ERROR;
+			}
+		}
+		else
+		{
+			error = LCD_MODE_ERROR;
+		}
 
 
-		register (LCD_CTRL_PORT_DIR) |= (1<<E) | (1<<RS) | (1<<RW); /* Configure the control pins(E,RS,RW) as output pins */
-
-		LCD_sendCommand(TWO_LINE_LCD_Eight_BIT_MODE); /* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
-
-		LCD_sendCommand(CURSOR_OFF); /* cursor off */
-
-		LCD_sendCommand(CLEAR_COMMAND); /* clear LCD at the beginning */
+		if (error == LCD_SUCCESS)
+		{
+			/* cursor off */
+			if (LCD_SUCCESS == LCD_sendCommand(CURSOR_OFF))
+			{
+				/* clear LCD at the beginning */
+				if (LCD_SUCCESS ==  LCD_sendCommand(CLEAR_COMMAND))
+				{
+					/* LCD initialized */
+				}
+				else
+				{
+					error = LCD_command_ERROR;
+				}
+			}
+			else
+			{
+				error = LCD_command_ERROR;
+			}
+		}
+		else
+		{
+			/* error */
+		}
 	}
 	else
 	{
@@ -36,7 +102,7 @@ lcd_error_t LCD_init(lcd_t *lcd)
 	return error;
 }
 
-void LCD_sendCommand(u8_t command)
+lcd_error_t LCD_sendCommand(u8_t command)
 {
 	clr_bit(LCD_CTRL_PORT,RS); /* Instruction Mode RS=0 */
 	clr_bit(LCD_CTRL_PORT,RW); /* write data to LCD so RW=0 */

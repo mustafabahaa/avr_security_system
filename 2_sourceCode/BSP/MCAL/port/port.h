@@ -17,7 +17,9 @@
 /*************************************************************************/
 #define PORT_ON 0xFF
 #define PORT_OFF 0x00
+#define PORT_HIGH_ORDER_OFF 0x0F
 #define PORT_OUTPUT_DIR 0xFF
+#define PORT_HIGH_ORDER_OUTPUT_DIR 0x0F
 #define PORT_INPUT_DIR 0x00
 /*************************************************************************/
 /*                               Types                                   */
@@ -26,7 +28,8 @@ typedef enum
 {
 	DIR_PORT_INPUT_PULLUP,
 	DIR_PORT_INPUT_PULLDOWN,
-	DIR_PORT_OUTPUT
+	DIR_PORT_OUTPUT,
+	DIR_HIGH_ORDER_PORT_OUTPUT,
 } portState;
 
 typedef enum port_error_t
