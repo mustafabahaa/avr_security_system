@@ -10,16 +10,30 @@
 /*******************************************************************************
  *                      Functions Definitions                                  *
  *******************************************************************************/
-void LCD_init(void)
+lcd_error_t LCD_init(lcd_t *lcd)
 {
-	LCD_DATA_PORT_DIR = 0xFF; /* Configure the data port as output port */
-	LCD_CTRL_PORT_DIR |= (1<<E) | (1<<RS) | (1<<RW); /* Configure the control pins(E,RS,RW) as output pins */
+	lcd_error_t error = LCD_SUCCESS;
 
-	LCD_sendCommand(TWO_LINE_LCD_Eight_BIT_MODE); /* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
+	/* Configure the data port as output port */
+	if (PORT_STATE_SUCCESS == 	 mcal_port_init(lcd->lcdDataPort , DIR_PORT_OUTPUT))
+	{
+		mcal_gpio_pin_init(lcd->lcdControlPort, lcd->lcdE, DIR_OUTPUT);
 
-	LCD_sendCommand(CURSOR_OFF); /* cursor off */
 
-	LCD_sendCommand(CLEAR_COMMAND); /* clear LCD at the beginning */
+		register (LCD_CTRL_PORT_DIR) |= (1<<E) | (1<<RS) | (1<<RW); /* Configure the control pins(E,RS,RW) as output pins */
+
+		LCD_sendCommand(TWO_LINE_LCD_Eight_BIT_MODE); /* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
+
+		LCD_sendCommand(CURSOR_OFF); /* cursor off */
+
+		LCD_sendCommand(CLEAR_COMMAND); /* clear LCD at the beginning */
+	}
+	else
+	{
+		error = LCD_ERROR;
+	}
+
+	return error;
 }
 
 void LCD_sendCommand(u8_t command)
@@ -29,7 +43,7 @@ void LCD_sendCommand(u8_t command)
 	_delay_ms(1); /* delay for processing Tas = 50ns */
 	set_bit(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
 	_delay_ms(1); /* delay for processing Tpw - Tdws = 190ns */
-	LCD_DATA_PORT = command; /* out the required command to the data bus D0 --> D7 */
+	register (LCD_DATA_PORT) = command; /* out the required command to the data bus D0 --> D7 */
 	_delay_ms(1); /* delay for processing Tdsw = 100ns */
 	clr_bit(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	_delay_ms(1); /* delay for processing Th = 13ns */
@@ -42,7 +56,7 @@ void LCD_displayCharacter(u8_t data)
 	_delay_ms(1); /* delay for processing Tas = 50ns */
 	set_bit(LCD_CTRL_PORT,E); /* Enable LCD E=1 */
 	_delay_ms(1); /* delay for processing Tpw - Tdws = 190ns */
-	LCD_DATA_PORT = data; /* out the required data char to the data bus D0 --> D7 */
+	register (LCD_DATA_PORT) = data; /* out the required data char to the data bus D0 --> D7 */
 	_delay_ms(1); /* delay for processing Tdsw = 100ns */
 	clr_bit(LCD_CTRL_PORT,E); /* disable LCD E=0 */
 	_delay_ms(1); /* delay for processing Th = 13ns */
