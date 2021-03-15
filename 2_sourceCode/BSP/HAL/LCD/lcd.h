@@ -59,7 +59,7 @@ typedef struct
  *                      Functions Prototypes                                   *
  *******************************************************************************/
 lcd_error_t LCD_init(lcd_t *lcd);
-lcd_error_t LCD_sendCommand(u8_t command);
+lcd_error_t LCD_sendCommand(lcd_t* lcd , u8_t command);
 lcd_error_t LCD_displayCharacter(u8_t data);
 lcd_error_t LCD_displaystring(const char *str);
 lcd_error_t LCD_clearScreen(void);

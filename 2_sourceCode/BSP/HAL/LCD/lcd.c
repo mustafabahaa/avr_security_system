@@ -29,7 +29,7 @@ lcd_error_t LCD_init(lcd_t *lcd)
 			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_PORT_OUTPUT))
 			{
 				/* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
-				if (LCD_SUCCESS == LCD_sendCommand(TWO_LINE_LCD_Eight_BIT_MODE))
+				if (LCD_SUCCESS == LCD_sendCommand(lcd,TWO_LINE_LCD_Eight_BIT_MODE))
 				{
 					/* 8 bit mode is configured */
 				}
@@ -49,7 +49,7 @@ lcd_error_t LCD_init(lcd_t *lcd)
 			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_HIGH_ORDER_PORT_OUTPUT))
 			{
 				/* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
-				if (LCD_SUCCESS == LCD_sendCommand(TWO_LINE_LCD_Four_BIT_MODE))
+				if (LCD_SUCCESS == LCD_sendCommand(lcd,TWO_LINE_LCD_Four_BIT_MODE))
 				{
 					/* 5 bit mode is configured */
 				}
@@ -72,10 +72,10 @@ lcd_error_t LCD_init(lcd_t *lcd)
 		if (error == LCD_SUCCESS)
 		{
 			/* cursor off */
-			if (LCD_SUCCESS == LCD_sendCommand(CURSOR_OFF))
+			if (LCD_SUCCESS == LCD_sendCommand(lcd,CURSOR_OFF))
 			{
 				/* clear LCD at the beginning */
-				if (LCD_SUCCESS ==  LCD_sendCommand(CLEAR_COMMAND))
+				if (LCD_SUCCESS ==  LCD_sendCommand(lcd,CLEAR_COMMAND))
 				{
 					/* LCD initialized */
 				}
@@ -102,19 +102,39 @@ lcd_error_t LCD_init(lcd_t *lcd)
 	return error;
 }
 
-lcd_error_t LCD_sendCommand(u8_t command)
+lcd_error_t LCD_sendCommand(lcd_t* lcd , u8_t command)
 {
-	lcd_t lcd;
 	lcd_error_t error = LCD_SUCCESS;
-	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRS ,LOW);	 /* Instruction Mode RS=0 */
-	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRW ,LOW); 	 /* write data to LCD so RW=0 */
-	_delay_ms(1);												 /* delay for processing Tas = 50ns */
-	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,HIGH);	 /* Enable LCD E=1 */
-	_delay_ms(1); 												 /* delay for processing Tpw - Tdws = 190ns */
-	mcal_port_write(lcd->lcdDataPort) = command; 				 /* out the required command to the data bus D0 --> D7 */
-	_delay_ms(1); 												 /* delay for processing Tdsw = 100ns */
-	mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,LOW);	 /* disable LCD E=0 */
-	_delay_ms(1); 												 /* delay for processing Th = 13ns */
+	GPIO_STATE_ERROR_t gpioError = GPIO_STATE_SUCCESS;
+	port_error_t portError = PORT_STATE_SUCCESS;
+
+	/* Instruction Mode RS=0 */
+	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRS ,LOW);
+	_delay_ms(1);
+
+	/* write data to LCD so RW=0 */
+	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRW ,LOW);
+	_delay_ms(1);
+
+	/* Enable LCD E=1 */
+	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,HIGH);
+	_delay_ms(1);
+
+	/* REVIEW : Here you should handle if it's 8 bit mode or 4 bit mode
+	 * you don't have port write high order  port only so you need to add
+	 * this modification to port driver before proceeding
+	 */
+	/* out the required command to the data bus D0 --> D7 */
+	portError = mcal_port_write(lcd->lcdDataPort,command);
+	_delay_ms(1);
+
+	 /* disable LCD E=0 */
+	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,LOW);
+	_delay_ms(1);
+
+	error = (gpioError == GPIO_STATE_SUCCESS && portError == PORT_STATE_SUCCESS) ?
+			LCD_SUCCESS :  LCD_ERROR;
+
 	return error;
 }
 
