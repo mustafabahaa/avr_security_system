@@ -53,6 +53,8 @@
 /*************************************************************************/
 #define TCNT0   0x52
 #define TCNT1   0x4C
+#define TCNT2   0x44
+
 
 #define TCCR0   0x53
 #define CS00    0

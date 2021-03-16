@@ -11,8 +11,8 @@
 
 #include "../../includes/types.h"
 #include "../../includes/atmega16.h"
-#include "../../MCAL/PORT/port.h"
 #include "../../MCAL/GPIO/gpio.h"
+#include "../../MCAL/PORT/port.h"
 
 /*******************************************************************************
  *                                   Macros                                    *
@@ -37,7 +37,14 @@ typedef enum
 	LCD_command_ERROR,
 	LCD_data_ERROR,
 	LCD_MODE_ERROR,
+	LCD_INVALID_TYPE,
 } lcd_error_t;
+
+typedef enum
+{
+	COMMAND,
+	DISPLAY,
+}lcd_data_types_t;
 
 typedef enum
 {
@@ -55,17 +62,63 @@ typedef struct
 	u8_t lcdE;
 } lcd_t;
 
-/*******************************************************************************
- *                      Functions Prototypes                                   *
- *******************************************************************************/
-lcd_error_t LCD_init(lcd_t *lcd);
-lcd_error_t LCD_sendCommand(lcd_t* lcd , u8_t command);
-lcd_error_t LCD_displayCharacter(u8_t data);
-lcd_error_t LCD_displaystring(const char *str);
-lcd_error_t LCD_clearScreen(void);
-lcd_error_t LCD_displaystringRowColumn(u8_t row,u8_t col,const char *str);
-lcd_error_t LCD_goToRowColumn(u8_t row,u8_t col);
-lcd_error_t LCD_intgerToString(int data);
+/*************************************************************************/
+/*                           Public Functions                            */
+/**************************************************************************
+ ** hal_lcd_init()
+ **
+ ** parameters: lcd_t
+ ** return    : lcd_error_t
+ ***************************************************************************
+ ** this function is used to initialize all the necessary sequence for LCD
+ **************************************************************************/
+lcd_error_t hal_lcd_init(lcd_t *lcd);
+/**************************************************************************
+ ** hal_lcd_sendData()
+ **
+ ** parameters: lcd_t , lcd_data_types_t , u8_t
+ ** return    : lcd_error_t
+ ***************************************************************************
+ ** this function is used to send command or data for LCD
+ **************************************************************************/
+lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data );
+/**************************************************************************
+ ** hal_lcd_displaystring()
+ **
+ ** parameters: lcd_t , const char
+ ** return    : lcd_error_t
+ ***************************************************************************
+ ** this function is used to display strings for LCD
+ **************************************************************************/
+lcd_error_t hal_lcd_displaystring(lcd_t *lcd,const char *str);
+/**************************************************************************
+ ** hal_lcd_goToRowColumn()
+ **
+ ** parameters: lcd_t , lcd_data_types_t, u8_t,u8_t
+ ** return    : lcd_error_t
+ ***************************************************************************
+ ** this function is used to start cursor in specific location at LCD
+ **************************************************************************/
+lcd_error_t hal_lcd_goToRowColumn(lcd_t *lcd ,lcd_data_types_t type, u8_t row, u8_t col);
+/**************************************************************************
+ ** hal_lcd_intgerToString()
+ **
+ ** parameters: lcd_t , u16_t
+ ** return    : lcd_error_t
+ ***************************************************************************
+ ** this function is used to display integers as string  at LCD
+ **************************************************************************/
+lcd_error_t hal_lcd_intgerToString(lcd_t *lcd,u16_t data);
+/**************************************************************************
+ ** hal_lcd_clearScreen()
+ **
+ ** parameters: lcd_t , lcd_data_types_t
+ ** return    : lcd_error_t
+ ***************************************************************************
+ ** this function is used to clear the LCD
+ **************************************************************************/
+lcd_error_t hal_lcd_clearScreen(lcd_t *lcd,lcd_data_types_t type);
+
 
 
 #endif /* HAL_LCD_H_ */

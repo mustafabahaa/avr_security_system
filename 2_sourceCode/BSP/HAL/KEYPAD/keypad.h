@@ -11,8 +11,17 @@
 #include "../../includes/types.h"
 #include "../../includes/atmega16.h"
 
+/*************************************************************************/
+/*                                 Types                                 */
+/*************************************************************************/
+typedef enum
+{
+	KEYPAD_SUCCESS,
+	KEYPAD_ERROR,
+} keypad_error_t;
+
 /*******************************************************************************
- *                      Preprocessor Macros                                    *
+ *                      				 Macros                                    *
  *******************************************************************************/
 
 /* Keypad configurations for number of rows and columns */
@@ -24,14 +33,18 @@
 #define KEYPAD_PORT_IN  (BASE_A + OFFSET_PIN)
 #define KEYPAD_PORT_DIR (BASE_A + OFFSET_DIR)
 
-/*******************************************************************************
- *                      Functions Prototypes                                   *
- *******************************************************************************/
+/*************************************************************************/
+/*                           Public Functions                            */
+/**************************************************************************
+ ** hal_keypad_getPressedKey()
+ **
+ ** parameters: void
+ ** return    : u8_t
+ ***************************************************************************
+ ** this function is used to get the pressed keypad key
+ **************************************************************************/
 
-/*
- * Function responsible for getting the pressed keypad key
- */
-u8_t KeyPad_getPressedKey(void);
+u8_t hal_keypad_getPressedKey(void);
 
 
 #endif /* HAL_KEYPAD_H_ */

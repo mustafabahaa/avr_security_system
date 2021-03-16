@@ -70,6 +70,22 @@ port_error_t mcal_port_write(u8_t base, u8_t value)
 	return error;
 }
 
+port_error_t mcal_port_high_order_write(u8_t base, u8_t value)
+{
+	port_error_t error = PORT_STATE_SUCCESS;
+
+	if (base == BASE_A || base == BASE_B || base == BASE_C || base == BASE_D)
+	{
+		register(base + OFFSET_PORT) = PORT_HIGH_ORDER_OUTPUT_DIR & value;
+	}
+	else
+	{
+		error = PORT_STATE_INVALID_ADDR;
+	}
+
+	return error;
+}
+
 port_error_t mcal_port_read(u8_t base, u8_t *value)
 {
 	port_error_t error = PORT_STATE_SUCCESS;

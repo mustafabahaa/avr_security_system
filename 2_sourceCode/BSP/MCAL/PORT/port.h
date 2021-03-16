@@ -65,6 +65,15 @@ port_error_t mcal_port_init(u8_t base, portState dir);
 port_error_t mcal_port_write(u8_t base, u8_t value);
 
 /**************************************************************************
+ ** mcal_port_high_order_write()
+ **
+ ** parameters: u8_t base
+ ** parameters: u8_t* value
+ ** return    : GPIO_STATE_ERROR_t
+ **************************************************************************/
+port_error_t mcal_port_high_order_write(u8_t base, u8_t value);
+
+/**************************************************************************
  ** mcal_port_read()
  **
  ** parameters: u8_t base

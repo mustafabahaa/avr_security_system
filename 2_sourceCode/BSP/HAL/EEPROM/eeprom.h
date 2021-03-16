@@ -13,10 +13,16 @@
 #include "../../MCAL/I2C/i2c.h"
 
 /*******************************************************************************
- *                      Preprocessor Macros                                    *
+ *                 					 Macros                                    *
  *******************************************************************************/
 #define ERROR 0
 #define SUCCESS 1
+
+typedef enum
+{
+	EEPROM_FAIL,
+	EEPROM_SUCCESS,
+}eeprom_error_t;
 
 /*******************************************************************************
  *                      Functions Prototypes                                   *

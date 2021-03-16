@@ -31,6 +31,7 @@ static u8_t KeyPad_4x4_adjustKeyNumber(u8_t button_number);
  *******************************************************************************/
 u8_t KeyPad_getPressedKey(void)
 {
+	keypad_error_t error = KEYPAD_SUCCESS;
 	u8_t col,row;
 	while(1)
 	{
@@ -40,13 +41,13 @@ u8_t KeyPad_getPressedKey(void)
 			 * each time only one of the column pins will be output and
 			 * the rest will be input pins include the row pins
 			 */
-			KEYPAD_PORT_DIR = (0b00010000<<col);
+			register(KEYPAD_PORT_DIR) = (0b00010000<<col);
 
 			/*
 			 * clear the output pin column in this trace and enable the internal
 			 * pull up resistors for the rows pins
 			 */
-			KEYPAD_PORT_OUT = (~(0b00010000<<col));
+			register(KEYPAD_PORT_OUT) = (~(0b00010000<<col));
 
 			for(row=0;row<N_row;row++) /* loop for rows */
 			{
