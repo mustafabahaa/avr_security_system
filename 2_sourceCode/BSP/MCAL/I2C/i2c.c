@@ -132,7 +132,7 @@ i2c_error_t TWI_readWithNACK(u8_t* data)
 
 }
 
-i2c_error_t TWI_getStatus(u8_t* status)
+i2c_error_t TWI_getStatus(u8_t *status)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 

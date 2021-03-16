@@ -27,9 +27,9 @@ typedef enum
 /*******************************************************************************
  *                      Functions Prototypes                                   *
  *******************************************************************************/
-void EEPROM_init(void);
-u8_t EEPROM_writeByte(u16_t u16addr,u8_t u8data);
-u8_t EEPROM_readByte(u16_t u16addr,u8_t *u8data);
+eeprom_error_t hal_eeprom_init(void);
+eeprom_error_t hal_eeprom_writeByte(u16_t u16addr,u8_t u8data);
+eeprom_error_t EEPROM_readByte(u16_t u16addr,u8_t *u8data);
 
 
 #endif /* HAL_EEPROM_H_ */
