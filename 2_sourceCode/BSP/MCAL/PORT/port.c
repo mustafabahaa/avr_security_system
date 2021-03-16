@@ -13,38 +13,42 @@
 /*                     Functions Implementation                          */
 /*************************************************************************/
 
-port_error_t mcal_port_init(u8_t base, portState dir)
+port_error_t mcal_port_init(u8_t base, portState dir , u8_t mask)
 {
 	port_error_t error = PORT_STATE_SUCCESS;
 
 	if (base == BASE_A || base == BASE_B || base == BASE_C || base == BASE_D)
 	{
-		switch (dir)
+
+		if(mask == PORT_FULL)
 		{
-		case DIR_PORT_OUTPUT:
-			reg_write(base + OFFSET_DIR, PORT_OUTPUT_DIR);
-			reg_write(base + OFFSET_PORT, PORT_OFF);
-			break;
+			switch (dir)
+			{
+			case DIR_PORT_OUTPUT:
+				reg_write(base + OFFSET_DIR, PORT_OUTPUT_DIR);
+				reg_write(base + OFFSET_PORT, PORT_OFF);
+				break;
 
-		case DIR_PORT_INPUT_PULLDOWN:
-			reg_write(base + OFFSET_DIR, PORT_INPUT_DIR);
-			reg_write(base + OFFSET_PORT, PORT_OFF);
-			break;
+			case DIR_PORT_INPUT_PULLDOWN:
+				reg_write(base + OFFSET_DIR, PORT_INPUT_DIR);
+				reg_write(base + OFFSET_PORT, PORT_OFF);
+				break;
 
-		case DIR_PORT_INPUT_PULLUP:
-			reg_write(base + OFFSET_DIR, PORT_INPUT_DIR);
-			reg_write(base + OFFSET_PORT, PORT_ON);
-			break;
+			case DIR_PORT_INPUT_PULLUP:
+				reg_write(base + OFFSET_DIR, PORT_INPUT_DIR);
+				reg_write(base + OFFSET_PORT, PORT_ON);
+				break;
 
-		case DIR_HIGH_ORDER_PORT_OUTPUT:
-			register(base + OFFSET_DIR) = HIGH & PORT_HIGH_ORDER_OUTPUT_DIR;
-			register(base + OFFSET_DIR) = HIGH & PORT_HIGH_ORDER_OFF;
-			break;
-
-		default:
-			error = PORT_STATE_INVALID_DIR;
-			break;
+			default:
+				error = PORT_STATE_INVALID_DIR;
+				break;
+			}
 		}
+		else
+		{
+			reg_mask_write((base + OFFSET_DIR), dir , mask );
+		}
+
 	}
 	else
 	{
@@ -54,13 +58,20 @@ port_error_t mcal_port_init(u8_t base, portState dir)
 	return error;
 }
 
-port_error_t mcal_port_write(u8_t base, u8_t value)
+port_error_t mcal_port_write(u8_t base, u8_t value , u8_t mask)
 {
 	port_error_t error = PORT_STATE_SUCCESS;
 
 	if (base == BASE_A || base == BASE_B || base == BASE_C || base == BASE_D)
 	{
-		reg_write(base + OFFSET_PORT, value);
+		if (mask == PORT_FULL)
+		{
+			reg_write(base + OFFSET_PORT, value );
+		}
+		else
+		{
+			reg_mask_write((base + OFFSET_PORT) , mask , value);
+		}
 	}
 	else
 	{

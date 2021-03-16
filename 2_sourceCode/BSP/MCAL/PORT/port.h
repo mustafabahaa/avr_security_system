@@ -21,9 +21,12 @@
 #define PORT_OUTPUT_DIR 0xFF
 #define PORT_HIGH_ORDER_OUTPUT_DIR 0x0F
 #define PORT_INPUT_DIR 0x00
+#define PORT_FULL 0xFF
 /*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/
+
+
 typedef enum
 {
 	DIR_PORT_INPUT_PULLUP,
@@ -51,28 +54,19 @@ typedef enum port_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for port
  **************************************************************************/
-port_error_t mcal_port_init(u8_t base, portState dir);
+port_error_t mcal_port_init(u8_t base, portState dir , u8_t mask);
 
 /**************************************************************************
  ** mcal_port_write()
  **
  ** parameters: u8_t base
  ** parameters: u8_t value
+ ** parameters: mask_type_t mask
  ** return    : GPIO_STATE_ERROR_t
  ***************************************************************************
  ** this function is used to write a value to all port
  **************************************************************************/
-port_error_t mcal_port_write(u8_t base, u8_t value);
-
-/**************************************************************************
- ** mcal_port_high_order_write()
- **
- ** parameters: u8_t base
- ** parameters: u8_t* value
- ** return    : GPIO_STATE_ERROR_t
- **************************************************************************/
-port_error_t mcal_port_high_order_write(u8_t base, u8_t value);
-
+port_error_t mcal_port_write(u8_t base, u8_t value , u8_t mask);
 /**************************************************************************
  ** mcal_port_read()
  **
