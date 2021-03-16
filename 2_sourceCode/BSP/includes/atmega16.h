@@ -31,10 +31,8 @@
 #define bit_is_clr(register, bit) (((*((volatile u8_t *)(u16_t) register)) & (1 << bit)) ? LOW : HIGH)
 
 #define reg_write(reg,value) (*((volatile u8_t *)(u16_t)reg)) = value;
-#define reg_read(reg,value) (*((volatile u8_t *)(u16_t)reg)) = *value;
-
-
 #define reg_mask_write(reg,mask,value) (*((volatile u8_t *)(u16_t)reg)) = mask & value;
+#define reg_read(reg,value) (*((volatile u8_t *)(u16_t)reg)) = *value;
 
 /*************************************************************************/
 /*                               Register                                */

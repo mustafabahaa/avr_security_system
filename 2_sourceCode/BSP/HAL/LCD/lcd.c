@@ -1,13 +1,14 @@
-/*
- * lcd.c
- *
- *  Created on: Mar 11, 2021
- *      Author: Lenovo
- */
 
+/**************************************************************************
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
+
+ ** lcd.c
+ **************************************************************************
+ **                              Includes                                 *
+ *************************************************************************/
 #include "lcd.h"
-
-
 /*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
@@ -26,7 +27,7 @@ lcd_error_t hal_lcd_init(lcd_t *lcd)
 		if (lcd->lcdMode == MODE_8_BIT)
 		{
 			/* Configure the data port as output port */
-			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_PORT_OUTPUT))
+			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_PORT_OUTPUT , PORT_FULL))
 			{
 				/* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
 				if (LCD_SUCCESS == hal_lcd_sendData(lcd,COMMAND,TWO_LINE_LCD_Eight_BIT_MODE))
@@ -46,7 +47,7 @@ lcd_error_t hal_lcd_init(lcd_t *lcd)
 		else if (lcd->lcdMode == MODE_4_BIT)
 		{
 			/* Configure the data port as output port */
-			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_HIGH_ORDER_PORT_OUTPUT))
+			if (PORT_STATE_SUCCESS == mcal_port_init(lcd->lcdDataPort , DIR_PORT_OUTPUT , PORT_HIGH_ORDER))
 			{
 				/* use 2-line lcd + 8-bit Data Mode + 5*7 dot display Mode */
 				if (LCD_SUCCESS == hal_lcd_sendData(lcd,COMMAND,TWO_LINE_LCD_Four_BIT_MODE))
@@ -138,12 +139,12 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 	if(lcd->lcdMode == MODE_8_BIT)
 	{
 		/* out the required command to the data bus D0 --> D7 */
-		portError = mcal_port_write(lcd->lcdDataPort, data);
+		portError = mcal_port_write(lcd->lcdDataPort, data ,PORT_FULL);
 	}
 	else if (lcd->lcdMode == MODE_4_BIT)
 	{
 		/* Sending command with 4 bit mode*/
-		portError = mcal_port_high_order_write(lcd->lcdDataPort, data);
+		portError = mcal_port_write(lcd->lcdDataPort, data , PORT_HIGH_ORDER );
 	}
 	else
 	{

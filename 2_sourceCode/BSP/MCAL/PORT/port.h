@@ -5,28 +5,25 @@
 
  ** port.h
  **************************************************************************/
-#ifndef PORT_H_
-#define PORT_H_
+#ifndef _PORT_H_
+#define _PORT_H_
 /*************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
 #include "./../../includes/types.h"
-#include "../../includes/atmega16.h"
+#include "./../../includes/atmega16.h"
 /*************************************************************************/
 /*                              Macros                                   */
 /*************************************************************************/
 #define PORT_ON 0xFF
 #define PORT_OFF 0x00
-#define PORT_HIGH_ORDER_OFF 0x0F
-#define PORT_OUTPUT_DIR 0xFF
-#define PORT_HIGH_ORDER_OUTPUT_DIR 0x0F
 #define PORT_INPUT_DIR 0x00
+#define PORT_OUTPUT_DIR 0xFF
 #define PORT_FULL 0xFF
+#define PORT_HIGH_ORDER 0x0F
 /*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/
-
-
 typedef enum
 {
 	DIR_PORT_INPUT_PULLUP,
@@ -50,6 +47,7 @@ typedef enum port_error_t
  **
  ** parameters: u8_t base
  ** parameters: portState dir
+ ** parameters: u8_t mask
  ** return    : GPIO_STATE_ERROR_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for port
@@ -61,12 +59,13 @@ port_error_t mcal_port_init(u8_t base, portState dir , u8_t mask);
  **
  ** parameters: u8_t base
  ** parameters: u8_t value
- ** parameters: mask_type_t mask
+ ** parameters: u8_t mask
  ** return    : GPIO_STATE_ERROR_t
  ***************************************************************************
  ** this function is used to write a value to all port
  **************************************************************************/
 port_error_t mcal_port_write(u8_t base, u8_t value , u8_t mask);
+
 /**************************************************************************
  ** mcal_port_read()
  **
@@ -78,4 +77,4 @@ port_error_t mcal_port_write(u8_t base, u8_t value , u8_t mask);
  **************************************************************************/
 port_error_t mcal_port_read(u8_t base, u8_t *value);
 
-#endif /* PORT_H_ */
+#endif /* _PORT_H_ */

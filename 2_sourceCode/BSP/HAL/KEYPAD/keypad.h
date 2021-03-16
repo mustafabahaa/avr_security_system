@@ -1,38 +1,26 @@
+/**************************************************************************
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
 
-
+ ** keypad.h
+ **************************************************************************/
 #ifndef KEYPAD_H_
 #define KEYPAD_H_
-
+/*************************************************************************/
+/*                              Includes                                 */
+/*************************************************************************/
 #include "../../includes/types.h"
 #include "../../includes/atmega16.h"
 #include "../../MCAL/PORT/port.h"
-
-
-
-/* configure  your row pins*/
-/* comment any line if you don't have 4 rows*/
-#define ROW_1 0
-#define ROW_2 1
-#define ROW_3 2
-#define ROW_4 3
-
-/* configure  your columns pins */
-/* comment any line if you don't have 4 columns*/
-#define COL_1 4
-#define COL_2 5
-#define COL_3 6
-#define COL_4 7
-
-/* configure as your keypad dimention */
-#define ROW_NUMBERS 4
-#define COL_NUMBERS 4
-
-/* configure the port of LCD */
-#define KEYPAD_PORT (BASE_A + OFFSET_PORT)
-#define KEYPAD_PIN  (BASE_A + OFFSET_PIN)
-
-
-
+#include "../../MCAL/GPIO/gpio.h"
+/*************************************************************************/
+/*                               Macros                                  */
+/*************************************************************************/
+#define NO_KEY_PRESSED 0XFF
+/*************************************************************************/
+/*                               Types                                   */
+/*************************************************************************/
 typedef enum
 {
 	KEYPAD_SUCCESS,
@@ -41,11 +29,17 @@ typedef enum
 
 typedef struct
 {
-	u8_t keypad_port;
-	u8_t keypad_
-};
+	u8_t keypadPORT;
+	u8_t keypadPIN;
+	u8_t keypadRowsNo;
+	u8_t keypadColsNo;
+	u8_t keypadRowsGPIOS[4];
+	u8_t keypadColumnsGPIOS[4];
+	s8_t keypadMapping [4][4];
+}keypad_t;
+
 /* configure as your keypad */
-s8_t KeyPad [ROW_NUMBERS][COL_NUMBERS] =
+s8_t KeyPad [4][4] =
 {
 		{'7', '8' , '9' , '/' },
 		{'4', '5' , '6' , '*' },
@@ -53,35 +47,35 @@ s8_t KeyPad [ROW_NUMBERS][COL_NUMBERS] =
 		{'A', '0' , '=' , '+' }
 };
 
-/* Don't change this at all */
-#define NO_KEY_PRESSED 0XFF
-
-/* Don't change this variables at all */
-s8_t pressed=0;
-s8_t keypressed = 0;
-s8_t col_loop=COL_1;
-
-
-/*************************************************************************/
-/*                           Public Functions                            */
 /*************************************************************************
- hal_keypad_getKey()
+**                           Public Functions                            *
+**************************************************************************
+ ** hal_keypad_init()
+ **
+ ** parameters: keypad_t keypad
+ ** return    : keypad_error_t
+ **************************************************************************
+ ** this function is used to init the keypad ports and pins
+ *************************************************************************/
+keypad_error_t hal_keypad_init(keypad_t* keypad);
+
+/**************************************************************************
+ **  hal_keypad_getKey()
  **  paramters : void
  **  return    : u8_t
- ** -- implementation ---------------------------------------------------------
+ **
  **  this function loops the coloumns and rows of an keypad and return the
  **  keypressed at the intersection between the column and raw pressed ,
  **  configure the wanted character to be returned from the matrix at
  **  keypadconfig.h , this function returns a s8_t characters value in
  **  you can directly print it on LCD or to use the value as a integer
  **  you have to convert it back to integer.
- ** -------------------------------------------------------------------------
+ ** ----------------------------------------------------------------------
  ** important
- ** -------------------------------------------------------------------------
+ ** ----------------------------------------------------------------------
  ** the function will return 0XFF when no key pressed
  ** the function will return the pressed key as a character if key pressed
- ** -------------------------------------------------------------------------*/
-u8_t hal_keypad_getKey();
-
+ ** ---------------------------------------------------------------------*/
+keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed);
 
 #endif /* KEYPAD_H_ */

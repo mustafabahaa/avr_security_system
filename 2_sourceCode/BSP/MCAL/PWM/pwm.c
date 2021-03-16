@@ -30,11 +30,11 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t* channel)
 
 		/*choose non inverting mode of pwm */
 		set_bit(TCCR0,COM01);
-		clear_bit(TCCR0,COM00);
+		clr_bit(TCCR0,COM00);
 
 		/*choose clock no pre scalling option*/
-		clear_bit(TCCR0,CS02);
-		clear_bit(TCCR0,CS01);
+		clr_bit(TCCR0,CS02);
+		clr_bit(TCCR0,CS01);
 		set_bit(TCCR0,CS00);
 
 		break;
@@ -48,11 +48,11 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t* channel)
 
 		/*choose non inverting mode of pwm */
 		set_bit(TCCR1A,COM1A1);
-		clear_bit(TCCR1A,COM1A0);
+		clr_bit(TCCR1A,COM1A0);
 
 		/*choose clock no pre scalling option*/
-		clear_bit(TCCR1B,CS12);
-		clear_bit(TCCR1B,CS11);
+		clr_bit(TCCR1B,CS12);
+		clr_bit(TCCR1B,CS11);
 		set_bit(TCCR1B,CS10);
 
 		break;
@@ -66,11 +66,11 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t* channel)
 
 		/*choose non inverting mode of pwm */
 		set_bit(TCCR1A,COM1B1);
-		clear_bit(TCCR1A,COM1B0);
+		clr_bit(TCCR1A,COM1B0);
 
 		/*choose clock no pre scalling option*/
-		clear_bit(TCCR1B,CS12);
-		clear_bit(TCCR1B,CS11);
+		clr_bit(TCCR1B,CS12);
+		clr_bit(TCCR1B,CS11);
 		set_bit(TCCR1B,CS10);
 
 		break;
@@ -84,11 +84,11 @@ pwm_error_t  mcal_pwm_initialization(pwm_channel_t* channel)
 
 		/*choose non inverting mode of pwm */
 		set_bit(TCCR2,COM21);
-		clear_bit(TCCR2,COM20);
+		clr_bit(TCCR2,COM20);
 
 		/*choose clock no pre scalling option*/
-		clear_bit(TCCR2,CS22);
-		clear_bit(TCCR2,CS21);
+		clr_bit(TCCR2,CS22);
+		clr_bit(TCCR2,CS21);
 		set_bit(TCCR2,CS20);
 
 		break;

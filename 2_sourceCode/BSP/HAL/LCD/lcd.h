@@ -1,22 +1,22 @@
-/*
- * lcd.h
- *
- *  Created on: Mar 11, 2021
- *      Author: Lenovo
- */
+/**************************************************************************
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
 
-#ifndef HAL_LCD_H_
-#define HAL_LCD_H_
-
-
-#include "../../includes/types.h"
-#include "../../includes/atmega16.h"
-#include "../../MCAL/GPIO/gpio.h"
-#include "../../MCAL/PORT/port.h"
-
-/*******************************************************************************
- *                                   Macros                                    *
- *******************************************************************************/
+ ** lcd.h
+ **************************************************************************/
+#ifndef _LCD_H_
+#define _LCD_H_
+/*************************************************************************/
+/*                              Includes                                 */
+/*************************************************************************/
+#include "./../../includes/types.h"
+#include "./../../includes/atmega16.h"
+#include "./../../MCAL/GPIO/gpio.h"
+#include "./../../MCAL/PORT/port.h"
+/**************************************************************************
+ *                                   Macros                               *
+ **************************************************************************/
 
 /* LCD Commands */
 #define CLEAR_COMMAND                 0x01
@@ -120,5 +120,4 @@ lcd_error_t hal_lcd_intgerToString(lcd_t *lcd,u16_t data);
 lcd_error_t hal_lcd_clearScreen(lcd_t *lcd,lcd_data_types_t type);
 
 
-
-#endif /* HAL_LCD_H_ */
+#endif /* _LCD_H_ */

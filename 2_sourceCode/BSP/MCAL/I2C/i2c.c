@@ -13,7 +13,7 @@
 /*                     Functions Implementation                          */
 /*************************************************************************/
 
-i2c_error_t TWI_init(void)
+i2c_error_t mcal_TWI_init(void)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
@@ -33,7 +33,7 @@ i2c_error_t TWI_init(void)
 	return error;
 }
 
-i2c_error_t TWI_start(void)
+i2c_error_t mcal_TWI_start(void)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
@@ -48,12 +48,12 @@ i2c_error_t TWI_start(void)
 
 	/* Wait for TWINT flag set in TWCR Register
 	 *  (start bit is send successfully) */
-	while(bit_is_clear(TWCR,TWINT));
+	while(bit_is_clr(TWCR,TWINT));
 
 	return error;
 }
 
-i2c_error_t TWI_stop(void)
+i2c_error_t mcal_TWI_stop(void)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
@@ -69,7 +69,7 @@ i2c_error_t TWI_stop(void)
 	return error;
 }
 
-i2c_error_t TWI_write(u8_t data)
+i2c_error_t mcal_TWI_write(u8_t data)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
@@ -83,12 +83,12 @@ i2c_error_t TWI_write(u8_t data)
 	set_bit(TWCR,TWEN);
 
 	/* Wait for TWINT flag set in TWCR Register(data is send successfully) */
-	while(bit_is_clear(TWCR,TWINT));
+	while(bit_is_clr(TWCR,TWINT));
 
 	return error;
 }
 
-i2c_error_t TWI_readWithACK(u8_t* data)
+i2c_error_t mcal_TWI_readWithACK(u8_t* data)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
@@ -102,7 +102,7 @@ i2c_error_t TWI_readWithACK(u8_t* data)
 	set_bit(TWCR,TWEA);
 
 	/* Wait for TWINT flag set in TWCR Register (data received successfully) */
-	while(bit_is_clear(TWCR,TWINT));
+	while(bit_is_clr(TWCR,TWINT));
 
 	/* Read Data */
 	*data = TWDR;
@@ -110,7 +110,7 @@ i2c_error_t TWI_readWithACK(u8_t* data)
 	return error;
 }
 
-i2c_error_t TWI_readWithNACK(u8_t* data)
+i2c_error_t mcal_TWI_readWithNACK(u8_t* data)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
@@ -123,7 +123,7 @@ i2c_error_t TWI_readWithNACK(u8_t* data)
 	set_bit(TWCR,TWEN);
 
 	/* Wait for TWINT flag set in TWCR Register (data received successfully) */
-	while(bit_is_clear(TWCR,TWINT));
+	while(bit_is_clr(TWCR,TWINT));
 
 	/* Read Data */
 	*data = TWDR;
@@ -132,7 +132,7 @@ i2c_error_t TWI_readWithNACK(u8_t* data)
 
 }
 
-i2c_error_t TWI_getStatus(u8_t *status)
+i2c_error_t mcal_TWI_getStatus(u8_t *status)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
