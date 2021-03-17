@@ -20,6 +20,7 @@
 #define LOW 0
 #define ON 1
 #define OFF 0
+
 /*************************************************************************/
 /*                      Register Access Functions Macros                 */
 /*************************************************************************/
@@ -49,6 +50,22 @@
 #define OFFSET_PIN 0x00
 #define OFFSET_DIR 0x01
 #define OFFSET_PORT 0x02
+
+/*************************************************************************/
+/*                               INTERRUPT Register                          */
+/*************************************************************************/
+
+/*enable and disable interrupt by setting and clearing I bit in SREG */
+#define SREG_interrupt_bit 7
+#define setGlobalInterrupt set_bit(SREG, SREG_interrupt_bit)
+#define clearGlobalInterrupt clr_bit(SREG, SREG_interrupt_bit)
+
+/* define interrupt registers */
+#define SREG 0X5F
+#define GIFR 0x5A
+#define GICR 0x5B
+#define MCUCR 0x55
+#define MCUCSR 0x54
 /*************************************************************************/
 /*                               TIMER Register                          */
 /*************************************************************************/
@@ -56,6 +73,15 @@
 #define TCNT1   0x4C
 #define TCNT2   0x44
 
+#define TIMSK   0x39
+#define TOIE0   0
+#define OCIE0   1
+#define TOIE1   2
+#define OCIE1B  3
+#define OCIE1A  4
+#define TICIE1  5
+#define TOIE2   6
+#define OCIE2   7
 
 #define TCCR0   0x53
 #define CS00    0

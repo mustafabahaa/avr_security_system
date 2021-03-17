@@ -29,7 +29,6 @@ typedef enum
 	DIR_PORT_INPUT_PULLUP,
 	DIR_PORT_INPUT_PULLDOWN,
 	DIR_PORT_OUTPUT,
-	DIR_HIGH_ORDER_PORT_OUTPUT,
 } portState;
 
 typedef enum port_error_t

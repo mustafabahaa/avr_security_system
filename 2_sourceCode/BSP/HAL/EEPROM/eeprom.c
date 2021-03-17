@@ -156,7 +156,7 @@ eeprom_error_t EEPROM_readByte(u16_t u16addr, u8_t *u8data)
 													/* Send the Stop Bit */
 													if (I2C_STATE_SUCCESS == mcal_TWI_stop())
 													{
-														/* EEPROM write success */
+														/* EEPROM read success */
 													}
 													else
 													{
