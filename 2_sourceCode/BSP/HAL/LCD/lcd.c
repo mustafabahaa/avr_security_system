@@ -117,7 +117,6 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 	else if(type == DISPLAY)
 	{
 		gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRS ,HIGH);
-		register(BASE_B+OFFSET_PORT) = 0xff;
 	}
 	else
 	{

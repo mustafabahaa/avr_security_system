@@ -33,7 +33,15 @@ keypad_error_t hal_keypad_init (keypad_t* keypad)
 		if(GPIO_STATE_SUCCESS == mcal_gpio_pin_init
 				(keypad->keypadPORT,keypad->keypadColumnsGPIOS[i],DIR_OUTPUT))
 		{
-			/* pin configured */
+			if (GPIO_STATE_SUCCESS == mcal_gpio_pin_write
+					(keypad->keypadPORT,keypad->keypadColumnsGPIOS[i],HIGH))
+			{
+				/* pin configured */
+			}
+			else
+			{
+				error = KEYPAD_FAIL;
+			}
 		}
 		else
 		{
@@ -70,7 +78,7 @@ keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed)
 	for (u8_t col_count =0 ; col_count<=(keypad->keypadColsNo) ; col_count++)
 	{
 		/*this line clears the column that is selected by for loop*/
-		clr_bit(keypad->keypadPORT+ OFFSET_PORT , keypad->keypadColumnsGPIOS[col_loop] );
+		clr_bit(keypad->keypadPORT+ OFFSET_PORT , keypad->keypadColumnsGPIOS[col_count] );
 
 		/*this line increment the column number for the next time
           the for loop enters to search the next column*/
@@ -100,8 +108,7 @@ keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed)
 				   needed we get that value from the array that
 				   is declared in configuration */  
 					*keyPressed = KeyPad[row_count][col_count];
-
-
+					return KEYPAD_SUCCESS;
 			}
 			/* if no keypressed , then all the bits of the 
 			   port is ones meaning 0xff */

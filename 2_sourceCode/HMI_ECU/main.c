@@ -57,23 +57,27 @@ int main(void)
 {
 	systemInit();
 	s8_t keyPressed = 0 ;
+
 	while(1)
 	{
+#if 1
 		if( KEYPAD_SUCCESS != hal_keypad_getKey(&keypad,&keyPressed))
 		{
 			/* LOGGER : error in keypad get key */
 		}
 		else
 		{
+			register(BASE_B+OFFSET_PORT) = 0xff;
+
 			if (NO_KEY_PRESSED != keyPressed)
 			{
 				if ( LCD_SUCCESS != hal_lcd_sendData(&lcd,DISPLAY,keyPressed))
 				{
-					/* LOGGER : Printing Value on LCD */
+					/* LOGGER : Failed to send data to LCD */
 				}
 				else
 				{
-					/* LOGGER : Failed to send data to LCD */
+					/* LOGGER : Printing Value on LCD */
 				}
 			}
 			else
@@ -81,7 +85,9 @@ int main(void)
 				/* LOGGER : Pending Keypad Input */
 			}
 		}
+#endif
 	}
+
 	return 0;
 }
 
@@ -109,9 +115,9 @@ static system_error_t keypadInit()
 	keypad.keypadRowsGPIOS[3] = 3;
 
 	keypad.keypadColumnsGPIOS[0] = 4;
-	keypad.keypadColumnsGPIOS[0] = 5;
-	keypad.keypadColumnsGPIOS[0] = 6;
-	keypad.keypadColumnsGPIOS[0] = 7;
+	keypad.keypadColumnsGPIOS[1] = 5;
+	keypad.keypadColumnsGPIOS[2] = 6;
+	keypad.keypadColumnsGPIOS[3] = 7;
 
 	if (KEYPAD_SUCCESS != hal_keypad_init(&keypad))
 	{
@@ -142,15 +148,7 @@ static system_error_t LCDInit()
 	}
 	else
 	{
-		u8_t A = 'A';
-		if (LCD_SUCCESS != hal_lcd_sendData(&lcd,DISPLAY,A))
-		{
-		}
-		else
-		{
-			register(BASE_B+OFFSET_PORT) = 0xff;
-			/* LCD initialized */
-		}
+		/* LCD initialized */
 	}
 
 	return error;
