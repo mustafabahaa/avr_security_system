@@ -108,6 +108,7 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 	lcd_error_t error = LCD_SUCCESS;
 	GPIO_STATE_ERROR_t gpioError = GPIO_STATE_SUCCESS;
 	port_error_t portError = PORT_STATE_SUCCESS;
+
 	if (type == COMMAND)
 	{
 		gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRS ,LOW);
@@ -116,21 +117,12 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 	else if(type == DISPLAY)
 	{
 		gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRS ,HIGH);
-
+		register(BASE_B+OFFSET_PORT) = 0xff;
 	}
 	else
 	{
 		error =	LCD_INVALID_TYPE;
-
 	}
-
-	/* Instruction Mode RS=0 */
-	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRS ,LOW);
-	_delay_ms(1);
-
-	/* write data to LCD so RW=0 */
-	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdRW ,LOW);
-	_delay_ms(1);
 
 	/* Enable LCD E=1 */
 	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,HIGH);

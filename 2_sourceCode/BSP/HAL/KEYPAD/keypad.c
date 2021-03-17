@@ -14,6 +14,15 @@
 /*                     Functions Implementation                          */
 /*************************************************************************/
 
+/* configure as your keypad */
+s8_t KeyPad [4][4] =
+{
+		{'7', '8' , '9' , '/' },
+		{'4', '5' , '6' , '*' },
+		{'1', '2' , '3' , '-' },
+		{'A', '0' , '=' , '+' }
+};
+
 keypad_error_t hal_keypad_init (keypad_t* keypad)
 {
 	keypad_error_t error = KEYPAD_SUCCESS;
@@ -49,7 +58,7 @@ keypad_error_t hal_keypad_init (keypad_t* keypad)
 	return error;
 }
 
-keypad_error_t getKey(keypad_t* keypad , s8_t* keyPressed)
+keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed)
 {
 	keypad_error_t error = KEYPAD_SUCCESS;
 
@@ -61,7 +70,7 @@ keypad_error_t getKey(keypad_t* keypad , s8_t* keyPressed)
 	for (u8_t col_count =0 ; col_count<=(keypad->keypadColsNo) ; col_count++)
 	{
 		/*this line clears the column that is selected by for loop*/
-		clr_bit(keypad->keypadPORT,keypad->keypadColumnsGPIOS[col_loop]);
+		clr_bit(keypad->keypadPORT+ OFFSET_PORT , keypad->keypadColumnsGPIOS[col_loop] );
 
 		/*this line increment the column number for the next time
           the for loop enters to search the next column*/
@@ -75,7 +84,7 @@ keypad_error_t getKey(keypad_t* keypad , s8_t* keyPressed)
 		for (u8_t row_count=(keypad->keypadRowsGPIOS[0]) ; row_count<(keypad->keypadRowsNo) ; row_count++)
 		{
 			/* if any bit of that row is cleared (means pressed)*/
-			if (bit_is_clr(keypad->keypadPIN,keypad->keypadRowsGPIOS[row_count]))
+			if (bit_is_clr(keypad->keypadPIN + OFFSET_PIN ,keypad->keypadRowsGPIOS[row_count]))
 			{
 				/* this while loop is used to make the program
 				   only take the value of the pressed button 
@@ -84,7 +93,7 @@ keypad_error_t getKey(keypad_t* keypad , s8_t* keyPressed)
 				   because normally when you press you get a lot
 				   of readings because micro-controller is a lot
 				   faster than you */
-				while(bit_is_clr(keypad->keypadPIN,keypad->keypadRowsGPIOS[row_count]))
+				while(bit_is_clr(keypad->keypadPIN + OFFSET_PIN ,keypad->keypadRowsGPIOS[row_count]))
 
 					/* as soon as we found the keypressed by finding
 				   the intersection between the column and row
