@@ -1,10 +1,15 @@
-/*
- * timerTest.c
- *
- *  Created on: Mar 18, 2021
- *      Author: Lenovo
- */
+/** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
+
+ ** timer.c
+ **************************************************************************
+ **                              Includes                                **
+ *************************************************************************/
 #include"timer.h"
+/*************************************************************************/
+/*                     Functions Implementation                          */
+/*************************************************************************/
 
 timer_error_t mcal_timer_init(timer_config_t* timer)
 {
@@ -61,26 +66,38 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 		{
 		case TIMER_NORMAL_MODE:
 		{
-			register(TCNT0) = timer->inital_value; // Set Timer initial value
-			set_bit(TIMSK,TOIE0); // Enable Timer0 Overflow Interrupt
+			 // Set Timer initial value
+			register(TCNT0) = timer->inital_value;
+
+			// Enable Timer0 Overflow Interrupt
+			set_bit(TIMSK,TOIE0);
+
 			/* configure the timer
 			 * 1. Non PWM mode FOC0=1
 			 * 2. Normal Mode WGM01=0 & WGM00=0
 			 * 3. Normal Mode COM00=0 & COM01=0
 			 */
 			set_bit(TCCR0, FOC0);
+
 			break;
 		}
 		case TIMER_CTC_MODE:
 		{
-			register(TCNT0) = timer->inital_value;    // Set Timer initial value
-			register(OCR0)  = timer->compare_value; // Set Compare Value
-			set_bit(TIMSK, OCIE0); // Enable Timer0 Compare Interrupt
+			// Set Timer initial value
+			register(TCNT0) = timer->inital_value;
+
+			// Set Compare Value
+			register(OCR0)  = timer->compare_value;
+
+			// Enable Timer0 Compare Interrupt
+			set_bit(TIMSK, OCIE0);
+
 			/* Configure timer0 control register
 			 * 1. Non PWM mode FOC0=1
 			 * 2. CTC Mode WGM01=1 & WGM00=0
 			 * 3. No need for OC0 so COM00=0 & COM01=0
 			 */
+
 			set_bit(TCCR0, FOC0);
 			set_bit(TCCR0, WGM01);
 			break;
@@ -133,7 +150,7 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			break;
 		}
 		}
-		switch(timer->timer1_A_B)
+		switch(timer->timer_channel)
 		{
 		case TIMER1_CHANNEL_A:
 		{
@@ -141,8 +158,12 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			{
 			case TIMER_NORMAL_MODE:
 			{
-				register(TCNT1) = timer->inital_value; // Set Timer initial value to 0
-				set_bit(TIMSK,TOIE1); // Enable Timer1 Overflow Interrupt
+				// Set Timer initial value to 0
+				register(TCNT1) = timer->inital_value;
+
+				// Enable Timer1 Overflow Interrupt
+				set_bit(TIMSK,TOIE1);
+
 				/* configure the timer
 				 *  Normal Mode WGM13=0 & WGM12=0 & WGM11=0 & WGM10=0
 				 *  Normal Mode FOC1A=1 & FOC1B=1
@@ -156,9 +177,15 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			}
 			case TIMER_CTC_MODE:
 			{
-				register(TCNT1)= timer->inital_value;    // Set Timer initial value
-				register(OCR1A)  = timer->compare_value; // Set Compare Value
-				set_bit(TIMSK, OCIE1A); // Enable Timer1 Compare Interrupt
+				// Set Timer initial value
+				register(TCNT1)= timer->inital_value;
+
+				// Set Compare Value
+				register(OCR1A)  = timer->compare_value;
+
+				// Enable Timer1 Compare Interrupt
+				set_bit(TIMSK, OCIE1A);
+
 				/* Configure timer0 control register
 				 * 1. Non PWM mode FOC0=1
 				 * 2. CTC Mode WGM13=0 &WGM12=1 & WGM11=0 & WGM10=0
@@ -176,8 +203,12 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			{
 			case TIMER_NORMAL_MODE:
 			{
-				register(TCNT1) = timer->inital_value; // Set Timer initial value to 0
-				set_bit(TIMSK,TOIE1); // Enable Timer1 Overflow Interrupt
+				 // Set Timer initial value to 0
+				register(TCNT1) = timer->inital_value;
+
+				// Enable Timer1 Overflow Interrupt
+				set_bit(TIMSK,TOIE1);
+
 				/* configure the timer
 				 *  Normal Mode WGM13=0 & WGM12=0 & WGM11=0 & WGM10=0
 				 *  Normal Mode FOC1A=1 & FOC1B=1
@@ -191,9 +222,15 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			}
 			case TIMER_CTC_MODE:
 			{
-				register(TCNT1)= timer->inital_value;    // Set Timer initial value
-				register(OCR1B)  = timer->compare_value; // Set Compare Value
-				set_bit(TIMSK, OCIE1A); // Enable Timer1 Compare Interrupt
+				// Set Timer initial value
+				register(TCNT1)= timer->inital_value;
+
+				// Set Compare Value
+				register(OCR1B)  = timer->compare_value;
+
+				// Enable Timer1 Compare Interrupt
+				set_bit(TIMSK, OCIE1A);
+
 				/* Configure timer0 control register
 				 * 1. Non PWM mode FOC0=1
 				 * 2. CTC Mode WGM13=0 &WGM12=1 & WGM11=0 & WGM10=0
@@ -257,8 +294,12 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 		{
 		case TIMER_NORMAL_MODE:
 		{
-			register(TCNT2) = timer->inital_value; // Set Timer initial value
-			set_bit(TIMSK,TOIE2); // Enable Timer2 Overflow Interrupt
+			// Set Timer initial value
+			register(TCNT2) = timer->inital_value;
+
+			// Enable Timer2 Overflow Interrupt
+			set_bit(TIMSK,TOIE2);
+
 			/* configure the timer
 			 * 1. Non PWM mode FOC2=1
 			 * 2. Normal Mode WGM21=0 & WGM20=0
@@ -269,9 +310,15 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 		}
 		case TIMER_CTC_MODE:
 		{
-			register(TCNT2) = timer->inital_value;    // Set Timer initial value
-			register(OCR2)  = timer->compare_value; // Set Compare Value
-			set_bit(TIMSK, OCIE2); // Enable Timer2 Compare Interrupt
+			// Set Timer initial value
+			register(TCNT2) = timer->inital_value;
+
+			// Set Compare Value
+			register(OCR2)  = timer->compare_value;
+
+			// Enable Timer2 Compare Interrupt
+			set_bit(TIMSK, OCIE2);
+
 			/* Configure timer0 control register
 			 * 1. Non PWM mode FOC2=1
 			 * 2. CTC Mode WGM21=1 & WGM20=0

@@ -108,6 +108,7 @@ keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed)
 				   needed we get that value from the array that
 				   is declared in configuration */  
 					*keyPressed = KeyPad[row_count][col_count];
+
 					return KEYPAD_SUCCESS;
 			}
 			/* if no keypressed , then all the bits of the 
@@ -119,7 +120,7 @@ keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed)
 		}
 		/*make all the port equal to one again in order to clear
 		  only the bit of the column that we need to search for*/
-		register(keypad->keypadPORT + OFFSET_PORT)=PORT_ON;
+		register(keypad->keypadPORT + OFFSET_PORT) = PORT_ON;
 	}
 	/*after finishing the search on all the keypad return col_loop into
 	  it's initial value which is COL_1 in order to start from beginning

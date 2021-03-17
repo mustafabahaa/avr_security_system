@@ -60,7 +60,6 @@ int main(void)
 
 	while(1)
 	{
-#if 1
 		if( KEYPAD_SUCCESS != hal_keypad_getKey(&keypad,&keyPressed))
 		{
 			/* LOGGER : error in keypad get key */
@@ -85,7 +84,6 @@ int main(void)
 				/* LOGGER : Pending Keypad Input */
 			}
 		}
-#endif
 	}
 
 	return 0;

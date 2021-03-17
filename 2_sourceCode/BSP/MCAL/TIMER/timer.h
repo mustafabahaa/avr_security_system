@@ -1,16 +1,20 @@
-/*
- * timer.h
- *
- *  Created on: Mar 15, 2021
- *      Author: Lenovo
- */
+/**************************************************************************
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
 
+ ** timer.h
+ **************************************************************************/
 #ifndef _TIMER_H_
 #define _TIMER_H_
-
+/*************************************************************************/
+/*                              Includes                                 */
+/*************************************************************************/
 #include "../../includes/types.h"
 #include "../../includes/atmega16.h"
-
+/*************************************************************************/
+/*                               Types                                   */
+/*************************************************************************/
 typedef enum
 {
 	TIMER_STATE_SUCCESS,
@@ -47,18 +51,25 @@ typedef enum
 
 typedef struct
 {
-	timer_preScaler_t preScaler;
 	timer_mode_t mode;
-	u16_t inital_value; /* initial value for timer */
-	u16_t compare_value; /* compare value for compare mode */
-	timer1_channel_t timer1_A_B;
+	timer_preScaler_t preScaler;
+	u16_t inital_value;             /* initial value for timer */
+	u16_t compare_value;            /* compare value for compare mode */
+	timer1_channel_t timer_channel;
 	timer_number_t timer_number;
 }timer_config_t;
 
-
+/*************************************************************************/
+/*                           Public Functions                            */
+/**************************************************************************
+ ** mcal_timer_init()
+ **
+ ** parameters: timer_config_t* timer
+ ** return    : timer_error_t
+ ***************************************************************************
+ ** this function is used to initialize all the necessary sequence for timer
+ **************************************************************************/
 timer_error_t mcal_timer_init(timer_config_t* timer);
-
-
 
 
 #endif /* _TIMER_H_ */
