@@ -61,16 +61,14 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			set_bit(TCCR0, CS02);
 			break;
 		}
+
 		}
 		switch (timer->mode)
 		{
 		case TIMER_NORMAL_MODE:
 		{
-			 // Set Timer initial value
+			// Set Timer initial value
 			register(TCNT0) = timer->inital_value;
-
-			// Enable Timer0 Overflow Interrupt
-			set_bit(TIMSK,TOIE0);
 
 			/* configure the timer
 			 * 1. Non PWM mode FOC0=1
@@ -78,6 +76,10 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			 * 3. Normal Mode COM00=0 & COM01=0
 			 */
 			set_bit(TCCR0, FOC0);
+
+			double registerMaxTime = ((double)timer->preScaler / (double)F_CPU) * (double)256;
+			timer->overflows = timer->tick_seconds / registerMaxTime;
+			set_timer_config(timer);
 
 			break;
 		}
@@ -88,9 +90,6 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 
 			// Set Compare Value
 			register(OCR0)  = timer->compare_value;
-
-			// Enable Timer0 Compare Interrupt
-			set_bit(TIMSK, OCIE0);
 
 			/* Configure timer0 control register
 			 * 1. Non PWM mode FOC0=1
@@ -161,9 +160,6 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 				// Set Timer initial value to 0
 				register(TCNT1) = timer->inital_value;
 
-				// Enable Timer1 Overflow Interrupt
-				set_bit(TIMSK,TOIE1);
-
 				/* configure the timer
 				 *  Normal Mode WGM13=0 & WGM12=0 & WGM11=0 & WGM10=0
 				 *  Normal Mode FOC1A=1 & FOC1B=1
@@ -183,9 +179,6 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 				// Set Compare Value
 				register(OCR1A)  = timer->compare_value;
 
-				// Enable Timer1 Compare Interrupt
-				set_bit(TIMSK, OCIE1A);
-
 				/* Configure timer0 control register
 				 * 1. Non PWM mode FOC0=1
 				 * 2. CTC Mode WGM13=0 &WGM12=1 & WGM11=0 & WGM10=0
@@ -203,11 +196,8 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			{
 			case TIMER_NORMAL_MODE:
 			{
-				 // Set Timer initial value to 0
+				// Set Timer initial value to 0
 				register(TCNT1) = timer->inital_value;
-
-				// Enable Timer1 Overflow Interrupt
-				set_bit(TIMSK,TOIE1);
 
 				/* configure the timer
 				 *  Normal Mode WGM13=0 & WGM12=0 & WGM11=0 & WGM10=0
@@ -297,9 +287,6 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			// Set Timer initial value
 			register(TCNT2) = timer->inital_value;
 
-			// Enable Timer2 Overflow Interrupt
-			set_bit(TIMSK,TOIE2);
-
 			/* configure the timer
 			 * 1. Non PWM mode FOC2=1
 			 * 2. Normal Mode WGM21=0 & WGM20=0
@@ -316,9 +303,6 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			// Set Compare Value
 			register(OCR2)  = timer->compare_value;
 
-			// Enable Timer2 Compare Interrupt
-			set_bit(TIMSK, OCIE2);
-
 			/* Configure timer0 control register
 			 * 1. Non PWM mode FOC2=1
 			 * 2. CTC Mode WGM21=1 & WGM20=0
@@ -332,5 +316,149 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 		break;
 	}
 	}
+	return error;
+}
+
+
+timer_error_t mcal_timer_start(timer_config_t* timer)
+{
+	timer_error_t error = TIMER_STATE_SUCCESS;
+
+	switch (timer->timer_number)
+	{
+	case TIMER0:
+	{
+		if (TIMER_NORMAL_MODE ==  timer->mode)
+		{
+			// Enable Timer0 Overflow Interrupt
+			set_bit(TIMSK,TOIE0);
+		}
+		else if (TIMER_CTC_MODE == timer->mode)
+		{
+			// Enable Timer0 Compare Interrupt
+			set_bit(TIMSK, OCIE0);
+		}
+		else
+		{
+			error = TIMER_STATE_INVALID_MODE;
+		}
+		break;
+	}
+	case TIMER1:
+	{
+		if (TIMER_NORMAL_MODE ==  timer->mode)
+		{
+			// Enable Timer1 Overflow Interrupt
+			set_bit(TIMSK,TOIE1);
+		}
+		else if (TIMER_CTC_MODE == timer->mode)
+		{
+			// Enable Timer1 Compare Interrupt
+			set_bit(TIMSK, OCIE1A);
+		}
+		else
+		{
+			error = TIMER_STATE_INVALID_MODE;
+		}
+		break;
+	}
+	case TIMER2:
+	{
+		if (TIMER_NORMAL_MODE ==  timer->mode)
+		{
+
+			// Enable Timer2 Overflow Interrupt
+			set_bit(TIMSK,TOIE2);
+		}
+		else if (TIMER_CTC_MODE == timer->mode)
+		{
+			// Enable Timer2 Compare Interrupt
+			set_bit(TIMSK, OCIE2);
+		}
+		else
+		{
+			error = TIMER_STATE_INVALID_MODE;
+		}
+		break;
+	}
+
+	default :
+	{
+		error = TIMER_STATE_INVALID_TIMER;
+		break;
+	}
+	}
+
+	return error;
+}
+
+timer_error_t mcal_timer_stop(timer_config_t* timer)
+{
+	timer_error_t error = TIMER_STATE_SUCCESS;
+
+	switch (timer->timer_number)
+	{
+	case TIMER0:
+	{
+		if (TIMER_NORMAL_MODE ==  timer->mode)
+		{
+			// Enable Timer0 Overflow Interrupt
+			clr_bit(TIMSK,TOIE0);
+		}
+		else if (TIMER_CTC_MODE == timer->mode)
+		{
+			// Enable Timer0 Compare Interrupt
+			clr_bit(TIMSK, OCIE0);
+		}
+		else
+		{
+			error = TIMER_STATE_INVALID_MODE;
+		}
+		break;
+	}
+	case TIMER1:
+	{
+		if (TIMER_NORMAL_MODE ==  timer->mode)
+		{
+			// Enable Timer1 Overflow Interrupt
+			clr_bit(TIMSK,TOIE1);
+		}
+		else if (TIMER_CTC_MODE == timer->mode)
+		{
+			// Enable Timer1 Compare Interrupt
+			clr_bit(TIMSK, OCIE1A);
+		}
+		else
+		{
+			error = TIMER_STATE_INVALID_MODE;
+		}
+		break;
+	}
+	case TIMER2:
+	{
+		if (TIMER_NORMAL_MODE ==  timer->mode)
+		{
+			// Enable Timer2 Overflow Interrupt
+			clr_bit(TIMSK,TOIE2);
+		}
+		else if (TIMER_CTC_MODE == timer->mode)
+		{
+			// Enable Timer2 Compare Interrupt
+			clr_bit(TIMSK, OCIE2);
+		}
+		else
+		{
+			error = TIMER_STATE_INVALID_MODE;
+		}
+		break;
+	}
+
+	default :
+	{
+		error = TIMER_STATE_INVALID_TIMER;
+		break;
+	}
+	}
+
 	return error;
 }

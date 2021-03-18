@@ -1,0 +1,125 @@
+/**************************************************************************
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
+
+ ** timer_callbacks.c
+ **************************************************************************
+ **                              Includes                                **
+ *************************************************************************/
+#include"timer.h"
+#include <avr/interrupt.h>
+/**************************************************************************
+ **                              Global Variable                         **
+ *************************************************************************/
+/* Global variables to hold the address of the call back function*/
+static volatile void (*g_callBackPtr)(void) = NULL_PTR;
+volatile double ticks = 0;
+timer_config_t timerConfig;
+/*************************************************************************/
+/*                         Linker Attributes                             */
+/*************************************************************************/
+void __vector_3(void) __attribute__((signal, used, externally_visible));
+void __vector_4(void) __attribute__((signal, used, externally_visible));
+void __vector_5(void) __attribute__((signal, used, externally_visible));
+void __vector_6(void) __attribute__((signal, used, externally_visible));
+void __vector_7(void) __attribute__((signal, used, externally_visible));
+void __vector_8(void) __attribute__((signal, used, externally_visible));
+void __vector_9(void) __attribute__((signal, used, externally_visible));
+void __vector_19(void) __attribute__((signal, used, externally_visible));
+/*************************************************************************/
+/*                     Functions Implementation                          */
+/*************************************************************************/
+void timer_setCallBack(void(*a_ptr)(void))
+{
+	g_callBackPtr = a_ptr;
+}
+
+void set_timer_config(timer_config_t* timer) {
+	timerConfig.overflows = timer->overflows;
+
+	//timerConfig.overflows = 30;
+}
+/*************************************************************************/
+/*                     Interrupts Implementation                         */
+/*************************************************************************/
+
+/* TIMER2_COMP_vect */
+void __vector_3(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER2_OVF_vect */
+void __vector_4(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER1_CAPT_vect */
+void __vector_5(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER1_COMPA_vect */
+void __vector_6(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER1_COMPB_vect */
+void __vector_7(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER1_OVF_vect */
+void __vector_8(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER0_OVF_vect */
+void __vector_9(void)
+{
+	ticks++;
+	if(g_callBackPtr != NULL_PTR)
+	{
+		if(ticks >= timerConfig.overflows)
+		{
+			ticks= 0;
+			(*g_callBackPtr)();
+		}
+	}
+}
+
+/* TIMER0_COMP_vect */
+void __vector_19(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+
+

@@ -20,7 +20,7 @@
 #define LOW 0
 #define ON 1
 #define OFF 0
-
+#define NULL_PTR    ((void*)0)
 /*************************************************************************/
 /*                      Register Access Functions Macros                 */
 /*************************************************************************/
@@ -61,7 +61,7 @@
 #define clearGlobalInterrupt clr_bit(SREG, SREG_interrupt_bit)
 
 /* define interrupt registers */
-#define SREG 0X5F
+#define SREG 0x5F
 #define GIFR 0x5A
 #define GICR 0x5B
 #define MCUCR 0x55
@@ -73,7 +73,7 @@
 #define TCNT1   0x4C
 #define TCNT2   0x44
 
-#define TIMSK   0x39
+#define TIMSK   0x59
 #define TOIE0   0
 #define OCIE0   1
 #define TOIE1   2

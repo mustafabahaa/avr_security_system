@@ -25,9 +25,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>BSP</name>
+			<name>STACK</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/BSP</locationURI>
+			<locationURI>WORKSPACE_LOC/STACK</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
