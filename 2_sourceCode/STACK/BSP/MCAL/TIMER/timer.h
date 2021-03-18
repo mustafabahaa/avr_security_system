@@ -21,13 +21,8 @@ typedef enum
 	TIMER_STATE_FAIL,
 	TIMER_STATE_INVALID_TIMER,
 	TIMER_STATE_INVALID_MODE,
+	TIMER_STATE_INVALID_ARGUMENT
 }timer_error_t;
-
-typedef enum
-{
-	TIMER1_CHANNEL_A,
-	TIMER1_CHANNEL_B,
-}timer1_channel_t;
 
 typedef enum
 {
@@ -38,29 +33,27 @@ typedef enum
 typedef enum
 {
 	TIMER0,
-	TIMER1,
+	TIMER1_CHANNEL_1,
+	TIMER1_CHANNEL_2,
 	TIMER2,
 }timer_number_t;
 
 typedef enum
 {
-	PRESCALER_1 = 1,
-	PRESCALER_8 = 8,
-	PRESCALER_64 = 64,
-	PRESCALER_256 = 256,
-	PRESCALER_1024 = 1024,
+	F_CPU_CLOCK=1,
+	F_CPU_8,
+	F_CPU_64,
+	F_CPU_256,
+	F_CPU_1024
 }timer_preScaler_t;
 
 typedef struct
 {
-	timer_mode_t mode;
 	timer_preScaler_t preScaler;
-	u16_t inital_value;             /* initial value for timer */
-	u16_t compare_value;            /* compare value for compare mode */
-	double tick_seconds;
-	u16_t overflows;
-	timer1_channel_t timer_channel;
 	timer_number_t timer_number;
+	timer_mode_t mode;
+	double tick_seconds;
+	double overflow;      /*used for normal mode only*/
 }timer_config_t;
 
 /*************************************************************************/
@@ -101,19 +94,19 @@ timer_error_t mcal_timer_stop(timer_config_t* timer);
  ** parameters: void(*a_ptr)(void)
  ** return    : void
  ***************************************************************************
- ** this function is used write a value to gpio pin
+ ** this function is used to register timer interrupts callback
  **************************************************************************/
 void timer_setCallBack(void(*a_ptr)(void));
 
 /**************************************************************************
- ** set_timer_config()
+ ** set_timer_overflow()
  **
- ** parameters: timer_config_t* timer
+ ** parameters: u16_t overflow
  ** return    : void
  ***************************************************************************
- ** this function is used write a value to gpio pin
+ ** this function is used to update overflow value in callback file
  **************************************************************************/
-void set_timer_config(timer_config_t* timer);
+void set_timer_overflow(double overflow);
 
 
 #endif /* _TIMER_H_ */

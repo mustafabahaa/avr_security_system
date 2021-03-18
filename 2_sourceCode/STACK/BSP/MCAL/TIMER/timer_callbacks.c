@@ -15,7 +15,7 @@
 /* Global variables to hold the address of the call back function*/
 static volatile void (*g_callBackPtr)(void) = NULL_PTR;
 volatile double ticks = 0;
-timer_config_t timerConfig;
+double interruptOverflow = 0;
 /*************************************************************************/
 /*                         Linker Attributes                             */
 /*************************************************************************/
@@ -30,15 +30,13 @@ void __vector_19(void) __attribute__((signal, used, externally_visible));
 /*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
-void timer_setCallBack(void(*a_ptr)(void))
+void timer_setCallBack( void(*a_ptr)(void))
 {
 	g_callBackPtr = a_ptr;
 }
 
-void set_timer_config(timer_config_t* timer) {
-	timerConfig.overflows = timer->overflows;
-
-	//timerConfig.overflows = 30;
+void set_timer_overflow(double overflow) {
+	interruptOverflow = overflow;
 }
 /*************************************************************************/
 /*                     Interrupts Implementation                         */
@@ -101,10 +99,11 @@ void __vector_8(void)
 /* TIMER0_OVF_vect */
 void __vector_9(void)
 {
+	set_bit(BASE_B+OFFSET_DIR,7);
 	ticks++;
 	if(g_callBackPtr != NULL_PTR)
 	{
-		if(ticks >= timerConfig.overflows)
+		if(ticks >= interruptOverflow)
 		{
 			ticks= 0;
 			(*g_callBackPtr)();

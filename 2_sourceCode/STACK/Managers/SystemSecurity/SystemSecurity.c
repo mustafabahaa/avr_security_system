@@ -36,12 +36,12 @@ timer_config_t timer;
 
 static void timerTick()
 {
-	tog_bit(BASE_B+OFFSET_PORT,7);
+	//tog_bit(BASE_B+OFFSET_PORT,7);
 }
 
 system_error_t manager_sc_init_freeze_timer()
 {
-	tog_bit(BASE_B+OFFSET_DIR,7);
+	//set_bit(BASE_B+OFFSET_DIR,7);
 
 	system_error_t error = SYSTEM_SUCCESS;
 
@@ -90,10 +90,9 @@ static system_error_t timerInit()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	timer.inital_value = 0 ;
 	timer.timer_number = TIMER0;
 	timer.mode = TIMER_NORMAL_MODE ;
-	timer.preScaler = PRESCALER_1024;
+	timer.preScaler = F_CPU_1024;
 	timer.tick_seconds = 1;
 
 	if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
