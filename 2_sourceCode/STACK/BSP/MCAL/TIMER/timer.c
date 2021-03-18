@@ -58,7 +58,6 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 
 			/* attach overflow value to timer so we can use it in callback */
 			timer->overflow = timer->tick_seconds / (double)registerMaxTime;
-			timer->overflow = 30;
 			set_timer_overflow(timer->overflow);
 
 		}

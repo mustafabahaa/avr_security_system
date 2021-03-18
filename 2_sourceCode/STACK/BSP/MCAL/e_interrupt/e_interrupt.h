@@ -14,39 +14,6 @@
 #include "./../../includes/types.h"
 #include "../../includes/atmega16.h"
 /*************************************************************************/
-/*                              Macros                                   */
-/*************************************************************************/
-
-/*enable and disable interrupt by setting and clearing I bit in SREG */
-#define SREG_interrupt_bit 7
-#define setGlobalInterrupt set_bit(SREG, SREG_interrupt_bit)
-#define clearGlobalInterrupt clr_bit(SREG, SREG_interrupt_bit)
-
-/* define interrupt registers */
-#define SREG 0X5F
-#define GIFR 0x5A
-#define GICR 0x5B
-#define MCUCR 0x55
-#define MCUCSR 0x54
-
-/*MCUCR (MCU Control Register)*/
-#define ISC00 0
-#define ISC01 1
-#define ISC10 2
-#define ISC11 3
-#define ISC2 6
-
-/*Interrupts Number*/
-#define INT0 6
-#define INT1 7
-#define INT2 5
-
-/*Interrupts Flags*/
-#define INTF0 6
-#define INTF1 7
-#define INTF2 5
-
-/*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/
 

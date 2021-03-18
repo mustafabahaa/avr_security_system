@@ -99,7 +99,6 @@ void __vector_8(void)
 /* TIMER0_OVF_vect */
 void __vector_9(void)
 {
-	set_bit(BASE_B+OFFSET_DIR,7);
 	ticks++;
 	if(g_callBackPtr != NULL_PTR)
 	{

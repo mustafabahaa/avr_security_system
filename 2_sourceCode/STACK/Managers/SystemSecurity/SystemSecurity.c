@@ -36,12 +36,12 @@ timer_config_t timer;
 
 static void timerTick()
 {
-	//tog_bit(BASE_B+OFFSET_PORT,7);
+	tog_bit(BASE_B+OFFSET_PORT,7);
 }
 
 system_error_t manager_sc_init_freeze_timer()
 {
-	//set_bit(BASE_B+OFFSET_DIR,7);
+	set_bit(BASE_B+OFFSET_DIR,7);
 
 	system_error_t error = SYSTEM_SUCCESS;
 
