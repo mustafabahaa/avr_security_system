@@ -130,7 +130,7 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 	if(lcd->lcdMode == MODE_8_BIT)
 	{
 		/* out the required command to the data bus D0 --> D7 */
-		portError = mcal_port_write(lcd->lcdDataPort, data ,PORT_FULL);
+		portError = mcal_port_write(lcd->lcdDataPort, data ,LOW);
 	}
 	else if (lcd->lcdMode == MODE_4_BIT)
 	{
