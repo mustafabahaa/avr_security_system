@@ -13,7 +13,7 @@
  **                              Global Variable                         **
  *************************************************************************/
 /* Global variables to hold the address of the call back function*/
-static volatile void (*g_callBackPtr)(void) = NULL_PTR;
+static void (*g_callBackPtr)(void) = NULL_PTR;
 volatile double ticks = 0;
 double interruptOverflow = 0;
 /*************************************************************************/

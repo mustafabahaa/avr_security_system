@@ -7,13 +7,19 @@
  *************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
+/* BSP Includes */
 #include "./../STACK/BSP/includes/types.h"
 #include "./../STACK/BSP/includes/atmega16.h"
 #include "./../STACK/BSP/HAL/KEYPAD/keypad.h"
 #include "./../STACK/BSP/HAL/LCD/lcd.h"
 #include "./../STACK/BSP/MCAL/TIMER/timer.h"
 
+/* Managers Includes */
 #include "./../STACK/Managers/SystemSecurity/SystemSecurity.h"
+
+/* Service Includes */
+#include "./../STACK/Services/Logger/logger.h"
+
 /*************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
@@ -78,6 +84,7 @@ static void freezeState();
 /*************************************************************************/
 /*                            Global variables                           */
 /*************************************************************************/
+u8_t* TAG = (u8_t*)"[HMI-ECU]";
 keypad_t keypad ;
 lcd_t lcd;
 /*************************************************************************/
@@ -86,7 +93,7 @@ lcd_t lcd;
 
 int main(void)
 {
-	state_t state = FREEZE_STATE;
+	state_t state = PASSWORD_INPUT_STATE;
 
 	systemInit();
 
@@ -123,19 +130,19 @@ static void passwordInputState()
 
 	if( KEYPAD_SUCCESS != hal_keypad_getKey(&keypad,&keyPressed))
 	{
-		/* LOGGER : error in keypad get key */
+		logger_write_error(TAG,(u8_t*)"Failed to get key from keypad");
 	}
 	else if (NO_KEY_PRESSED == keyPressed)
 	{
-		/* LOGGER : Pending Keypad Input */
+		logger_write_debug(TAG,(u8_t*)"Pending Keypad Input");
 	}
 	else if ( LCD_SUCCESS != hal_lcd_sendData(&lcd,DISPLAY,keyPressed))
 	{
-		/* LOGGER : Failed to send data to LCD */
+		logger_write_error(TAG,(u8_t*)"Failed to send key pressed to LCD");
 	}
 	else
 	{
-		/* LOGGER : Printing Value on LCD */
+		logger_write_error(TAG,(u8_t*)"keypad pressed button is printed on LCD");
 	}
 }
 
@@ -161,6 +168,9 @@ static system_error_t systemInit()
 
 	/* Initialize Managers */
 	error = manager_sc_init_freeze_timer();
+
+	/* Initialize Services */
+	logger_init(LOGGER_ALL);
 
 	return error;
 }

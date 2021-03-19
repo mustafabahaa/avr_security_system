@@ -85,7 +85,7 @@ keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed)
 		col_loop++; 
 
 		/* delay 5 mills-seconds give user time to press*/
-		_delay_ms(5);
+		delay_ms(5);
 
 		/* the following for loop , loop on the rows to find if any
 		   key is pressed on the rows for each column*/

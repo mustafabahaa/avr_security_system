@@ -125,7 +125,7 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 
 	/* Enable LCD E=1 */
 	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,HIGH);
-	_delay_ms(1);
+	delay_ms(1);
 
 	if(lcd->lcdMode == MODE_8_BIT)
 	{
@@ -141,11 +141,11 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 	{
 		return LCD_MODE_ERROR;
 	}
-	_delay_ms(1);
+	delay_ms(1);
 
 	/* disable LCD E=0 */
 	gpioError = mcal_gpio_pin_write(lcd->lcdControlPort,lcd->lcdE ,LOW);
-	_delay_ms(1);
+	delay_ms(1);
 
 	error = (gpioError == GPIO_STATE_SUCCESS && portError == PORT_STATE_SUCCESS) ?
 			LCD_SUCCESS :  LCD_ERROR;
@@ -154,7 +154,7 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 }
 
 
-lcd_error_t hal_lcd_displayString(lcd_t *lcd, const char *str)
+lcd_error_t hal_lcd_displayString(lcd_t *lcd, const u8_t *str)
 {
 	lcd_error_t error = LCD_SUCCESS;
 	u8_t i = 0;
@@ -196,8 +196,8 @@ lcd_error_t hal_lcd_goToRowColumn(lcd_t *lcd , lcd_data_types_t type, u8_t row,u
 lcd_error_t hal_lcd_intgerToString(lcd_t *lcd,u16_t data)
 {
 	lcd_error_t error = LCD_SUCCESS;
-	char buff[16]; /* String to hold the ascii result */
-	itoa(data,buff,10); /* 10 for decimal */
+	u8_t buff[16]; /* String to hold the ascii result */
+	std_itoa(data,buff,10); /* 10 for decimal */
 	error = hal_lcd_displayString(lcd,buff);
 	return error;
 }

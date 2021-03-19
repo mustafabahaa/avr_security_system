@@ -14,6 +14,8 @@
 #include "./../../includes/atmega16.h"
 #include "./../../MCAL/GPIO/gpio.h"
 #include "./../../MCAL/PORT/port.h"
+#include "./../../../Utility/std_library/std_library.h"
+#include "./../../../Utility/delay/delay.h"
 /**************************************************************************
  *                                   Macros                               *
  **************************************************************************/
