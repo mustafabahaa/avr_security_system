@@ -214,9 +214,9 @@ static system_error_t LCDInit()
 	lcd.lcdControlPort = BASE_D;
 	lcd.lcdDataPort = BASE_C;
 	lcd.lcdMode = MODE_8_BIT;
-	lcd.lcdRS = 4;
-	lcd.lcdRW = 5;
-	lcd.lcdE = 6;
+	lcd.lcdRS = 5;
+	lcd.lcdRW = 6;
+	lcd.lcdE = 7;
 
 	if (LCD_SUCCESS != hal_lcd_init(&lcd))
 	{
