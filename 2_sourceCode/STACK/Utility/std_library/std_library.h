@@ -26,12 +26,12 @@ u8_t* std_strcat(u8_t* destination,u8_t* source);
 /***************************************************************************
  ** std_strlen()
  **
- ** parameters: const u8_t *s
+ ** parameters: const u8_t *str
  ** return    : u16_t
  ***************************************************************************
  ** this function is the custom implementation of std-lib strlen function
  **************************************************************************/
-u16_t std_strlen(u8_t *length);
+u16_t std_strlen(u8_t *str);
 
 /***************************************************************************
  ** std_strlen()

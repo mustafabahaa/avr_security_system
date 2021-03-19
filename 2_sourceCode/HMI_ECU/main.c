@@ -26,6 +26,7 @@
 typedef enum {
 	PASSWORD_INPUT_STATE,
 	FREEZE_STATE,
+	HALT,
 }state_t;
 
 /*************************************************************************/
@@ -162,15 +163,15 @@ static system_error_t systemInit()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
+	/* Initialize Services */
+	logger_init(LOGGER_ALL);
+
 	/* Initialize hardware devices */
 	error = keypadInit();
 	error = LCDInit();
 
 	/* Initialize Managers */
 	error = manager_sc_init_freeze_timer();
-
-	/* Initialize Services */
-	logger_init(LOGGER_ALL);
 
 	return error;
 }
@@ -179,21 +180,33 @@ static system_error_t keypadInit()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	keypad.keypadColsNo = 4;
+	/*define the port of the cols and rows */
+	keypad.keypadColsPORT = BASE_A;
+	keypad.keypadRowsPort = BASE_A;
+
+	/*define the number of rows and cols */
 	keypad.keypadRowsNo = 4;
+	keypad.keypadColsNo = 4;
 
-	keypad.keypadPORT = BASE_A;
-	keypad.keypadPIN = BASE_A;
+	/* Locate keypad rows gpios */
+	static u8_t keypadRowsGPIOS[] = {0,1,2,3};
 
-	keypad.keypadRowsGPIOS[0] = 0;
-	keypad.keypadRowsGPIOS[1] = 1;
-	keypad.keypadRowsGPIOS[2] = 2;
-	keypad.keypadRowsGPIOS[3] = 3;
+	/* Locate keypad columns gpios */
+	static u8_t keypadColumnsGPIOS[] = {4,5,6,7};
 
-	keypad.keypadColumnsGPIOS[0] = 4;
-	keypad.keypadColumnsGPIOS[1] = 5;
-	keypad.keypadColumnsGPIOS[2] = 6;
-	keypad.keypadColumnsGPIOS[3] = 7;
+	/* insert the correct keypad mapping */
+	static s8_t keypadMapping[4][4] =
+	{
+			{'7', '8' , '9' , '/' },
+			{'4', '5' , '6' , '*' },
+			{'1', '2' , '3' , '-' },
+			{'A', '0' , '=' , '+' }
+	};
+
+	/* attach the keypad rows and cols and mapping to keypad*/
+	keypad.keypadRowsGPIOS = &keypadRowsGPIOS;
+	keypad.keypadColumnsGPIOS = &keypadColumnsGPIOS;
+	keypad.keypadMapping = &keypadMapping;
 
 	if (KEYPAD_SUCCESS != hal_keypad_init(&keypad))
 	{

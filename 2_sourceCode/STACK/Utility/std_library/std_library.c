@@ -65,13 +65,13 @@ u8_t* std_strcat(u8_t* destination,u8_t* source)
 }
 
 
-u16_t std_strlen(u8_t *length)
+u16_t std_strlen(u8_t *str)
 {
     u16_t count = 0;
-    while(*length!='\0')
+    while(*str!='\0')
     {
         count++;
-        length++;
+        str++;
     }
     return count;
 }

@@ -15,6 +15,7 @@
 #include "../../MCAL/PORT/port.h"
 #include "../../MCAL/GPIO/gpio.h"
 #include "./../../../Utility/delay/delay.h"
+#include "./../../../Services/Logger/logger.h"
 /*************************************************************************/
 /*                               Macros                                  */
 /*************************************************************************/
@@ -30,13 +31,13 @@ typedef enum
 
 typedef struct
 {
-	u8_t keypadPORT;
-	u8_t keypadPIN;
+	u8_t keypadColsPORT;
+	u8_t keypadRowsPort;
 	u8_t keypadRowsNo;
 	u8_t keypadColsNo;
-	u8_t keypadRowsGPIOS[4];
-	u8_t keypadColumnsGPIOS[4];
-	s8_t keypadMapping [4][4];
+	void* keypadRowsGPIOS;
+	void* keypadColumnsGPIOS;
+	void* keypadMapping;
 }keypad_t;
 
 
