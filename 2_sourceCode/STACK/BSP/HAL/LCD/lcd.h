@@ -87,21 +87,21 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data );
 /**************************************************************************
  ** hal_lcd_displaystring()
  **
- ** parameters: lcd_t , const char
+ ** parameters: lcd_t , const u8_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to display strings for LCD
  **************************************************************************/
-lcd_error_t hal_lcd_displaystring(lcd_t *lcd,const char *str);
+lcd_error_t hal_lcd_displayString(lcd_t *lcd, const u8_t *str);
 /**************************************************************************
  ** hal_lcd_goToRowColumn()
  **
- ** parameters: lcd_t , lcd_data_types_t, u8_t,u8_t
+ ** parameters: lcd_t , u8_t,u8_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to start cursor in specific location at LCD
  **************************************************************************/
-lcd_error_t hal_lcd_goToRowColumn(lcd_t *lcd ,lcd_data_types_t type, u8_t row, u8_t col);
+lcd_error_t hal_lcd_goToRowColumn(lcd_t *lcd , u8_t row, u8_t col);
 /**************************************************************************
  ** hal_lcd_intgerToString()
  **
@@ -114,12 +114,12 @@ lcd_error_t hal_lcd_intgerToString(lcd_t *lcd,u16_t data);
 /**************************************************************************
  ** hal_lcd_clearScreen()
  **
- ** parameters: lcd_t , lcd_data_types_t
+ ** parameters: lcd_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to clear the LCD
  **************************************************************************/
-lcd_error_t hal_lcd_clearScreen(lcd_t *lcd,lcd_data_types_t type);
+lcd_error_t hal_lcd_clearScreen(lcd_t *lcd);
 
 
 #endif /* _LCD_H_ */

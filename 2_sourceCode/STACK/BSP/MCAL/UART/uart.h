@@ -79,6 +79,6 @@ uart_error_t mcal_UART_sendString(const u8_t *str);
  ***************************************************************************
  ** this function is  to receive String
  **************************************************************************/
-uart_error_t mcal_UART_recieveString (u8_t *str);
+uart_error_t mcal_UART_receiveString (u8_t *str);
 
 #endif /* _UART_H_ */

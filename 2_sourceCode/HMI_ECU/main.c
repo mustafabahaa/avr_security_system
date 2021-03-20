@@ -16,16 +16,31 @@
 
 /* Managers Includes */
 #include "./../STACK/Managers/SystemSecurity/SystemSecurity.h"
+#include "./../STACK/Managers/MessagingUnit/MessagingUnit.h"
 
 /* Service Includes */
 #include "./../STACK/Services/Logger/logger.h"
 
 /*************************************************************************/
-/*                              Includes                                 */
+/*                               MACROS                                  */
+/*************************************************************************/
+#define PASSWORD_LENGTH 4
+#define MAX_INCORRECT_PASSWORD_ENTER 3
+#define ENTER 'A'
+/*************************************************************************/
+/*                               Types                                   */
 /*************************************************************************/
 typedef enum {
+	ANONYMOUS,
+	AUTHENTICATED,
+}authentication_t;
+
+typedef enum {
+	CHECK_DEFAULT_PASSWORD_STATE,
+	SET_NEW_PASSWORD_STATE,
 	PASSWORD_INPUT_STATE,
-	FREEZE_STATE,
+	ALARM_SYSTEM_STATE,
+	HOME_STATE,
 	HALT,
 }state_t;
 
@@ -33,68 +48,40 @@ typedef enum {
 /*                     Static Functions Prototypes                       */
 /*************************************************************************/
 
-/**************************************************************************
- ** systemInit()
- **
- ** parameters: void
- ** return    : system_error_t
- **************************************************************************
- ** this function is used to initialize all the system peripherals
- *************************************************************************/
 static system_error_t systemInit();
-
-/**************************************************************************
- ** keypadInit()
- **
- ** parameters: void
- ** return    : system_error_t
- **************************************************************************
- ** this function is used to initialize keypad peripheral
- *************************************************************************/
 static system_error_t keypadInit();
-
-/**************************************************************************
- ** LCDInit()
- **
- ** parameters: void
- ** return    : system_error_t
- **************************************************************************
- ** this function is used to initialize LCD peripheral
- *************************************************************************/
 static system_error_t LCDInit();
 
-/**************************************************************************
- ** passwordInputState()
- **
- ** parameters: void
- ** return    : void
- **************************************************************************
- ** this function is used to enter password input state
- *************************************************************************/
+static void requirePassword(u8_t* message , u8_t* password);
+static void userAuthentication(authentication_t authentcated);
 static void passwordInputState();
+static void checkDefaultPassword();
+static void firtTimePassword();
+static void startAlarmSystem();
+static void displayHomeSystem();
 
-/**************************************************************************
- ** freezeState()
- **
- ** parameters: void
- ** return    : void
- **************************************************************************
- ** this function is used to enter freeze state
- *************************************************************************/
-static void freezeState();
 /*************************************************************************/
 /*                            Global variables                           */
 /*************************************************************************/
-u8_t* TAG = (u8_t*)"[HMI-ECU]";
+
+/* used for program to handle state */
+state_t state;
+
+/* HAL layer initialization devices */
 keypad_t keypad ;
 lcd_t lcd;
+
+/* Authentication variables */
+u8_t passwordErrorCounter = 0 ;
+
+
 /*************************************************************************/
-/*                               Main test                               */
+/*                               Main Program                            */
 /*************************************************************************/
 
 int main(void)
 {
-	state_t state = PASSWORD_INPUT_STATE;
+	state = CHECK_DEFAULT_PASSWORD_STATE;
 
 	systemInit();
 
@@ -102,15 +89,34 @@ int main(void)
 	{
 		switch(state)
 		{
+
+		case CHECK_DEFAULT_PASSWORD_STATE:
+		{
+			checkDefaultPassword();
+			break;
+		}
+
+		case SET_NEW_PASSWORD_STATE:
+		{
+			firtTimePassword();
+			break;
+		}
+
 		case PASSWORD_INPUT_STATE :
 		{
 			passwordInputState();
 			break;
 		}
 
-		case FREEZE_STATE:
+		case HOME_STATE:
 		{
-			freezeState();
+			displayHomeSystem();
+			break;
+		}
+
+		case ALARM_SYSTEM_STATE:
+		{
+			startAlarmSystem();
 			break;
 		}
 
@@ -125,46 +131,213 @@ int main(void)
 	return 0;
 }
 
+/*************************************************************************/
+/*                           System Functions                            */
+/*************************************************************************/
+
+static void requirePassword(u8_t* message , u8_t* password)
+{
+	s8_t keyPressed = NO_KEY_PRESSED;
+	s8_t buffer[4] ={0};
+
+	hal_lcd_goToRowColumn(&lcd,0,0);
+	hal_lcd_displayString(&lcd,message);
+
+	/*insert new line for password entering */
+	hal_lcd_goToRowColumn(&lcd,1,0);
+
+	/*take password from user*/
+	for (int i = 0 ; i < PASSWORD_LENGTH ; i++)
+	{
+		/* stay in loop until any key is pressed */
+		while(NO_KEY_PRESSED == keyPressed)
+		{
+			hal_keypad_getKey(&keypad,&keyPressed);
+		}
+
+		/* print * on LCD every time keypad is pressed*/
+		hal_lcd_sendData(&lcd,DISPLAY,'*');
+
+		buffer[i] = keyPressed;
+	}
+
+	/* wait for user to press enter */
+	while(ENTER != keyPressed)
+	{
+		hal_keypad_getKey(&keypad,&keyPressed);
+	}
+
+	/* copy the password buffer to the passed array*/
+	for(int i = 0 ; i < PASSWORD_LENGTH ; i++)
+	{
+		password[i] = buffer[i];
+	}
+
+	hal_lcd_goToRowColumn(&lcd,0,0);
+	hal_lcd_clearScreen(&lcd);
+}
+
 static void passwordInputState()
 {
-	s8_t keyPressed = 0;
+	u8_t password[4] = {0};
+	u8_t buffer=0;
 
-	if( KEYPAD_SUCCESS != hal_keypad_getKey(&keypad,&keyPressed))
+	requirePassword((u8_t*)"Enter password",password);
+
+	/* send data to Control ECU to be validated */
+	ms_manager_send_data(START);
+
+	/* receive response from Control ECU */
+	ms_manager_receive_data(&buffer);
+
+	switch(buffer)
 	{
-		logger_write_error(TAG,(u8_t*)"Failed to get key from keypad");
-	}
-	else if (NO_KEY_PRESSED == keyPressed)
+	case PASSWORD_WRONG:
 	{
-		logger_write_debug(TAG,(u8_t*)"Pending Keypad Input");
+		userAuthentication(ANONYMOUS);
+		break;
 	}
-	else if ( LCD_SUCCESS != hal_lcd_sendData(&lcd,DISPLAY,keyPressed))
+	case PASSWORD_RIGHT:
 	{
-		logger_write_error(TAG,(u8_t*)"Failed to send key pressed to LCD");
+		userAuthentication(AUTHENTICATED);
+		break;
 	}
-	else
+	default :
 	{
-		logger_write_error(TAG,(u8_t*)"keypad pressed button is printed on LCD");
+		/* ECU didn't response in right way */
 	}
+	}
+
 }
 
-static void freezeState()
+static void checkDefaultPassword()
 {
-	if(SYSTEM_SUCCESS != manager_sc_start_freeze_timer())
+	u8_t buffer = 0 ;
+	ms_manager_send_data(CHECK_PASS_EXCISTANCE);
+	ms_manager_receive_data(&buffer);
+
+	if (buffer == PASSWORD_NOT_EXICTED)
 	{
-		/* LOGGER : Error initializing freeze timer */
+		state = SET_NEW_PASSWORD_STATE;
 	}
 	else
 	{
-		/* LOGGER :  freeze timer initialized */
+		state = PASSWORD_INPUT_STATE;
 	}
 }
+
+static void firtTimePassword()
+{
+	u8_t password[4] = {0};
+	u8_t confirmPassword[4] = {0};
+
+	requirePassword((u8_t*)"Enter new password",password);
+	requirePassword((u8_t*)"Confirm password",confirmPassword);
+
+	if (std_strcmp(password,confirmPassword) == 0)
+	{
+		// send password to control unit to save it in EEPROM
+		ms_manager_send_data(START_DEFAULT_PASS);
+		ms_manager_send_string(password);
+		state = PASSWORD_INPUT_STATE;
+	}
+	else
+	{
+		hal_lcd_displayString(&lcd,"Passwords Doesn't");
+		hal_lcd_goToRowColumn(&lcd,1,0);
+		hal_lcd_displayString(&lcd,"Match");
+
+		delay_ms(10000);
+
+		hal_lcd_clearScreen(&lcd);
+
+		state = SET_NEW_PASSWORD_STATE;
+	}
+}
+
+static void userAuthentication(authentication_t authentcated)
+{
+	if (authentcated)
+	{
+		state = HOME_STATE;
+		passwordErrorCounter = 0;
+	}
+	else if (MAX_INCORRECT_PASSWORD_ENTER == passwordErrorCounter)
+	{
+		state = ALARM_SYSTEM_STATE;
+	}
+	else
+	{
+		passwordErrorCounter++;
+	}
+}
+
+static void startAlarmSystem()
+{
+	/* start buzzer , hang system for a while
+	 * 7alet tawre2 gem
+	 * wewaaweewaaaaaaaaaa
+	 * atsl bel3yal */
+	passwordErrorCounter = 0;
+
+	state = PASSWORD_INPUT_STATE;
+}
+
+static void displayHomeSystem()
+{
+	s8_t keyPressed = NO_KEY_PRESSED;
+
+	hal_lcd_displayString(&lcd,"1-Open  2-Close");
+	hal_lcd_goToRowColumn(&lcd,1,0);
+	hal_lcd_displayString(&lcd,"3-Change password");
+
+	/* stay in loop until any key is pressed */
+	while(NO_KEY_PRESSED == keyPressed)
+	{
+		hal_keypad_getKey(&keypad,&keyPressed);
+	}
+
+	switch(keyPressed)
+	{
+	case '1' :
+	{
+		break;
+	}
+	case '2' :
+	{
+		break;
+	}
+	case '3' :
+	{
+		break;
+	}
+	default:
+	{
+		hal_lcd_goToRowColumn(&lcd,0,0);
+		hal_lcd_clearScreen(&lcd);
+
+		hal_lcd_displayString(&lcd,"Wrong Input");
+		hal_lcd_goToRowColumn(&lcd,1,0);
+		hal_lcd_displayString(&lcd,"Try Again");
+		delay_ms(10000);
+
+		hal_lcd_goToRowColumn(&lcd,0,0);
+		hal_lcd_clearScreen(&lcd);
+		break;
+	}
+	}
+}
+
+/*************************************************************************/
+/*                           Initialization                              */
+/*************************************************************************/
 
 static system_error_t systemInit()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
 	/* Initialize Services */
-	logger_init(LOGGER_ALL);
+	//logger_init(LOGGER_ALL);
 
 	/* Initialize hardware devices */
 	error = keypadInit();
@@ -172,6 +345,7 @@ static system_error_t systemInit()
 
 	/* Initialize Managers */
 	error = manager_sc_init_freeze_timer();
+	error = ms_manager_init();
 
 	return error;
 }

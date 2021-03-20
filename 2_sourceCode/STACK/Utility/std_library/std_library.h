@@ -34,7 +34,7 @@ u8_t* std_strcat(u8_t* destination,u8_t* source);
 u16_t std_strlen(u8_t *str);
 
 /***************************************************************************
- ** std_strlen()
+ ** std_itoa()
  **
  ** parameters: const u8_t *s
  ** return    : u16_t
@@ -42,6 +42,18 @@ u16_t std_strlen(u8_t *str);
  ** this function is the custom implementation of std-lib itoa function
  **************************************************************************/
 u8_t* std_itoa(u16_t value, u8_t* buffer, u16_t base);
+
+/***************************************************************************
+ ** std_strcmp()
+ **
+ ** parameters: const u8_t *X
+ ** parameters: const u8_t *Y
+ ** return    : u16_t
+ ***************************************************************************
+ ** this function is the custom implementation of strcmp function
+ **************************************************************************/
+u16_t std_strcmp(const u8_t *X, const u8_t *Y);
+
 
 #endif /* _STD_LIBS_H */
 

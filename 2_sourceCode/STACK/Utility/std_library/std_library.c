@@ -114,6 +114,23 @@ u8_t* std_itoa(u16_t value, u8_t* buffer, u16_t base)
     return std_reverse(buffer, 0, i - 1);
 }
 
+u16_t std_strcmp(const u8_t *X, const u8_t *Y)
+{
+    while(*X)
+    {
+        // if u8_t differ or end of second string is reached
+        if (*X != *Y)
+            break;
+
+        // move to next pair of u8_t
+        X++;
+        Y++;
+    }
+
+    // return the ASCII difference after converting u8_t* to unsigned u8_t*
+    return *(const u8_t*)X - *(const u8_t*)Y;
+}
+
 
 /**************************************************************************/
 /*                     Static Functions Implementation                    */

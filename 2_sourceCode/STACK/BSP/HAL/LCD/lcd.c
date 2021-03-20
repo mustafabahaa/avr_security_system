@@ -166,7 +166,7 @@ lcd_error_t hal_lcd_displayString(lcd_t *lcd, const u8_t *str)
 	return error;
 }
 
-lcd_error_t hal_lcd_goToRowColumn(lcd_t *lcd , lcd_data_types_t type, u8_t row,u8_t col)
+lcd_error_t hal_lcd_goToRowColumn(lcd_t *lcd , u8_t row,u8_t col)
 {
 	lcd_error_t error = LCD_SUCCESS;
 	u8_t Address=0;
@@ -202,7 +202,7 @@ lcd_error_t hal_lcd_intgerToString(lcd_t *lcd,u16_t data)
 	return error;
 }
 
-lcd_error_t hal_lcd_clearScreen(lcd_t *lcd,lcd_data_types_t type)
+lcd_error_t hal_lcd_clearScreen(lcd_t *lcd)
 {
 	lcd_error_t error = LCD_SUCCESS;
 	error = hal_lcd_sendData(lcd,COMMAND,CLEAR_COMMAND); //clear display
