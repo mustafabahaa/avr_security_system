@@ -3,10 +3,10 @@
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
 
- ** dc_motor.h
+ ** servo_motor.h
  **************************************************************************/
-#ifndef _DC_MOTOR_H_
-#define _DC_MOTOR_H_
+#ifndef _SERVO_MOTOR_H_
+#define _SERVO_MOTOR_H_
 /**************************************************************************/
 /*                              Includes                                  */
 /**************************************************************************/
@@ -14,79 +14,51 @@
 #include "./../../includes/types.h"
 #include "./../../MCAL/gpio/gpio.h"
 #include "./../../MCAL/PWM/pwm.h"
+
+/*************************************************************************/
+/*                                 Macros                                */
+/*************************************************************************/
+/*servo specification from data sheet*/
+#define SERVO_FREQUENCY  50
+#define SERVO_PERIOD     0.02f
+#define SERVO_MAX_PERIOD 0.0025f
+#define SERVO_MIN_PERIOD 0.0005f
 /*************************************************************************/
 /*                                 Types                                 */
 /*************************************************************************/
 typedef enum
 {
-	MOTOR_STATE_SUCCESS,
-	MOTOR_STATE_ERROR,
-	MOTOR_STATE_INVALID_DIRECTION,
-	MOTOR_STATE_INVALID_SPEED,
-	MOTOR_STATE_INVALID_MOTOR_PIN
-} motor_error_t;
-
-typedef struct
-{
-	u8_t dir_1_port;
-	u8_t dir_2_port;
-	u8_t dir_1_pin;
-	u8_t dir_2_pin;
-} motor_direction_pins_t;
-
-typedef enum
-{
-	RIGHT,
-	LEFT
-} motor_direction_t;
-
-typedef enum
-{
-	STOP = 0 ,
-	HALF_SPEED = 128,
-	FULL_SPEED = 255,
-} motor_speed_t;
+	SERVO_MOTOR_STATE_SUCCESS,
+	SERVO_MOTOR_STATE_ERROR,
+	SERVO_MOTOR_STATE_INVALID_DEGREE,
+	SERVO_MOTOR_STATE_INVALID_MOTOR_PIN
+} servo_motor_error_t;
 
 typedef struct
 {
 	pwm_channel_t* channel;
-	motor_direction_pins_t* direction;
-} motor_t;
+} servo_motor_t;
 
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
- ** hal_dc_motor_init()
+ ** hal_servo_motor_init()
  **
  ** parameters: motor_t *motor
- ** return    : motor_error_t
+ ** return    : servo_motor_error_t
  ***************************************************************************
- ** this function is used to initialize all  sequence for DC motor
+ ** this function is used to initialize all  sequence for SERVO motor
  **************************************************************************/
-motor_error_t hal_dc_motor_init(motor_t *motor);
+servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor);
 
-/**************************************************************************
- ** hal_dc_motor_set_direction()
+/***************************************************************************
+ ** hal_servo_motor_set_direction()
  **
- ** parameters: motor_t *motor
- ** parameters: motor_direction_t direction
- **
- ** return    : motor_error_t
+ ** parameters: u8_t degree
+ ** return    : servo_motor_error_t
  ***************************************************************************
  ** this function is used to change the direction of the motor
  **************************************************************************/
-motor_error_t hal_dc_motor_set_direction(motor_t *motor ,motor_direction_t direction);
+servo_motor_error_t hal_servo_motor_set_degree(servo_motor_t *motor ,u8_t degree);
 
-/**************************************************************************
- ** hal_dc_motor_set_speed()
- **
- ** parameters: motor_t *motor
- ** parameters: motor_speed_t speed
- **
- ** return    : motor_error_t
- ***************************************************************************
- ** this function is used to change the speed of the motor
- **************************************************************************/
-motor_error_t hal_dc_motor_set_speed(motor_t *motor ,motor_speed_t speed);
-
-#endif /* _DC_MOTOR_H_ */
+#endif /* _SERVO_MOTOR_H_ */

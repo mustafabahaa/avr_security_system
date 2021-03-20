@@ -13,6 +13,7 @@
 #include "./../STACK/BSP/MCAL/TIMER/timer.h"
 #include "./../STACK/BSP/HAL/EEPROM/eeprom.h"
 #include "./../STACK/BSP/HAL/BUZZER/buzzer.h"
+#include "./../STACK/BSP/HAL/SERVO_MOTOR/servo_motor.h"
 
 /* Managers Includes */
 #include "./../STACK/Managers/MessagingUnit/MessagingUnit.h"
@@ -45,6 +46,8 @@ typedef enum {
 static system_error_t systemInit();
 static system_error_t buzzerInit();
 static system_error_t timerInit();
+static system_error_t servoMotorInit();
+
 static void checkDefaultPassword();
 static void startPasswordFlashing();
 static void validatePassword();
@@ -64,6 +67,7 @@ state_t state;
 /* HAL layer initialization devices */
 buzzer_t buzzer;
 timer_config_t timer;
+servo_motor_t servo;
 
 /*************************************************************************/
 /*                               Main Program                            */
@@ -221,7 +225,7 @@ static void motorOpen()
 	timer_setCallBack(closeMotor);
 
 	mcal_timer_start(&timer);
-	/* TODO open motor */
+	hal_servo_motor_set_degree(&servo,180);
 	state = HALT_STATE;
 }
 
@@ -237,12 +241,24 @@ static system_error_t systemInit()
 	//logger_init(LOGGER_ALL);
 
 	/* Initialize hardware devices */
-	buzzerInit();
+	error = buzzerInit();
+	error = servoMotorInit();
 	hal_eeprom_init();
 
 	/* Initialize Managers */
 	error = ms_manager_init();
 
+	return error;
+}
+
+static system_error_t servoMotorInit()
+{
+	system_error_t error = SYSTEM_SUCCESS;
+
+	servo.channel->channel_port = BASE_B;
+	servo.channel->channel_pin = 3;
+
+	hal_servo_motor_init(&servo);
 	return error;
 }
 
@@ -295,7 +311,7 @@ static void releaseSystem()
 static void closeMotor()
 {
 	mcal_timer_stop(&timer);
-	/* TODO : Close motor */
+	hal_servo_motor_set_degree(&servo,0);
 	state = HALT_STATE;
 }
 
