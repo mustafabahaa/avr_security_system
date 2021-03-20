@@ -3,10 +3,10 @@
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
 
- ** led.h
+ ** buzzer.h
  **************************************************************************/
-#ifndef _LED_H_
-#define _LED_H_
+#ifndef _BUZZER_H_
+#define _BUZZER_H_
 
 /*************************************************************************/
 /*                              Includes                                 */
@@ -19,67 +19,67 @@
 /*************************************************************************/
 typedef enum
 {
-	LED_CURRENT_SOURCING,
-	LED_CURRENT_SINKING
-} led_current_t;
+	BUZZER_CURRENT_SOURCING,
+	BUZZER_CURRENT_SINKING
+} buzzer_current_t;
 
 typedef enum
 {
-	LED_GPIO_STATE_SUCCESS,
-	LED_GPIO_INVALID_CURRENT,
-	LED_GPIO_STATE_ERROR
-} led_error_t;
+	BUZZER_GPIO_STATE_SUCCESS,
+	BUZZER_GPIO_INVALID_CURRENT,
+	BUZZER_GPIO_STATE_ERROR
+} buzzer_error_t;
 
 typedef struct
 {
 	u8_t base_addr;
 	u8_t pin_num;
-	led_current_t wiring;
-} led_t;
+	buzzer_current_t wiring;
+} buzzer_t;
 
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
- ** hal_led_init()
+ ** hal_buzzer_init()
  **
- ** parameters: led_t* the_led
- ** return    : led_error_t
+ ** parameters: buzzer_t* the_buzzer
+ ** return    : BUZZER_error_t
  ***************************************************************************
- ** this function is used to initialize all the necessary sequence for LED
+ ** this function is used to initialize all the necessary sequence for BUZZER
  **************************************************************************/
-led_error_t hal_led_init(led_t *the_led);
+buzzer_error_t hal_buzzer_init(buzzer_t *the_buzzer);
 
 /**************************************************************************
- ** hal_led_set_state()
+ ** hal_buzzer_set_state()
  **
- ** parameters: led_t* the_led
+ ** parameters: buzzer_t* the_buzzer
  ** parameters: u8_t value
- ** return    : led_error_t
+ ** return    : BUZZER_error_t
  ***************************************************************************
- ** this function set the states of the LED on or off
+ ** this function set the states of the BUZZER on or off
  **************************************************************************/
-led_error_t hal_led_set_state(led_t *the_led, u8_t value);
+buzzer_error_t hal_buzzer_set_state(buzzer_t *the_buzzer, u8_t value);
 
 /**************************************************************************
- ** hal_led_toggle_state()
+ ** hal_buzzer_toggle_state()
  **
- ** parameters: led_t* the_led
- ** return    : led_error_t
+ ** parameters: buzzer_t* the_buzzer
+ ** return    : BUZZER_error_t
  ***************************************************************************
- ** this function toggle the led states
+ ** this function toggle the BUZZER states
  **************************************************************************/
-led_error_t hal_led_toggle_state(led_t *the_led);
+buzzer_error_t hal_buzzer_toggle_state(buzzer_t *the_buzzer);
 
 /**************************************************************************
- ** hal_led_get_state()
+ ** hal_buzzer_get_state()
  **
- ** parameters: led_t* the_led
+ ** parameters: buzzer_t* the_buzzer
  ** parameters: u8_t* value
- ** return    : led_error_t
+ ** return    : BUZZER_error_t
  ***************************************************************************
- ** this function get the states of the LED on or off
+ ** this function get the states of the BUZZER on or off
  **************************************************************************/
-led_error_t hal_led_get_state(led_t *the_led, u8_t *value);
+buzzer_error_t hal_buzzer_get_state(buzzer_t *the_buzzer, u8_t *value);
 
-#endif /*_LED_H_*/
+#endif /*_BUZZER_H_*/
 /**************************************************************************/

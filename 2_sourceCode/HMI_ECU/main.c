@@ -15,7 +15,6 @@
 #include "./../STACK/BSP/MCAL/TIMER/timer.h"
 
 /* Managers Includes */
-#include "./../STACK/Managers/SystemSecurity/SystemSecurity.h"
 #include "./../STACK/Managers/MessagingUnit/MessagingUnit.h"
 
 /* Service Includes */
@@ -42,7 +41,8 @@ typedef enum {
 	PASSWORD_INPUT_STATE,
 	ALARM_SYSTEM_STATE,
 	HOME_STATE,
-	HALT,
+	FREEZE_STATE,
+	HALT_STATE,
 }state_t;
 
 /*************************************************************************/
@@ -52,6 +52,7 @@ typedef enum {
 static system_error_t systemInit();
 static system_error_t keypadInit();
 static system_error_t LCDInit();
+static system_error_t timerInit();
 
 static void requirePassword(u8_t* message , u8_t* password);
 static void userAuthentication(authentication_t authentcated);
@@ -62,19 +63,22 @@ static void startAlarmSystem();
 static void displayHomeSystem();
 static void changePassword();
 
+/* timers callback */
+static void releaseSystem();
 /*************************************************************************/
 /*                            Global variables                           */
 /*************************************************************************/
 
 /* used for program to handle state */
-state_t state;
+volatile state_t state;
 
 /* HAL layer initialization devices */
 keypad_t keypad ;
 lcd_t lcd;
+timer_config_t timer;
 
 /* Authentication variables */
-u8_t passwordErrorCounter = 0 ;
+volatile u8_t passwordErrorCounter = 0 ;
 
 /* currentPassword */
 u8_t currentPassword[PASSWORD_LENGTH] = {0};
@@ -129,6 +133,13 @@ int main(void)
 			startAlarmSystem();
 			break;
 		}
+
+		case HALT_STATE:
+		{
+
+			break;
+		}
+
 
 		default :
 		{
@@ -196,6 +207,9 @@ static void passwordInputState()
 
 	/* send data to Control ECU to be validated */
 	ms_manager_send_data(START);
+
+	/* send the actual password */
+	ms_manager_send_string(password);
 
 	/* receive response from Control ECU */
 	ms_manager_receive_data(&buffer);
@@ -330,13 +344,10 @@ static void changePassword()
 
 static void startAlarmSystem()
 {
-	/* start buzzer , hang system for a while
-	 * 7alet tawre2 gem
-	 * wewaaweewaaaaaaaaaa
-	 * atsl bel3yal */
-	passwordErrorCounter = 0;
+	mcal_timer_start(&timer);
+	ms_manager_send_data(ALARM);
 
-	state = PASSWORD_INPUT_STATE;
+	state = HALT_STATE;
 }
 
 static void displayHomeSystem()
@@ -402,9 +413,10 @@ static system_error_t systemInit()
 	/* Initialize hardware devices */
 	error = keypadInit();
 	error = LCDInit();
+	timerInit();
 
 	/* Initialize Managers */
-	error = manager_sc_init_freeze_timer();
+
 	error = ms_manager_init();
 
 	return error;
@@ -475,6 +487,39 @@ static system_error_t LCDInit()
 	}
 
 	return error;
+}
+
+static system_error_t timerInit()
+{
+	system_error_t error = SYSTEM_SUCCESS;
+
+	timer.timer_number = TIMER0;
+	timer.mode = TIMER_NORMAL_MODE ;
+	timer.preScaler = F_CPU_1024;
+	timer.tick_seconds = 5;
+
+	if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
+	{
+		error = SYSTEM_FAIL;
+	}
+	else
+	{
+		timer_setCallBack(releaseSystem);
+		error = SYSTEM_SUCCESS;
+	}
+
+	return error;
+}
+
+/*************************************************************************/
+/*                            Timer Callback                             */
+/*************************************************************************/
+
+static void releaseSystem()
+{
+	mcal_timer_stop(&timer);
+	passwordErrorCounter = 0;
+	state = PASSWORD_INPUT_STATE;
 }
 
 

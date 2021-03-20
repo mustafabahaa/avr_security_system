@@ -101,4 +101,21 @@ system_error_t ms_manager_receive_data(u8_t* data)
 	return error;
 }
 
+system_error_t ms_manager_receive_string(u8_t* data)
+{
+	system_error_t error = SYSTEM_SUCCESS;
+
+	if(UART_STATE_SUCCESS != mcal_UART_receiveString(data))
+	{
+		error = SYSTEM_FAIL;
+		logger_write_error(TAG,(u8_t *)"Failed to receive string data");
+	}
+	else
+	{
+		logger_write_debug(TAG,(u8_t *)"Succeed to receive string data");
+	}
+
+	return error;
+}
+
 

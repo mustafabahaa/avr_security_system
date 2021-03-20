@@ -109,7 +109,7 @@ eeprom_error_t hal_eeprom_writeByte(u16_t u16addr, u8_t u8data)
 	return error;
 
 }
-eeprom_error_t EEPROM_readByte(u16_t u16addr, u8_t *u8data)
+eeprom_error_t hal_eeprom_readByte(u16_t u16addr, u8_t *u8data)
 {
 	eeprom_error_t error = EEPROM_SUCCESS;
 	u8_t status = 0;
