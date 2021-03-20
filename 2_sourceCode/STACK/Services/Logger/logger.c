@@ -16,7 +16,7 @@ logger_verbosity_t g_verbosity;
 
 void logger_init(logger_verbosity_t verbosity)
 {
-
+#if 0
 	g_verbosity = verbosity;
 
 	if(UART_STATE_SUCCESS != mcal_UART_init())
@@ -27,10 +27,12 @@ void logger_init(logger_verbosity_t verbosity)
 	{
 		/* Logger initialized */
 	}
+#endif
 }
 
 void logger_write_debug(u8_t* tag ,u8_t* data)
 {
+#if 0
 	if ( LOGGER_DEBUG != g_verbosity && LOGGER_ALL != g_verbosity)
 	{
 		/* do nothing */
@@ -46,10 +48,12 @@ void logger_write_debug(u8_t* tag ,u8_t* data)
 		std_strcat(str, (u8_t*)"\r\n");
 		mcal_UART_sendString(str);
 	}
+#endif
 }
 
 void logger_write_warning(u8_t* tag ,u8_t* data)
 {
+#if 0
 	if ( LOGGER_WARNING != g_verbosity && LOGGER_ALL != g_verbosity)
 	{
 		/* do nothing */
@@ -65,10 +69,12 @@ void logger_write_warning(u8_t* tag ,u8_t* data)
 		std_strcat(str, (u8_t*)"\r\n");
 		mcal_UART_sendString(str);
 	}
+#endif
 }
 
 void logger_write_error(u8_t* tag ,u8_t* data)
 {
+#if 0
 	if ( LOGGER_ERROR != g_verbosity && LOGGER_ALL != g_verbosity)
 	{
 		/* do nothing */
@@ -84,4 +90,5 @@ void logger_write_error(u8_t* tag ,u8_t* data)
 		std_strcat(str, (u8_t*)"\r\n");
 		mcal_UART_sendString(str);
 	}
+#endif
 }

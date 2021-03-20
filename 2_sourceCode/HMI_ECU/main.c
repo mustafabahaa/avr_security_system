@@ -38,6 +38,7 @@ typedef enum {
 typedef enum {
 	CHECK_DEFAULT_PASSWORD_STATE,
 	SET_NEW_PASSWORD_STATE,
+	CHANGE_PASSWORD_STATE,
 	PASSWORD_INPUT_STATE,
 	ALARM_SYSTEM_STATE,
 	HOME_STATE,
@@ -59,6 +60,7 @@ static void checkDefaultPassword();
 static void firtTimePassword();
 static void startAlarmSystem();
 static void displayHomeSystem();
+static void changePassword();
 
 /*************************************************************************/
 /*                            Global variables                           */
@@ -74,6 +76,8 @@ lcd_t lcd;
 /* Authentication variables */
 u8_t passwordErrorCounter = 0 ;
 
+/* currentPassword */
+u8_t currentPassword[PASSWORD_LENGTH] = {0};
 
 /*************************************************************************/
 /*                               Main Program                            */
@@ -99,6 +103,12 @@ int main(void)
 		case SET_NEW_PASSWORD_STATE:
 		{
 			firtTimePassword();
+			break;
+		}
+
+		case CHANGE_PASSWORD_STATE:
+		{
+			changePassword();
 			break;
 		}
 
@@ -138,7 +148,7 @@ int main(void)
 static void requirePassword(u8_t* message , u8_t* password)
 {
 	s8_t keyPressed = NO_KEY_PRESSED;
-	s8_t buffer[4] ={0};
+	s8_t buffer[PASSWORD_LENGTH] ={0};
 
 	hal_lcd_goToRowColumn(&lcd,0,0);
 	hal_lcd_displayString(&lcd,message);
@@ -179,7 +189,7 @@ static void requirePassword(u8_t* message , u8_t* password)
 
 static void passwordInputState()
 {
-	u8_t password[4] = {0};
+	u8_t password[PASSWORD_LENGTH] = {0};
 	u8_t buffer=0;
 
 	requirePassword((u8_t*)"Enter password",password);
@@ -199,6 +209,12 @@ static void passwordInputState()
 	}
 	case PASSWORD_RIGHT:
 	{
+		/* if password is correct save the current password globally */
+		for (int i =0 ; i < PASSWORD_LENGTH ;i++)
+		{
+			currentPassword[i] = password[i];
+		}
+
 		userAuthentication(AUTHENTICATED);
 		break;
 	}
@@ -228,8 +244,8 @@ static void checkDefaultPassword()
 
 static void firtTimePassword()
 {
-	u8_t password[4] = {0};
-	u8_t confirmPassword[4] = {0};
+	u8_t password[PASSWORD_LENGTH] = {0};
+	u8_t confirmPassword[PASSWORD_LENGTH] = {0};
 
 	requirePassword((u8_t*)"Enter new password",password);
 	requirePassword((u8_t*)"Confirm password",confirmPassword);
@@ -243,9 +259,9 @@ static void firtTimePassword()
 	}
 	else
 	{
-		hal_lcd_displayString(&lcd,"Passwords Doesn't");
+		hal_lcd_displayString(&lcd,(u8_t *)"Passwords Doesn't");
 		hal_lcd_goToRowColumn(&lcd,1,0);
-		hal_lcd_displayString(&lcd,"Match");
+		hal_lcd_displayString(&lcd,(u8_t *)"Match");
 
 		delay_ms(10000);
 
@@ -260,6 +276,7 @@ static void userAuthentication(authentication_t authentcated)
 	if (authentcated)
 	{
 		state = HOME_STATE;
+
 		passwordErrorCounter = 0;
 	}
 	else if (MAX_INCORRECT_PASSWORD_ENTER == passwordErrorCounter)
@@ -269,6 +286,45 @@ static void userAuthentication(authentication_t authentcated)
 	else
 	{
 		passwordErrorCounter++;
+	}
+}
+
+static void changePassword()
+{
+	u8_t oldPassword[PASSWORD_LENGTH] = {0};
+	u8_t password[PASSWORD_LENGTH] = {0};
+	u8_t confirmPassword[PASSWORD_LENGTH] = {0};
+
+	requirePassword((u8_t*)"Enter old password",oldPassword);
+
+	if (std_strcmp(oldPassword,currentPassword) == 0)
+	{
+		requirePassword((u8_t*)"Enter new password",password);
+		requirePassword((u8_t*)"Confirm password",confirmPassword);
+
+		if (std_strcmp(password,confirmPassword) == 0)
+		{
+			// send password to control unit to save it in EEPROM
+			ms_manager_send_data(START_NEW_PASS);
+			ms_manager_send_string(password);
+			state = PASSWORD_INPUT_STATE;
+		}
+		else
+		{
+			hal_lcd_displayString(&lcd,(u8_t *)"Passwords Doesn't");
+			hal_lcd_goToRowColumn(&lcd,1,0);
+			hal_lcd_displayString(&lcd,(u8_t *)"Match");
+
+			delay_ms(10000);
+
+			hal_lcd_clearScreen(&lcd);
+
+			state = HOME_STATE;
+		}
+	}
+	else
+	{
+		state = HOME_STATE;
 	}
 }
 
@@ -285,11 +341,15 @@ static void startAlarmSystem()
 
 static void displayHomeSystem()
 {
+
+	/* TODO : register option time out if user didn't
+	 *  enter anything for 10 seconds */
+
 	s8_t keyPressed = NO_KEY_PRESSED;
 
-	hal_lcd_displayString(&lcd,"1-Open  2-Close");
+	hal_lcd_displayString(&lcd,(u8_t *)"1-Open");
 	hal_lcd_goToRowColumn(&lcd,1,0);
-	hal_lcd_displayString(&lcd,"3-Change password");
+	hal_lcd_displayString(&lcd,(u8_t *)"2-Change password");
 
 	/* stay in loop until any key is pressed */
 	while(NO_KEY_PRESSED == keyPressed)
@@ -301,14 +361,14 @@ static void displayHomeSystem()
 	{
 	case '1' :
 	{
+		ms_manager_send_data(OPEN_LOCK);
+		state = PASSWORD_INPUT_STATE;
+
 		break;
 	}
 	case '2' :
 	{
-		break;
-	}
-	case '3' :
-	{
+		state = CHANGE_PASSWORD_STATE;
 		break;
 	}
 	default:
@@ -316,9 +376,9 @@ static void displayHomeSystem()
 		hal_lcd_goToRowColumn(&lcd,0,0);
 		hal_lcd_clearScreen(&lcd);
 
-		hal_lcd_displayString(&lcd,"Wrong Input");
+		hal_lcd_displayString(&lcd,(u8_t *)"Wrong Input");
 		hal_lcd_goToRowColumn(&lcd,1,0);
-		hal_lcd_displayString(&lcd,"Try Again");
+		hal_lcd_displayString(&lcd,(u8_t *)"Try Again");
 		delay_ms(10000);
 
 		hal_lcd_goToRowColumn(&lcd,0,0);

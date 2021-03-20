@@ -30,7 +30,6 @@
 #define OLD_PASS_RIGHT        11
 #define CHECK_PASS_EXCISTANCE 12
 #define OPEN_LOCK             13
-#define CLOSE_LOCK            14
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
