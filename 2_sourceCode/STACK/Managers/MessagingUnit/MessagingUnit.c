@@ -37,7 +37,13 @@ system_error_t ms_manager_init()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	if(UART_STATE_SUCCESS != mcal_UART_init())
+	uart_t uart;
+	uart.baudRate = 9600;
+	uart.packetLength = BIT_8;
+	uart.stopBitNo = STOP_BIT_1;
+	uart.parity = DISABLE;
+
+	if(UART_STATE_SUCCESS != mcal_UART_init(&uart))
 	{
 		error = SYSTEM_FAIL;
 		logger_write_error(TAG,(u8_t *)"Failed to initialize messaging Unit");

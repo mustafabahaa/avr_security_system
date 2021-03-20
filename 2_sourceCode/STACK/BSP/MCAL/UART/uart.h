@@ -13,31 +13,71 @@
 #include "./../../includes/types.h"
 #include "./../../includes/atmega16.h"
 /*************************************************************************/
-/*                              Macros                                   */
-/*************************************************************************/
-/* UART Driver Baud Rate */
-#define USART_BAUDRATE 9600
-#define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 8UL))) - 1)
-/*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/
 typedef enum
 {
 	UART_STATE_SUCCESS,
 	UART_STATE_ERROR,
+	UART_STATE_INVALID_STOP_BIT_NUMBER,
+	UART_STATE_INVALID_BAUD_RATE,
+	UART_STATE_INVALID_PACKET_LENGTH,
+	UART_STATE_INVALID_ENDIAN,
 } uart_error_t;
 
+typedef enum
+{
+	BAUD_2400 = 2400,
+	BAUD_4800 = 4800,
+	BAUD_9600 = 9600,
+}baud_rate_t;
+
+typedef enum
+{
+	STOP_BIT_1,
+	STOP_BIT_2,
+}stop_bit_no_t;
+
+typedef enum
+{
+	DISABLE,
+	ENABLE_EVEN,
+	ENABLE_ODD
+}parity_t;
+
+typedef enum
+{
+	BIT_5,
+	BIT_6,
+	BIT_7,
+	BIT_8,
+	BIT_9
+}packet_length_t;
+
+typedef enum
+{
+	BIG_ENDIAN,
+	LITTLE_ENDIAN,
+}endian_type_t;
+
+typedef struct
+{
+	baud_rate_t baudRate;
+	stop_bit_no_t stopBitNo;
+	parity_t parity;
+	packet_length_t packetLength;
+}uart_t;
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
  ** mcal_UART_init()
  **
- ** parameters: void
+ ** parameters: uart_t* uart
  ** return    : uart_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for uart
  **************************************************************************/
-uart_error_t mcal_UART_init(void);
+uart_error_t mcal_UART_init(uart_t* uart);
 
 
 /**************************************************************************

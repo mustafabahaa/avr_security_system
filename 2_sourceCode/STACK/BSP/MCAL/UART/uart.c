@@ -12,7 +12,7 @@
 /**************************************************************************/
 /*                     Functions Implementation                           */
 /**************************************************************************/
-uart_error_t mcal_UART_init(void)
+uart_error_t mcal_UART_init(uart_t* uart)
 {
 	uart_error_t error = UART_STATE_SUCCESS;
 
@@ -40,13 +40,90 @@ uart_error_t mcal_UART_init(void)
 	 * UCPOL   = 0 Used with the Synchronous operation only
 	 ***********************************************************************/
 	set_bit(UCSRC,URSEL);
-	set_bit(UCSRC,1<<UCSZ0);
-	set_bit(UCSRC,UCSZ1);
 
 	/* First 8 bits from the BAUD_PRESCALE inside UBRRL and last 4 bits in UBRRH*/
-	register(UBRRH) = BAUD_PRESCALE>>8;
-	register(UBRRL) = BAUD_PRESCALE;
+	/* Initialize baud rate */
+	if (uart->baudRate == BAUD_2400 || uart->baudRate == BAUD_4800 || uart->baudRate == BAUD_9600)
+	{
+		register(UBRRH) = (((F_CPU / (uart->baudRate * 8UL))) - 1)>>8;
+		register(UBRRL) = (((F_CPU / (uart->baudRate * 8UL))) - 1);
+	}
+	else
+	{
+		error = UART_STATE_INVALID_BAUD_RATE;
+	}
 
+
+	/* Initialize stop bit numbers */
+	if (STOP_BIT_1 == uart->stopBitNo)
+	{
+		clr_bit(UCSRC,USBS);
+	}
+	else if (STOP_BIT_2 == uart->stopBitNo)
+	{
+		set_bit(UCSRC,USBS);
+	}
+	else
+	{
+		error = UART_STATE_INVALID_STOP_BIT_NUMBER;
+	}
+
+	/* Initialize parity mode */
+	if (DISABLE == uart->parity)
+	{
+		clr_bit(UCSRC,UPM0);
+		clr_bit(UCSRC,UPM1);
+	}
+	else if (ENABLE_EVEN == uart->parity)
+	{
+		clr_bit(UCSRC,UPM0);
+		set_bit(UCSRC,UPM1);
+	}
+	else if (ENABLE_ODD == uart->parity)
+	{
+		set_bit(UCSRC,UPM0);
+		set_bit(UCSRC,UPM1);
+	}
+	else
+	{
+		error = UART_STATE_INVALID_STOP_BIT_NUMBER;
+	}
+
+	/* Initialize packet length */
+	if (BIT_5 == uart->packetLength)
+	{
+		clr_bit(UCSRC,UCSZ0);
+		clr_bit(UCSRC,UCSZ1);
+		clr_bit(UCSRB,UCSZ2);
+	}
+	else if (BIT_6 == uart->packetLength)
+	{
+		set_bit(UCSRC,UCSZ0);
+		clr_bit(UCSRC,UCSZ1);
+		clr_bit(UCSRB,UCSZ2);
+	}
+	else if (BIT_7 == uart->packetLength)
+	{
+		clr_bit(UCSRC,UCSZ0);
+		set_bit(UCSRC,UCSZ1);
+		clr_bit(UCSRB,UCSZ2);
+	}
+	else if (BIT_8 == uart->packetLength)
+	{
+		set_bit(UCSRC,UCSZ0);
+		set_bit(UCSRC,UCSZ1);
+		clr_bit(UCSRB,UCSZ2);
+	}
+	else if (BIT_9 == uart->packetLength)
+	{
+		set_bit(UCSRC,UCSZ0);
+		set_bit(UCSRC,UCSZ1);
+		set_bit(UCSRB,UCSZ2);
+	}
+	else
+	{
+		error = UART_STATE_INVALID_PACKET_LENGTH;
+	}
 	return error;
 }
 
