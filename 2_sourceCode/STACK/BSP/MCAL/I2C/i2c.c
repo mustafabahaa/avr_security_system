@@ -13,13 +13,27 @@
 /*                     Functions Implementation                          */
 /*************************************************************************/
 
-i2c_error_t mcal_TWI_init(void)
+i2c_error_t mcal_TWI_init(i2c_t* i2c)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
-	/* Bit Rate: 400.000 kbps using zero pre-scaler TWPS=00 and F_CPU=8Mhz */
-	register(TWBR) = 0x02;
 	register(TWSR) = 0x00;
+
+	if ( RATE_100KB == i2c->bitRate)
+	{
+		/*TWBR  = ((F_CPU / SCLfreq) – 16) / (2 * Prescaler)*/
+		register(TWBR) = ((F_CPU / 100000) - 16) / 2;
+	}
+	else if (RATE_400KB == i2c->bitRate)
+	{
+		/*TWBR  = ((F_CPU / SCLfreq) – 16) / (2 * Prescaler)*/
+		register(TWBR) = ((F_CPU / 400000) - 16) / 2;
+	}
+	else
+	{
+		error = I2C_STATE_INVALID_BIT_RATE;
+	}
+
 
 	/* Two Wire Bus address my address if any master device want to call me:
 	 * 0x1 (used in case this MC is a slave device)

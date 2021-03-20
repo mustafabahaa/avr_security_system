@@ -45,18 +45,30 @@ typedef enum
 {
 	I2C_STATE_SUCCESS,
 	I2C_STATE_ERROR,
+	I2C_STATE_INVALID_BIT_RATE,
 } i2c_error_t;
+
+typedef enum
+{
+	RATE_100KB,
+	RATE_400KB,
+} i2c_bit_rate_t;
+
+typedef struct
+{
+	i2c_bit_rate_t bitRate;
+} i2c_t;
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
  ** mcal_TWI_init()
  **
- ** parameters: void
+ ** parameters: i2c_t* i2c
  ** return    : i2c_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for i2c
  **************************************************************************/
-i2c_error_t mcal_TWI_init(void);
+i2c_error_t mcal_TWI_init(i2c_t* i2c);
 
 /**************************************************************************
  ** mcal_TWI_start()

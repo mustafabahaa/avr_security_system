@@ -12,8 +12,11 @@ eeprom_error_t hal_eeprom_init(void)
 {
 	eeprom_error_t error = EEPROM_SUCCESS;
 
+	i2c_t i2c;
+	i2c.bitRate = RATE_100KB;
+
 	/* just initialize the I2C(TWI) module inside the MC */
-	if (I2C_STATE_SUCCESS == mcal_TWI_init())
+	if (I2C_STATE_SUCCESS == mcal_TWI_init(&i2c))
 	{
 		/* i2c initialized */
 	}
