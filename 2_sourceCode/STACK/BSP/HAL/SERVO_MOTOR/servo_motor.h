@@ -10,10 +10,10 @@
 /**************************************************************************/
 /*                              Includes                                  */
 /**************************************************************************/
-#include "./../../includes/atmega16.h"
-#include "./../../includes/types.h"
-#include "./../../MCAL/gpio/gpio.h"
-#include "./../../MCAL/PWM/pwm.h"
+#include "atmega16.h"
+#include "types.h"
+#include "gpio.h"
+#include "pwm.h"
 
 /*************************************************************************/
 /*                                 Macros                                */

@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "atmega16.h": "c",
+    "types.h": "c",
+    "gpio.h": "c",
+    "std_library.h": "c",
+    "port.h": "c",
+    "uart.h": "c"
+  }
+}

@@ -8,9 +8,9 @@
 #ifndef HAL_EEPROM_H_
 #define HAL_EEPROM_H_
 
-#include "../../includes/types.h"
-#include "../../includes/atmega16.h"
-#include "../../MCAL/I2C/i2c.h"
+#include "types.h"
+#include "atmega16.h"
+#include "i2c.h"
 
 /*******************************************************************************
  *                 					 Macros                                    *

@@ -8,17 +8,17 @@
 /*                              Includes                                 */
 /*************************************************************************/
 /* BSP Includes */
-#include "./../STACK/BSP/includes/types.h"
-#include "./../STACK/BSP/includes/atmega16.h"
-#include "./../STACK/BSP/HAL/KEYPAD/keypad.h"
-#include "./../STACK/BSP/HAL/LCD/lcd.h"
-#include "./../STACK/BSP/MCAL/TIMER/timer.h"
+#include "types.h"
+#include "atmega16.h"
+#include "keypad.h"
+#include "lcd.h"
+#include "timer.h"
 
 /* Managers Includes */
-#include "./../STACK/Managers/MessagingUnit/MessagingUnit.h"
+#include "MessagingUnit.h"
 
 /* Service Includes */
-#include "./../STACK/Services/Logger/logger.h"
+#include "logger.h"
 
 /*************************************************************************/
 /*                               MACROS                                  */

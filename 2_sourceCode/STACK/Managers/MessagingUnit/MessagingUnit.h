@@ -10,10 +10,10 @@
 /**************************************************************************/
 /*                              Includes                                  */
 /**************************************************************************/
-#include "./../../BSP/includes/types.h"
-#include "./../../BSP/MCAL/UART/uart.h"
-#include "./../../Services/Logger/logger.h"
-#include "./../../Utility/std_library/std_library.h"
+#include "types.h"
+#include "uart.h"
+#include "logger.h"
+#include "std_library.h"
 /**************************************************************************/
 /*                                 Macros                                 */
 /**************************************************************************/

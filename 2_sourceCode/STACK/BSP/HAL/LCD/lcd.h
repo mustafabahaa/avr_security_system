@@ -10,12 +10,12 @@
 /*************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
-#include "./../../includes/types.h"
-#include "./../../includes/atmega16.h"
-#include "./../../MCAL/GPIO/gpio.h"
-#include "./../../MCAL/PORT/port.h"
-#include "./../../../Utility/std_library/std_library.h"
-#include "./../../../Utility/delay/delay.h"
+#include "types.h"
+#include "atmega16.h"
+#include "gpio.h"
+#include "./port.h"
+#include "std_library.h"
+#include "delay.h"
 /**************************************************************************
  *                                   Macros                               *
  **************************************************************************/

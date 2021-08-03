@@ -1,6 +1,7 @@
 *.o
 3_simulation/final_program_project/Final-Project.pdsprj.DESKTOP-IAB9VBS.Mustafa.workspace
-2_sourceCode/HMI_ECU/.vs/
-2_sourceCode/CONTROL_ECU/.vs/
-2_sourceCode/HMI_ECU/Door Locker - HMI_ECU/Debug
-2_sourceCode/CONTROL_ECU/Door Locker - CONTROL_ECU/Debug
+2_sourceCode/SecuritySystem/HMI_ECU/.vs/
+2_sourceCode/SecuritySystem/CONTROL_ECU/.vs/
+2_sourceCode/SecuritySystem/CONTROL_ECU/CONTROL_ECU/Debug
+2_sourceCode/SecuritySystem/HMI_ECU/HMI_ECU/Debug
+2_sourceCode/SecuritySystem/.vs/
