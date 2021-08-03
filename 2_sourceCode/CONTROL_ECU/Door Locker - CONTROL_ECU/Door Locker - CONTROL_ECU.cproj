@@ -120,171 +120,171 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\2_sourceCode\CONTROL_ECU\main.c">
+    <Compile Include="..\..\..\2_sourceCode\CONTROL_ECU\main.c">
       <SubType>compile</SubType>
       <Link>main.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\BUTTON\button.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\BUTTON\button.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\BUTTON\button.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\BUTTON\button.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\BUTTON\button.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\BUTTON\button.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\BUZZER\buzzer.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\BUZZER\buzzer.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\BUZZER\buzzer.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\BUZZER\buzzer.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\BUZZER\buzzer.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\BUZZER\buzzer.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\DC_MOTOR\dc_motor.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\DC_MOTOR\dc_motor.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\DC_MOTOR\dc_motor.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\DC_MOTOR\dc_motor.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\DC_MOTOR\dc_motor.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\DC_MOTOR\dc_motor.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\EEPROM\eeprom.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\EEPROM\eeprom.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\EEPROM\eeprom.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\EEPROM\eeprom.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\EEPROM\eeprom.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\EEPROM\eeprom.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\KEYPAD\keypad.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\KEYPAD\keypad.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\KEYPAD\keypad.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\KEYPAD\keypad.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\KEYPAD\keypad.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\KEYPAD\keypad.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\LCD\lcd.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\LCD\lcd.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\LCD\lcd.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\LCD\lcd.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\LCD\lcd.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\LCD\lcd.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\LED\led.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\LED\led.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\LED\led.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\LED\led.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\LED\led.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\LED\led.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\SERVO_MOTOR\servo_motor.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\SERVO_MOTOR\servo_motor.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\SERVO_MOTOR\servo_motor.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\HAL\SERVO_MOTOR\servo_motor.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\HAL\SERVO_MOTOR\servo_motor.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\SERVO_MOTOR\servo_motor.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\includes\atmega16.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\includes\atmega16.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\includes\atmega16.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\includes\types.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\includes\types.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\includes\types.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\e_interrupt\e_interrupt.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\e_interrupt\e_interrupt.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\e_interrupt\e_interrupt.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\e_interrupt\e_interrupt.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\e_interrupt\e_interrupt.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\e_interrupt\e_interrupt.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\GPIO\gpio.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\GPIO\gpio.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\GPIO\gpio.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\GPIO\gpio.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\GPIO\gpio.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\GPIO\gpio.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\I2C\i2c.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\I2C\i2c.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\I2C\i2c.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\I2C\i2c.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\I2C\i2c.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\I2C\i2c.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\PORT\port.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\PORT\port.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\PORT\port.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\PORT\port.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\PORT\port.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\PORT\port.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\PWM\pwm.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\PWM\pwm.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\PWM\pwm.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\PWM\pwm.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\PWM\pwm.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\PWM\pwm.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\TIMER\timer.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\TIMER\timer.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer_callbacks.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer_callbacks.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\TIMER\timer_callbacks.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\UART\uart.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\UART\uart.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\UART\uart.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\BSP\MCAL\UART\uart.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\BSP\MCAL\UART\uart.h">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\UART\uart.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Managers\MessagingUnit\MessagingUnit.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Managers\MessagingUnit\MessagingUnit.c">
       <SubType>compile</SubType>
       <Link>STACK\Managers\MessagingUnit\MessagingUnit.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Managers\MessagingUnit\MessagingUnit.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Managers\MessagingUnit\MessagingUnit.h">
       <SubType>compile</SubType>
       <Link>STACK\Managers\MessagingUnit\MessagingUnit.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Services\Logger\logger.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Services\Logger\logger.c">
       <SubType>compile</SubType>
       <Link>STACK\Services\Logger\logger.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Services\Logger\logger.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Services\Logger\logger.h">
       <SubType>compile</SubType>
       <Link>STACK\Services\Logger\logger.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Utility\delay\delay.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Utility\delay\delay.c">
       <SubType>compile</SubType>
       <Link>STACK\Utility\delay\delay.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Utility\delay\delay.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Utility\delay\delay.h">
       <SubType>compile</SubType>
       <Link>STACK\Utility\delay\delay.h</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Utility\std_library\std_library.c">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Utility\std_library\std_library.c">
       <SubType>compile</SubType>
       <Link>STACK\Utility\std_library\std_library.c</Link>
     </Compile>
-    <Compile Include="..\..\2_sourceCode\STACK\Utility\std_library\std_library.h">
+    <Compile Include="..\..\..\2_sourceCode\STACK\Utility\std_library\std_library.h">
       <SubType>compile</SubType>
       <Link>STACK\Utility\std_library\std_library.h</Link>
     </Compile>

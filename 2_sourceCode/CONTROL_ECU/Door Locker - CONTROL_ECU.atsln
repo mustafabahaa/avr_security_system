@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Atmel Studio Solution File, Format Version 11.00
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Door Locker - CONTROL_ECU", "Door Locker - CONTROL_ECU.cproj", "{C374E5AE-B018-46BD-BEA6-1387541E4F69}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Door Locker - CONTROL_ECU", "Door Locker - CONTROL_ECU\Door Locker - CONTROL_ECU.cproj", "{C374E5AE-B018-46BD-BEA6-1387541E4F69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
