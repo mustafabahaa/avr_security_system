@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Door Locker - HMI_ECU", "Door Locker - HMI_ECU\Door Locker - HMI_ECU.cproj", "{DCE6C7E3-EE26-4D79-826B-08594B9AD897}"
 EndProject
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Door Locker - CONTROL_ECU", "..\Door Locker - CONTROL_ECU\Door Locker - CONTROL_ECU.cproj", "{C374E5AE-B018-46BD-BEA6-1387541E4F69}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AVR = Debug|AVR
@@ -17,10 +15,6 @@ Global
 		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Debug|AVR.Build.0 = Debug|AVR
 		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.ActiveCfg = Release|AVR
 		{DCE6C7E3-EE26-4D79-826B-08594B9AD897}.Release|AVR.Build.0 = Release|AVR
-		{C374E5AE-B018-46BD-BEA6-1387541E4F69}.Debug|AVR.ActiveCfg = Debug|AVR
-		{C374E5AE-B018-46BD-BEA6-1387541E4F69}.Debug|AVR.Build.0 = Debug|AVR
-		{C374E5AE-B018-46BD-BEA6-1387541E4F69}.Release|AVR.ActiveCfg = Release|AVR
-		{C374E5AE-B018-46BD-BEA6-1387541E4F69}.Release|AVR.Build.0 = Release|AVR
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
