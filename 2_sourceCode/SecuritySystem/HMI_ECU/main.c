@@ -23,7 +23,7 @@
 /*************************************************************************/
 /*                               MACROS                                  */
 /*************************************************************************/
-#define PASSWORD_LENGTH 4
+#define PASSWORD_LENGTH 5
 #define MAX_INCORRECT_PASSWORD_ENTER 3
 #define ENTER 'A'
 /*************************************************************************/
@@ -168,7 +168,7 @@ static void requirePassword(u8_t* message , u8_t* password)
 	hal_lcd_goToRowColumn(&lcd,1,0);
 
 	/*take password from user*/
-	for (int i = 0 ; i < PASSWORD_LENGTH ; i++)
+	for (int i = 0 ; i < PASSWORD_LENGTH-1 ; i++)
 	{
 		/* stay in loop until any key is pressed */
 		while(NO_KEY_PRESSED == keyPressed)
@@ -191,10 +191,12 @@ static void requirePassword(u8_t* message , u8_t* password)
 	}
 
 	/* copy the password buffer to the passed array*/
-	for(int i = 0 ; i < PASSWORD_LENGTH ; i++)
+	for(int i = 0 ; i < PASSWORD_LENGTH-1 ; i++)
 	{
 		password[i] = buffer[i];
 	}
+
+  password[PASSWORD_LENGTH] = '\0';
 
 	hal_lcd_goToRowColumn(&lcd,0,0);
 	hal_lcd_clearScreen(&lcd);
@@ -261,12 +263,12 @@ static void checkDefaultPassword()
 static void firtTimePassword()
 {
 	u8_t password[PASSWORD_LENGTH] = {0};
-	u8_t confirmPassword[PASSWORD_LENGTH] = {0};
+	u8_t confirmPassword[PASSWORD_LENGTH] = {0}; 
 
 	requirePassword((u8_t*)"Enter new password",password);
 	requirePassword((u8_t*)"Confirm password",confirmPassword);
 
-	if (std_strcmp(password,confirmPassword) == 0)
+  if (std_strcmp(password,confirmPassword) == 0)
 	{
 		// send password to control unit to save it in EEPROM
 		ms_manager_send_data(START_DEFAULT_PASS);
