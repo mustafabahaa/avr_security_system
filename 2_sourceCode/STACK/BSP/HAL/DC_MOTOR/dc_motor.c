@@ -10,7 +10,7 @@ motor_error_t hal_dc_motor_init(motor_t *motor)
 {
 	motor_error_t error = MOTOR_STATE_SUCCESS;
 
-	if (GPIO_STATE_SUCCESS == mcal_pwm_initialization(motor->channel))
+	if (PWM_STATE_SUCCESS == mcal_pwm_initialization(motor->channel))
 	{
 		if (GPIO_STATE_SUCCESS == mcal_gpio_pin_init(
 				motor->direction->dir_1_port,

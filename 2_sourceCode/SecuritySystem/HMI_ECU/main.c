@@ -180,6 +180,8 @@ static void requirePassword(u8_t* message , u8_t* password)
 		hal_lcd_sendData(&lcd,DISPLAY,'*');
 
 		buffer[i] = keyPressed;
+
+    keyPressed = NO_KEY_PRESSED;
 	}
 
 	/* wait for user to press enter */
