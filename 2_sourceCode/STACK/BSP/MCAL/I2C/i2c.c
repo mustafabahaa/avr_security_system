@@ -17,8 +17,12 @@ i2c_error_t mcal_TWI_init(i2c_t* i2c)
 {
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
-	register(TWSR) = 0x00;
+	register(TWBR) = 0x02;
+  register(TWAR) =0x02;
 
+
+
+#if 0
 	if ( RATE_100KB == i2c->bitRate)
 	{
 		/*TWBR  = ((F_CPU / SCLfreq) – 16) / (2 * Prescaler)*/
@@ -33,22 +37,25 @@ i2c_error_t mcal_TWI_init(i2c_t* i2c)
 	{
 		error = I2C_STATE_INVALID_BIT_RATE;
 	}
-
+#endif 
 
 	/* Two Wire Bus address my address if any master device want to call me:
 	 * 0x1 (used in case this MC is a slave device)
        General Call Recognition: Off */
 
-	register(TWAR) = 0b00000010; // my address = 0x01 :)
 
 	/* enable TWI */
 	set_bit(TWCR,TWEN);
+	set_bit(TWCR,TWEA);
+
+  register(TWSR)=0x00;	// no prescaler used 
 
 	return error;
 }
 
 i2c_error_t mcal_TWI_start(void)
 {
+  static u8_t x = 0;
 	i2c_error_t error = I2C_STATE_SUCCESS;
 
 	/*
@@ -62,8 +69,14 @@ i2c_error_t mcal_TWI_start(void)
 
 	/* Wait for TWINT flag set in TWCR Register
 	 *  (start bit is send successfully) */
-	while(bit_is_clr(TWCR,TWINT));
+	while (!(register(TWCR) & (1 << TWINT)));
 
+  //set_bit(TWCR,TWINT);
+  if (x == 1)
+  {
+     // set_bit(BASE_C + OFFSET_PORT, 3);         
+  }
+      x++;                    
 	return error;
 }
 
@@ -97,7 +110,7 @@ i2c_error_t mcal_TWI_write(u8_t data)
 	set_bit(TWCR,TWEN);
 
 	/* Wait for TWINT flag set in TWCR Register(data is send successfully) */
-	while(bit_is_clr(TWCR,TWINT));
+	while (!(register(TWCR) & (1 << TWINT)));
 
 	return error;
 }
@@ -116,7 +129,7 @@ i2c_error_t mcal_TWI_readWithACK(u8_t* data)
 	set_bit(TWCR,TWEA);
 
 	/* Wait for TWINT flag set in TWCR Register (data received successfully) */
-	while(bit_is_clr(TWCR,TWINT));
+	while (!(register(TWCR) & (1 << TWINT)));
 
 	/* Read Data */
 	*data = TWDR;
@@ -137,7 +150,7 @@ i2c_error_t mcal_TWI_readWithNACK(u8_t* data)
 	set_bit(TWCR,TWEN);
 
 	/* Wait for TWINT flag set in TWCR Register (data received successfully) */
-	while(bit_is_clr(TWCR,TWINT));
+	while (!(register(TWCR) & (1 << TWINT)));
 
 	/* Read Data */
 	*data = TWDR;

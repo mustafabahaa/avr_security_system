@@ -38,19 +38,25 @@
 // Master received data but doesn't send ACK to slave
 #define TW_MR_DATA_NACK  0x58
 
+// I2C write command
+#define I2C_WRITE_COMMAND 0x00
+
+// I2C read command
+#define I2C_READ_COMMAND 0x01
+
 /*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/
 typedef enum
 {
-	I2C_STATE_SUCCESS,
+	I2C_STATE_SUCCESS=1,
 	I2C_STATE_ERROR,
 	I2C_STATE_INVALID_BIT_RATE,
 } i2c_error_t;
 
 typedef enum
 {
-	RATE_100KB,
+	RATE_100KB=1,
 	RATE_400KB,
 } i2c_bit_rate_t;
 

@@ -18,6 +18,8 @@
 #define ERROR 0
 #define SUCCESS 1
 
+#define EEPROM_ADDRESS 0xa0
+
 typedef enum
 {
 	EEPROM_FAIL,
@@ -28,8 +30,8 @@ typedef enum
  *                      Functions Prototypes                                   *
  *******************************************************************************/
 eeprom_error_t hal_eeprom_init(void);
-eeprom_error_t hal_eeprom_writeByte(u16_t u16addr,u8_t u8data);
-eeprom_error_t hal_eeprom_readByte(u16_t u16addr,u8_t *u8data);
+eeprom_error_t hal_eeprom_writeByte(u8_t address,u8_t u8data);
+eeprom_error_t hal_eeprom_readByte(u8_t address,u8_t *u8data);
 
 
 #endif /* HAL_EEPROM_H_ */

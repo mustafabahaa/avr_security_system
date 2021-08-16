@@ -13,7 +13,7 @@ eeprom_error_t hal_eeprom_init(void)
 	eeprom_error_t error = EEPROM_SUCCESS;
 
 	i2c_t i2c;
-	i2c.bitRate = RATE_100KB;
+	i2c.bitRate = RATE_400KB;
 
 	/* just initialize the I2C(TWI) module inside the MC */
 	if (I2C_STATE_SUCCESS == mcal_TWI_init(&i2c))
@@ -27,7 +27,7 @@ eeprom_error_t hal_eeprom_init(void)
 	return error;
 }
 
-eeprom_error_t hal_eeprom_writeByte(u16_t u16addr, u8_t u8data)
+eeprom_error_t hal_eeprom_writeByte(u8_t address, u8_t u8data)
 {
 	eeprom_error_t error = EEPROM_SUCCESS;
 	u8_t status = 0;
@@ -36,18 +36,17 @@ eeprom_error_t hal_eeprom_writeByte(u16_t u16addr, u8_t u8data)
 	if (I2C_STATE_SUCCESS == mcal_TWI_start())
 	{
 		mcal_TWI_getStatus(&status);
-
 		if (status == TW_START)
 		{
 			/* Send the device address, we need to get A8 A9 A10 address bits from the
 			 * memory location address and R/W=0 (write) */
-			if (I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)(0xA0 | ((u16addr & 0x0700)>>7))))
+			if (I2C_STATE_SUCCESS == mcal_TWI_write(EEPROM_ADDRESS | I2C_WRITE_COMMAND))
 			{
 				mcal_TWI_getStatus(&status);
 				if ( status == TW_MT_SLA_W_ACK )
 				{
 					/* Send the required memory location address */
-					if(I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)(u16addr)))
+					if(I2C_STATE_SUCCESS == mcal_TWI_write(address))
 					{
 						mcal_TWI_getStatus(&status);
 						if( status ==  TW_MT_DATA_ACK)
@@ -59,7 +58,7 @@ eeprom_error_t hal_eeprom_writeByte(u16_t u16addr, u8_t u8data)
 								if ( status == TW_MT_DATA_ACK )
 								{
 									/* Send the Stop Bit */
-									if (I2C_STATE_SUCCESS == mcal_TWI_stop())
+									if (I2C_STATE_SUCCESS == mcal_TWI_stop())                                                      
 									{
 										/* EEPROM write success */
 									}
@@ -112,7 +111,7 @@ eeprom_error_t hal_eeprom_writeByte(u16_t u16addr, u8_t u8data)
 	return error;
 
 }
-eeprom_error_t hal_eeprom_readByte(u16_t u16addr, u8_t *u8data)
+eeprom_error_t hal_eeprom_readByte(u8_t address, u8_t *u8data)
 {
 	eeprom_error_t error = EEPROM_SUCCESS;
 	u8_t status = 0;
@@ -123,15 +122,32 @@ eeprom_error_t hal_eeprom_readByte(u16_t u16addr, u8_t *u8data)
 		mcal_TWI_getStatus(&status);
 		if (status == TW_START)
 		{
-			/* Send the device address, we need to get A8 A9 A10 address bits from the
+      switch (status)
+      {
+      case TW_REP_START:
+      case TW_MT_SLA_W_ACK:
+      case TW_MT_SLA_R_ACK:
+      case TW_MT_DATA_ACK:
+      case TW_MR_DATA_ACK:
+      case TW_MR_DATA_NACK:
+      case I2C_WRITE_COMMAND:
+      case I2C_READ_COMMAND:
+        set_bit(BASE_C + OFFSET_PORT, 3);
+        break;
+
+      default:
+        break;
+      }
+
+      /* Send the device address, we need to get A8 A9 A10 address bits from the
 			 * memory location address and R/W=0 (write) */
-			if (I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)((0xA0) | ((u16addr & 0x0700)>>7))))
+			if (I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)((0xA0) | ((address & 0x0700)>>7))))
 			{
 				mcal_TWI_getStatus(&status);
 				if(status == TW_MT_SLA_W_ACK)
 				{
 					/* write byte to eeprom */
-					if(I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)(u16addr)))
+					if(I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)(address)))
 					{
 						mcal_TWI_getStatus(&status);
 						if(status == TW_MT_DATA_ACK)
@@ -144,7 +160,7 @@ eeprom_error_t hal_eeprom_readByte(u16_t u16addr, u8_t *u8data)
 								{
 									/* Send the device address, we need to get A8 A9 A10 address bits from the
 									 * memory location address and R/W=1 (Read) */
-									if(I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)((0xA0) | ((u16addr & 0x0700)>>7) | 1)))
+									if(I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)((0xA0) | ((address & 0x0700)>>7) | 1)))
 									{
 										mcal_TWI_getStatus(&status);
 										if(status ==TW_MT_SLA_R_ACK )
