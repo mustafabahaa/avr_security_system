@@ -8,24 +8,24 @@
 /*                              Includes                                 */
 /*************************************************************************/
 /* BSP Includes */
-#include "./../../STACK/BSP/includes/types.h"
-#include "./../../STACK/BSP/includes/atmega16.h"
-#include "./../../STACK/BSP/MCAL/TIMER/timer.h"
-#include "./../../STACK/BSP/HAL/EEPROM/eeprom.h"
-#include "./../../STACK/BSP/HAL/BUZZER/buzzer.h"
-#include "./../../STACK/BSP/HAL/SERVO_MOTOR/servo_motor.h"
+#include "types.h"
+#include "atmega16.h"
+#include "timer.h"
+#include "eeprom.h"
+#include "buzzer.h"
+#include "servo_motor.h"
 
 /* Managers Includes */
-#include "./../../STACK/Managers/MessagingUnit/MessagingUnit.h"
+#include "MessagingUnit.h"
 
 /* Utility Includes */
-#include "./../../STACK/Utility/std_library/std_library.h"
-#include "./../../STACK/Utility/delay/delay.h"
+#include "std_library.h"
+#include "delay.h"
 
 /*************************************************************************/
 /*                               MACROS                                  */
 /*************************************************************************/
-#define PASSWORD_LENGTH 4
+#define PASSWORD_LENGTH 5
 #define PASSWORD_LOCATION_FLAG 0x09
 /*************************************************************************/
 /*                               Types                                   */
