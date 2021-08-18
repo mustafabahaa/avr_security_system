@@ -11,7 +11,7 @@
 /*                              Includes                                 */
 /*************************************************************************/
 #include "types.h"
-#include "atmega16.h"
+#include "atmega32.h"
 #include "gpio.h"
 #include "./port.h"
 #include "std_library.h"

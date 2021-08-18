@@ -1,6 +1,6 @@
 {
   "files.associations": {
-    "atmega16.h": "c",
+    "atmega32.h": "c",
     "types.h": "c",
     "gpio.h": "c",
     "std_library.h": "c",

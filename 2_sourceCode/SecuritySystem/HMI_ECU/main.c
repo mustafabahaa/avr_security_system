@@ -9,7 +9,7 @@
 /*************************************************************************/
 /* BSP Includes */
 #include "types.h"
-#include "atmega16.h"
+#include "atmega32.h"
 #include "keypad.h"
 #include "lcd.h"
 #include "timer.h"

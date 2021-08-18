@@ -3,7 +3,7 @@
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
 
- ** atmega16.h
+ ** atmega32.h
  **************************************************************************/
 #ifndef ATMEGA_16_H_
 #define ATMEGA_16_H_

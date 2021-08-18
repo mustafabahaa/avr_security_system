@@ -9,7 +9,7 @@
 /*************************************************************************/
 /* BSP Includes */
 #include "types.h"
-#include "atmega16.h"
+#include "atmega32.h"
 #include "timer.h"
 #include "eeprom.h"
 #include "buzzer.h"
