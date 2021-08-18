@@ -72,7 +72,7 @@ port_error_t mcal_port_read(u8_t base, u8_t *value)
 
 	if (base == BASE_A || base == BASE_B || base == BASE_C || base == BASE_D)
 	{
-		reg_read(base + OFFSET_PIN, value);
+		reg_read(base + OFFSET_PIN, *value);
 	}
 	else
 	{

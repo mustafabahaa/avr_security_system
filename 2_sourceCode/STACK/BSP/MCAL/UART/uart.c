@@ -180,43 +180,30 @@ uart_error_t mcal_UART_sendString(const u8_t *str)
 			error = UART_STATE_ERROR;
 		}
 	}
-	/************************* Another Method *************************
-	while(*Str != '\0')
-	{
-		UART_sendByte(*Str);
-		Str++;
-	}
-	 *******************************************************************/
+
+  /*send the null of the string after finish */
+  mcal_UART_sendByte('\0');
 
 	return error;
 }
 
 uart_error_t mcal_UART_receiveString(u8_t *str)
 {
-	uart_error_t error = UART_STATE_SUCCESS;
+  uart_error_t error = UART_STATE_SUCCESS;
 
-	u8_t i = 0;
-	if (UART_STATE_SUCCESS == mcal_UART_recieveByte(&str[i]))
-	{
-		while(str[i] != '\0')
-		{
-			i++;
-			if (UART_STATE_SUCCESS == mcal_UART_recieveByte(&str[i]))
-			{
-				// do nothing
-			}
-			else
-			{
-				error = UART_STATE_ERROR;
+  u8_t i = 0;
 
-			}
-		}
-	}
-	else
-	{
-		error = UART_STATE_ERROR;
-	}
-
-	return error;
+  while (str[i] != '\0')
+  {
+    i++;
+    if (UART_STATE_SUCCESS == mcal_UART_recieveByte(&str[i]))
+    {
+      // do nothing
+    }
+    else
+    {
+      error = UART_STATE_ERROR;
+    }
+  }
+  return error;
 }
-

@@ -163,20 +163,20 @@ static void startPasswordFlashing()
 
 	ms_manager_receive_string(password);
 
-	/* save password in eeprom */
-	hal_eeprom_writeByte(0x01,password[0]);
-	delay_ms(10);
+  /* save password in eeprom */
+  for (int i = 0; i < PASSWORD_LENGTH - 1; i++)
+  {
+    if (EEPROM_SUCCESS != hal_eeprom_writeByte(i + 1, password[i]))
+    {
+      break;
+    }
+    else
+    {
+      delay_ms(10);
+    }
+  }
 
-	hal_eeprom_writeByte(0x02,password[1]);
-	delay_ms(10);
-
-	hal_eeprom_writeByte(0x03,password[2]);
-	delay_ms(10);
-
-	hal_eeprom_writeByte(0x04,password[3]);
-	delay_ms(10);
-
-	/*write password exist flag */
+  /*write password exist flag */
 	hal_eeprom_writeByte(PASSWORD_LOCATION_FLAG,PASSWORD_EXICTED);
 	delay_ms(10);
 
@@ -241,13 +241,13 @@ static system_error_t systemInit()
 	//logger_init(LOGGER_ALL);
 
 	/* Initialize hardware devices */
-	error = buzzerInit();
-	error = servoMotorInit();
-	hal_eeprom_init();
+  error = buzzerInit();
+  error = servoMotorInit();
 
-	/* Initialize Managers */
+    /* Initialize Managers */
 	error = ms_manager_init();
 
+  error = EEPROM_SUCCESS == hal_eeprom_init() ? SYSTEM_SUCCESS : SYSTEM_FAIL;
 	return error;
 }
 
