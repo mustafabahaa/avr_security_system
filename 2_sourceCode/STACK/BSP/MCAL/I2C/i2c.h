@@ -132,12 +132,12 @@ i2c_error_t mcal_TWI_readWithNACK(u8_t* data);
 /**************************************************************************
  ** mcal_TWI_getStatus()
  **
- ** parameters: u8_t* data
+ ** parameters: void
  ** return    : status
  ***************************************************************************
  ** this function is used to get status of I2C
  **************************************************************************/
-i2c_error_t mcal_TWI_getStatus(u8_t* status);
+u8_t mcal_TWI_getStatus();
 
 
 #endif /* _I2C_H_ */

@@ -150,12 +150,8 @@ i2c_error_t mcal_TWI_readWithNACK(u8_t *data)
   return error;
 }
 
-i2c_error_t mcal_TWI_getStatus(u8_t *status)
+u8_t mcal_TWI_getStatus()
 {
-  i2c_error_t error = I2C_STATE_SUCCESS;
-
-  /* masking to eliminate first 3 bits and get the last 5 bits (status bits) */
-  reg_mask_read(TWSR, STATUS_REG_MASK, *status);
-
-  return error;
+  u8_t status = 0 ;
+  return reg_mask_read(TWSR, STATUS_REG_MASK, status);
 }
