@@ -40,7 +40,7 @@ eeprom_error_t hal_eeprom_writeByte(u8_t address, u8_t u8data)
 		{
 			/* Send the device address, we need to get A8 A9 A10 address bits from the
 			 * memory location address and R/W=0 (write) */
-			if (I2C_STATE_SUCCESS == mcal_TWI_write(EEPROM_ADDRESS | I2C_WRITE_COMMAND))
+			if (I2C_STATE_SUCCESS == mcal_TWI_write(EEPROM_ADDRESS + I2C_WRITE_COMMAND))
 			{
 				mcal_TWI_getStatus(&status);
 				if ( status == TW_MT_SLA_W_ACK )
@@ -122,55 +122,34 @@ eeprom_error_t hal_eeprom_readByte(u8_t address, u8_t *u8data)
 		mcal_TWI_getStatus(&status);
 		if (status == TW_START)
 		{
-      switch (status)
-      {
-      case TW_REP_START:
-      case TW_MT_SLA_W_ACK:
-      case TW_MT_SLA_R_ACK:
-      case TW_MT_DATA_ACK:
-      case TW_MR_DATA_ACK:
-      case TW_MR_DATA_NACK:
-      case I2C_WRITE_COMMAND:
-      case I2C_READ_COMMAND:
-        set_bit(BASE_C + OFFSET_PORT, 3);
-        break;
-
-      default:
-        break;
-      }
-
-      /* Send the device address, we need to get A8 A9 A10 address bits from the
-			 * memory location address and R/W=0 (write) */
-			if (I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)((0xA0) | ((address & 0x0700)>>7))))
+			if (I2C_STATE_SUCCESS == mcal_TWI_write(EEPROM_ADDRESS + I2C_WRITE_COMMAND))
 			{
 				mcal_TWI_getStatus(&status);
 				if(status == TW_MT_SLA_W_ACK)
 				{
 					/* write byte to eeprom */
-					if(I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)(address)))
+					if(I2C_STATE_SUCCESS == mcal_TWI_write(address))
 					{
 						mcal_TWI_getStatus(&status);
 						if(status == TW_MT_DATA_ACK)
 						{
+                                                                                                       
 							/* Send the Repeated Start Bit */
 							if (I2C_STATE_SUCCESS == mcal_TWI_start())
 							{
 								mcal_TWI_getStatus(&status);
 								if(status == TW_REP_START )
 								{
-									/* Send the device address, we need to get A8 A9 A10 address bits from the
-									 * memory location address and R/W=1 (Read) */
-									if(I2C_STATE_SUCCESS == mcal_TWI_write((u8_t)((0xA0) | ((address & 0x0700)>>7) | 1)))
+									if(I2C_STATE_SUCCESS == mcal_TWI_write(EEPROM_ADDRESS + I2C_READ_COMMAND))
 									{
 										mcal_TWI_getStatus(&status);
 										if(status ==TW_MT_SLA_R_ACK )
 										{
-
 											/* Read Byte from Memory without send ACK */
 											if (I2C_STATE_SUCCESS == mcal_TWI_readWithNACK(u8data))
 											{
 												mcal_TWI_getStatus(&status);
-												if(status ==TW_MR_DATA_NACK )
+												if(status == TW_MR_DATA_NACK )
 												{
 													/* Send the Stop Bit */
 													if (I2C_STATE_SUCCESS == mcal_TWI_stop())

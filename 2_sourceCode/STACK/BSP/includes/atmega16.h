@@ -23,16 +23,18 @@
 /*************************************************************************/
 /*                      Register Access Functions Macros                 */
 /*************************************************************************/
-#define register(register) (*((volatile u8_t *)(u16_t) register))
-#define set_bit(register, bit) ((*((volatile u8_t *)(u16_t) register)) |= (1 << bit))
-#define tog_bit(register, bit) ((*((volatile u8_t *)(u16_t) register)) ^= (1 << bit))
-#define clr_bit(register, bit) ((*((volatile u8_t *)(u16_t) register)) &= ~(1 << bit))
-#define bit_is_set(register, bit) (((*((volatile u8_t *)(u16_t) register)) & (1 << bit)) ? HIGH : LOW)
-#define bit_is_clr(register, bit) (((*((volatile u8_t *)(u16_t) register)) & (1 << bit)) ? LOW : HIGH)
-
-#define reg_write(reg,value) (*((volatile u8_t *)(u16_t)reg)) = value;
-#define reg_mask_write(reg,mask,value) (*((volatile u8_t *)(u16_t)reg)) = ((*((volatile u8_t *)(u16_t)reg)) & mask) | value;
-#define reg_read(reg,value) (*((volatile u8_t *)(u16_t)reg)) = *value;
+#define register(reg) (*((volatile u8_t *)(u16_t) reg))
+#define set_bit(reg, bit) (register(reg) |= (1 << bit))
+#define dbl_set_bit(reg, bit,bit2) (register(reg) |= (1 << bit) | (1<<bit2))
+#define tog_bit(reg, bit) (register(reg) ^= (1 << bit))
+#define clr_bit(reg, bit) (register(reg) &= ~(1 << bit))
+#define bit_is_set(reg, bit) ((register(reg) & (1 << bit)))
+#define bit_is_clr(reg, bit) (!(register(reg) & (1 << bit)))
+#define en_bit(bit) (1<<bit)
+#define reg_write(reg,value) register(reg) = value;
+#define reg_mask_write(reg,mask,value) register(reg) = (register(reg) & mask) | value;
+#define reg_read(reg,value) value = register(reg);
+#define reg_mask_read(reg,mask,value) value = register(reg) & mask;
 
 /*************************************************************************/
 /*                               Register                                */

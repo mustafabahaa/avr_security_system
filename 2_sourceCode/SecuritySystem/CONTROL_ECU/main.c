@@ -250,10 +250,11 @@ static system_error_t systemInit()
   error = EEPROM_SUCCESS == hal_eeprom_init() ? SYSTEM_SUCCESS : SYSTEM_FAIL;
 
   u8_t x = 0;
-  hal_eeprom_writeByte(0x02,0x01);
-  delay_ms(500);
-  hal_eeprom_readByte(0x02,&x);
- // if (x == 0x01)  
+  hal_eeprom_writeByte(0x03,0x02);
+  delay_ms(100);
+  hal_eeprom_readByte(0x03,&x);
+  if (x == 0x02)         set_bit(BASE_C + OFFSET_PORT, 3);
+  
 
   while(1);
 
