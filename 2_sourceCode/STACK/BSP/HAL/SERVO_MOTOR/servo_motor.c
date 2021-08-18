@@ -20,7 +20,7 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
 {
 	servo_motor_error_t error = SERVO_MOTOR_STATE_SUCCESS;
 
-	if (GPIO_STATE_SUCCESS == mcal_pwm_initialization(motor->channel))
+	if (PWM_STATE_SUCCESS == mcal_pwm_initialization(motor->channel))
 	{
 		/*define TOP value to reset at to adjust the frequency
 		  note that  Fpwm = Fcpu / (N * 256)  and f or optimal
