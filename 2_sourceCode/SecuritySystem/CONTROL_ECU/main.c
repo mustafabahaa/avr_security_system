@@ -172,13 +172,13 @@ static void startPasswordFlashing()
     }
     else
     {
-      delay_ms(10);
+      delay_ms(50);
     }
   }
 
   /*write password exist flag */
 	hal_eeprom_writeByte(PASSWORD_LOCATION_FLAG,PASSWORD_EXICTED);
-	delay_ms(10);
+	delay_ms(50);
 
 	state = HALT_STATE;
 
@@ -186,17 +186,30 @@ static void startPasswordFlashing()
 
 static void validatePassword()
 {
-	u8_t password[PASSWORD_LENGTH] = {0};
-	u8_t originalPassword[PASSWORD_LENGTH] = {0};
+	u8_t password[PASSWORD_LENGTH] = {100};
+	u8_t originalPassword[PASSWORD_LENGTH] = {110};
 
 	/* Receive password */
 	ms_manager_receive_string(password);
 
 	/* get password from EEPROM */
-	for (int i =0; i<PASSWORD_LENGTH; i++)
+	for (int i =0; i<PASSWORD_LENGTH-1; i++)
 	{
-		hal_eeprom_readByte(0x00+(i+1),&originalPassword[i]);
-	}
+		hal_eeprom_readByte( i + 1 ,&originalPassword[i]);
+    delay_ms(50);
+  }
+
+  password[PASSWORD_LENGTH] = '\0';
+  originalPassword[PASSWORD_LENGTH] = '\0';
+
+  if(originalPassword[0] == '1')  
+  {
+     set_bit(BASE_C+OFFSET_PORT,3);
+  }
+  else
+  {
+
+  }
 
 	if(std_strcmp(password,originalPassword) == 0)
 	{

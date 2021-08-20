@@ -195,10 +195,9 @@ uart_error_t mcal_UART_receiveString(u8_t *str)
 
   while (str[i] != '\0')
   {
-    i++;
     if (UART_STATE_SUCCESS == mcal_UART_recieveByte(&str[i]))
     {
-      // do nothing
+      i++;
     }
     else
     {
