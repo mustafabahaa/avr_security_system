@@ -70,6 +70,6 @@ keypad_error_t hal_keypad_init(keypad_t* keypad);
  ** the function will return 0XFF when no key pressed
  ** the function will return the pressed key as a character if key pressed
  ** ---------------------------------------------------------------------*/
-keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed);
+keypad_error_t hal_keypad_getKey(keypad_t* keypad , u8_t* keyPressed);
 
 #endif /* KEYPAD_H_ */

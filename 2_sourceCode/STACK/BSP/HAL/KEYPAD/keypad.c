@@ -56,7 +56,7 @@ keypad_error_t hal_keypad_init (keypad_t* keypad)
 	return error;
 }
 
-keypad_error_t hal_keypad_getKey(keypad_t* keypad , s8_t* keyPressed)
+keypad_error_t hal_keypad_getKey(keypad_t* keypad , u8_t* keyPressed)
 {
 	keypad_error_t error = KEYPAD_SUCCESS;
 	/* the following loop clear every column one by one then

@@ -19,13 +19,12 @@
 #include "MessagingUnit.h"
 
 /* Utility Includes */
-#include "std_library.h"
+#include "pass_mng.h"
 #include "delay.h"
 
 /*************************************************************************/
 /*                               MACROS                                  */
 /*************************************************************************/
-#define PASSWORD_LENGTH 5
 #define PASSWORD_LOCATION_FLAG 0x09
 /*************************************************************************/
 /*                               Types                                   */
@@ -80,7 +79,7 @@ int main(void)
 
 	while(1)
 	{
-		ms_manager_receive_data(&state);
+		ms_manager_receive_signal(&state);
 
 		switch(state)
 		{
@@ -147,11 +146,11 @@ static void checkDefaultPassword()
 	hal_eeprom_readByte(PASSWORD_LOCATION_FLAG,&passwordExistance);
 	if (PASSWORD_EXICTED ==  passwordExistance)
 	{
-		ms_manager_send_data(PASSWORD_EXICTED);
+		ms_manager_send_signal(PASSWORD_EXICTED);
 	}
 	else
 	{
-		ms_manager_send_data(PASSWORD_NOT_EXICTED);
+		ms_manager_send_signal(PASSWORD_NOT_EXICTED);
 	}
 
 	state = HALT_STATE;
@@ -161,10 +160,10 @@ static void startPasswordFlashing()
 {
 	u8_t password[PASSWORD_LENGTH] = {0};
 
-	ms_manager_receive_string(password);
+	ms_manager_receive_password(password);
 
   /* save password in eeprom */
-  for (int i = 0; i < PASSWORD_LENGTH - 1; i++)
+  for (int i = 0; i < PASSWORD_LENGTH; i++)
   {
     if (EEPROM_SUCCESS != hal_eeprom_writeByte(i + 1, password[i]))
     {
@@ -190,34 +189,22 @@ static void validatePassword()
 	u8_t originalPassword[PASSWORD_LENGTH] = {110};
 
 	/* Receive password */
-	ms_manager_receive_string(password);
+	ms_manager_receive_password(password);
 
 	/* get password from EEPROM */
-	for (int i =0; i<PASSWORD_LENGTH-1; i++)
+	for (int i =0; i<PASSWORD_LENGTH; i++)
 	{
 		hal_eeprom_readByte( i + 1 ,&originalPassword[i]);
     delay_ms(50);
   }
 
-  password[PASSWORD_LENGTH] = '\0';
-  originalPassword[PASSWORD_LENGTH] = '\0';
-
-  if(originalPassword[0] == '1')  
-  {
-     set_bit(BASE_C+OFFSET_PORT,3);
-  }
-  else
-  {
-
-  }
-
-	if(std_strcmp(password,originalPassword) == 0)
+	if(MATCH == comparePasswords(password,originalPassword))
 	{
-		ms_manager_send_data(PASSWORD_RIGHT);
+		ms_manager_send_signal(PASSWORD_RIGHT);
 	}
 	else
 	{
-		ms_manager_send_data(PASSWORD_WRONG);
+		ms_manager_send_signal(PASSWORD_WRONG);
 	}
 
 	state = HALT_STATE;

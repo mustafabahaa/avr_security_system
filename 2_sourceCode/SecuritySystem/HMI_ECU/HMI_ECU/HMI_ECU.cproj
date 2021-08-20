@@ -133,6 +133,7 @@
       <Value>../../../../STACK/Services/Logger</Value>
       <Value>../../../../STACK/Utility/delay</Value>
       <Value>../../../../STACK/Utility/std_library</Value>
+      <Value>../../../../STACK/Utility/password_management</Value>
       <Value>../../../../STACK/BSP/includes</Value>
     </ListValues>
   </avrgcc.compiler.directories.IncludePaths>
@@ -324,6 +325,14 @@
       <SubType>compile</SubType>
       <Link>STACK\Utility\std_library\std_library.h</Link>
     </Compile>
+     <Compile Include="..\..\..\..\2_sourceCode\STACK\Utility\password_management\pass_mng.c">
+      <SubType>compile</SubType>
+      <Link>STACK\Utility\password_management\pass_mng.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\2_sourceCode\STACK\Utility\password_management\pass_mng.h">
+      <SubType>compile</SubType>
+      <Link>STACK\Utility\password_management\pass_mng.h</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="STACK\" />
@@ -353,6 +362,7 @@
     <Folder Include="STACK\Utility\" />
     <Folder Include="STACK\Utility\delay\" />
     <Folder Include="STACK\Utility\std_library\" />
+    <Folder Include="STACK\Utility\password_management\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

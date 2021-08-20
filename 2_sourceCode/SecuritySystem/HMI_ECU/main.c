@@ -20,10 +20,12 @@
 /* Service Includes */
 #include "logger.h"
 
+/*  utility includes */
+#include "pass_mng.h"
+
 /*************************************************************************/
 /*                               MACROS                                  */
 /*************************************************************************/
-#define PASSWORD_LENGTH 5
 #define MAX_INCORRECT_PASSWORD_ENTER 3
 #define ENTER 'A'
 /*************************************************************************/
@@ -158,8 +160,8 @@ int main(void)
 
 static void requirePassword(u8_t* message , u8_t* password)
 {
-	s8_t keyPressed = NO_KEY_PRESSED;
-	s8_t buffer[PASSWORD_LENGTH] ={0};
+	u8_t keyPressed = NO_KEY_PRESSED;
+	u8_t buffer[PASSWORD_LENGTH] ={0};
 
 	hal_lcd_goToRowColumn(&lcd,0,0);
 	hal_lcd_displayString(&lcd,message);
@@ -168,7 +170,7 @@ static void requirePassword(u8_t* message , u8_t* password)
 	hal_lcd_goToRowColumn(&lcd,1,0);
 
 	/*take password from user*/
-	for (int i = 0 ; i < PASSWORD_LENGTH-1 ; i++)
+	for (int i = 0 ; i < PASSWORD_LENGTH ; i++)
 	{
 		/* stay in loop until any key is pressed */
 		while(NO_KEY_PRESSED == keyPressed)
@@ -191,12 +193,10 @@ static void requirePassword(u8_t* message , u8_t* password)
 	}
 
 	/* copy the password buffer to the passed array*/
-	for(int i = 0 ; i < PASSWORD_LENGTH-1 ; i++)
+	for(int i = 0 ; i < PASSWORD_LENGTH ; i++)
 	{
 		password[i] = buffer[i];
 	}
-
-  password[PASSWORD_LENGTH] = '\0';
 
 	hal_lcd_goToRowColumn(&lcd,0,0);
 	hal_lcd_clearScreen(&lcd);
@@ -210,13 +210,13 @@ static void passwordInputState()
 	requirePassword((u8_t*)"Enter password",password);
 
 	/* send data to Control ECU to be validated */
-	ms_manager_send_data(START);
+	ms_manager_send_signal(START);
 
 	/* send the actual password */
-	ms_manager_send_string(password);
+	ms_manager_send_password(password);
 
 	/* receive response from Control ECU */
-	ms_manager_receive_data(&buffer);
+	ms_manager_receive_signal(&buffer);
 
 	switch(buffer)
 	{
@@ -247,8 +247,8 @@ static void passwordInputState()
 static void checkDefaultPassword()
 {
 	u8_t buffer = 0 ;
-	ms_manager_send_data(CHECK_PASS_EXCISTANCE);
-	ms_manager_receive_data(&buffer);
+	ms_manager_send_signal(CHECK_PASS_EXCISTANCE);
+	ms_manager_receive_signal(&buffer);
 
 	if (buffer == PASSWORD_NOT_EXICTED)
 	{
@@ -268,11 +268,11 @@ static void firtTimePassword()
 	requirePassword((u8_t*)"Enter new password",password);
 	requirePassword((u8_t*)"Confirm password",confirmPassword);
 
-  if (std_strcmp(password,confirmPassword) == 0)
+  if (MATCH == comparePasswords(password,confirmPassword))
 	{
 		// send password to control unit to save it in EEPROM
-		ms_manager_send_data(START_DEFAULT_PASS);
-		ms_manager_send_string(password);
+		ms_manager_send_signal(START_DEFAULT_PASS);
+		ms_manager_send_password(password);
 		state = PASSWORD_INPUT_STATE;
 	}
 	else
@@ -315,16 +315,16 @@ static void changePassword()
 
 	requirePassword((u8_t*)"Enter old password",oldPassword);
 
-	if (std_strcmp(oldPassword,currentPassword) == 0)
+	if (MATCH == comparePasswords(oldPassword,currentPassword))
 	{
 		requirePassword((u8_t*)"Enter new password",password);
 		requirePassword((u8_t*)"Confirm password",confirmPassword);
 
-		if (std_strcmp(password,confirmPassword) == 0)
+		if (MATCH == comparePasswords(password,confirmPassword))
 		{
 			// send password to control unit to save it in EEPROM
-			ms_manager_send_data(START_NEW_PASS);
-			ms_manager_send_string(password);
+			ms_manager_send_signal(START_NEW_PASS);
+			ms_manager_send_password(password);
 			state = PASSWORD_INPUT_STATE;
 		}
 		else
@@ -349,7 +349,7 @@ static void changePassword()
 static void startAlarmSystem()
 {
 	mcal_timer_start(&timer);
-	ms_manager_send_data(ALARM);
+	ms_manager_send_signal(ALARM);
 
 	state = HALT_STATE;
 }
@@ -360,7 +360,7 @@ static void displayHomeSystem()
 	/* TODO : register option time out if user didn't
 	 *  enter anything for 10 seconds */
 
-	s8_t keyPressed = NO_KEY_PRESSED;
+	u8_t keyPressed = NO_KEY_PRESSED;
 
 	hal_lcd_displayString(&lcd,(u8_t *)"1-Open");
 	hal_lcd_goToRowColumn(&lcd,1,0);
@@ -376,7 +376,7 @@ static void displayHomeSystem()
 	{
 	case '1' :
 	{
-		ms_manager_send_data(OPEN_LOCK);
+		ms_manager_send_signal(OPEN_LOCK);
 		state = PASSWORD_INPUT_STATE;
 
 		break;
@@ -445,7 +445,7 @@ static system_error_t keypadInit()
 	static u8_t keypadColumnsGPIOS[] = {4,5,6,7};
 
 	/* insert the correct keypad mapping */
-	static s8_t keypadMapping[4][4] =
+	static u8_t keypadMapping[4][4] =
 	{
 			{'7', '8' , '9' , '/' },
 			{'4', '5' , '6' , '*' },
