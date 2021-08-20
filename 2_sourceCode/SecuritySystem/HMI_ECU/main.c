@@ -303,6 +303,12 @@ static void userAuthentication(authentication_t authentcated)
 	}
 	else
 	{
+    hal_lcd_goToRowColumn(&lcd,0,0);
+    hal_lcd_displayString(&lcd,(u8_t *)"Wrong Password");
+
+    delay_ms(1000);
+    hal_lcd_clearScreen(&lcd);
+
 		passwordErrorCounter++;
 	}
 }
