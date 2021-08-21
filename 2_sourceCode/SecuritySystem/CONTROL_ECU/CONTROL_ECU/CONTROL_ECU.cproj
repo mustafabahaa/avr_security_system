@@ -129,6 +129,7 @@
             <Value>../../../../STACK/BSP/MCAL/PWM</Value>
             <Value>../../../../STACK/BSP/MCAL/TIMER</Value>
             <Value>../../../../STACK/BSP/MCAL/UART</Value>
+	    <Value>../../../../STACK/BSP/MCAL/SPI</Value>
             <Value>../../../../STACK/Managers/MessagingUnit</Value>
             <Value>../../../../STACK/Services/Logger</Value>
             <Value>../../../../STACK/Utility/delay</Value>
@@ -293,6 +294,14 @@
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\UART\uart.h</Link>
     </Compile>
+      <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\MCAL\SPI\spi.c">
+      <SubType>compile</SubType>
+      <Link>STACK\BSP\MCAL\SPI\spi.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\MCAL\SPI\spi.h">
+      <SubType>compile</SubType>
+      <Link>STACK\BSP\MCAL\SPI\spi.h</Link>
+    </Compile>
     <Compile Include="..\..\..\..\2_sourceCode\STACK\Managers\MessagingUnit\MessagingUnit.c">
       <SubType>compile</SubType>
       <Link>STACK\Managers\MessagingUnit\MessagingUnit.c</Link>
@@ -325,7 +334,7 @@
       <SubType>compile</SubType>
       <Link>STACK\Utility\std_library\std_library.h</Link>
     </Compile>
-    <Compile Include="..\..\..\..\2_sourceCode\STACK\Utility\password_management\pass_mng.c">
+     <Compile Include="..\..\..\..\2_sourceCode\STACK\Utility\password_management\pass_mng.c">
       <SubType>compile</SubType>
       <Link>STACK\Utility\password_management\pass_mng.c</Link>
     </Compile>
@@ -355,14 +364,15 @@
     <Folder Include="STACK\BSP\MCAL\PWM\" />
     <Folder Include="STACK\BSP\MCAL\TIMER\" />
     <Folder Include="STACK\BSP\MCAL\UART\" />
+      <Folder Include="STACK\BSP\MCAL\SPI\" />
     <Folder Include="STACK\Managers\" />
     <Folder Include="STACK\Managers\MessagingUnit\" />
     <Folder Include="STACK\Services\" />
     <Folder Include="STACK\Services\Logger\" />
     <Folder Include="STACK\Utility\" />
     <Folder Include="STACK\Utility\delay\" />
-    <Folder Include="STACK\Utility\password_management\" />
     <Folder Include="STACK\Utility\std_library\" />
+    <Folder Include="STACK\Utility\password_management\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>
