@@ -99,8 +99,7 @@ spi_error_t mcal_spi_send_byte(u8_t data)
   reg_write(SPDR, data);
 
   /* check if operation of transmit or receive is running */
-  while (bit_is_clr(SPSR, SPIF))
-    ;
+  while (bit_is_clr(SPSR, SPIF));
 
   return error;
 }
