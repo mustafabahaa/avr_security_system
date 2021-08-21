@@ -17,7 +17,7 @@
 /*************************************************************************/
 typedef enum
 {
-	UART_STATE_SUCCESS,
+	UART_STATE_SUCCESS=1,
 	UART_STATE_ERROR,
 	UART_STATE_INVALID_STOP_BIT_NUMBER,
 	UART_STATE_INVALID_BAUD_RATE,

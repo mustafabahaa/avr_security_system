@@ -6,7 +6,11 @@
   ],
   "settings": {
     "files.associations": {
-      "i2c.h": "c"
+      "i2c.h": "c",
+      "messagingunit.h": "c",
+      "pass_mng.h": "c",
+      "std_library.h": "c",
+      "delay.h": "c"
     }
   }
 }

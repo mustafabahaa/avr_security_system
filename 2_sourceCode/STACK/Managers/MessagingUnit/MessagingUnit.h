@@ -29,6 +29,9 @@
 #define CHECK_PASS_EXCISTANCE 10
 #define OPEN_LOCK             11
 #define ALARM                 12
+
+#define PASSWORD_LENGTH 4
+#define PASSWORD_LOCATION_FLAG 0x09
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
@@ -42,43 +45,43 @@
 system_error_t ms_manager_init();
 
 /**************************************************************************
-** ms_manager_send_data()
+** ms_manager_send_signal()
 **
 ** parameters: u8_t data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to send data between ECU on UART Bus
 **************************************************************************/
-system_error_t ms_manager_send_data(u8_t data );
+system_error_t ms_manager_send_signal(u8_t data );
 
 /**************************************************************************
-** ms_manager_send_string()
+** ms_manager_send_password()
 **
 ** parameters: u8_t* data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to send data string between ECU on UART Bus
 **************************************************************************/
-system_error_t ms_manager_send_string(u8_t* data );
+system_error_t ms_manager_send_password(u8_t* data );
 
 /**************************************************************************
-** ms_manager_receive_data()
+** ms_manager_receive_signal()
 **
 ** parameters: u8_t* data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to receive data between ECU on UART Bus
 **************************************************************************/
-system_error_t ms_manager_receive_data(u8_t* data);
+system_error_t ms_manager_receive_signal(u8_t* data);
 
 /**************************************************************************
-** ms_manager_receive_string()
+** ms_manager_send_password()
 **
 ** parameters: u8_t* data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to receive string data between ECU on UART Bus
 **************************************************************************/
-system_error_t ms_manager_receive_string(u8_t* data);
+system_error_t ms_manager_receive_password(u8_t* data);
 
 #endif /* _MESSAGING_UNIT_H_ */

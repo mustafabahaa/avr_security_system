@@ -3,110 +3,116 @@
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
 
- ** timer.h
+ ** spi.h
  **************************************************************************/
-#ifndef _TIMER_H_
-#define _TIMER_H_
+#ifndef SPI_H_
+#define SPI_H_
 /*************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
 #include "types.h"
 #include "atmega32.h"
+#include "gpio.h"
+/*************************************************************************/
+/*                              Macros                                   */
+/*************************************************************************/
+#define DUMB 0XFF
+
+/*define port and of SPI control */
+#define DDR_SPI DDRB
+#define DD_SS PB4
+#define DD_MOSI PB5
+#define DD_MISO PB6
+#define DD_SCK PB7
 /*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/
 typedef enum
 {
-	TIMER_STATE_SUCCESS=1,
-	TIMER_STATE_FAIL,
-	TIMER_STATE_INVALID_TIMER,
-	TIMER_STATE_INVALID_MODE,
-	TIMER_STATE_INVALID_ARGUMENT
-}timer_error_t;
+  SPI_STATE_SUCCESS = 1,
+  SPI_STATE_ERROR,
+  SPI_STATE_INVALID_ENDIAN,
+  SPI_STATE_INVALID_MODE,
+  SPI_STATE_INVALID_CLOCK,
+} spi_error_t;
 
 typedef enum
 {
-	TIMER_NORMAL_MODE=1,
-	TIMER_CTC_MODE,
-}timer_mode_t;
+  SPI_SCK_FREQUANCY_FOC_4 = 1,
+  SPI_SCK_FREQUANCY_FOC_16,
+  SPI_SCK_FREQUANCY_FOC_64,
+  SPI_SCK_FREQUANCY_FOC_128,
+} spi_clock_t;
 
 typedef enum
 {
-	TIMER0=1,
-	TIMER1_CHANNEL_1,
-	TIMER1_CHANNEL_2,
-	TIMER2,
-}timer_number_t;
-
-typedef enum
-{
-	F_CPU_CLOCK=1,
-	F_CPU_8,
-	F_CPU_64,
-	F_CPU_256,
-	F_CPU_1024
-}timer_preScaler_t;
+  SPI_MODE_MASTER = 1,
+  SPI_MODE_SLAVE,
+} spi_mode_t;
 
 typedef struct
 {
-	timer_preScaler_t preScaler;
-	timer_number_t timer_number;
-	timer_mode_t mode;
-	double tick_seconds;
-	double overflow;      /*used for normal mode only*/
-}timer_config_t;
+  u8_t double_speed;
+} spi_features_t;
+
+typedef struct
+{
+  u8_t base_addr;
+  u8_t ss_pin;
+  u8_t mosi_pin;
+  u8_t miso_pin;
+  u8_t sci_pin;
+} spi_pinning_t;
+
+typedef struct
+{
+  spi_pinning_t pinning;
+  spi_mode_t mode;
+  spi_clock_t clock;
+  spi_features_t features;
+} spi_t;
 
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
- ** mcal_timer_init()
+ ** mcal_spi_init()
  **
- ** parameters: timer_config_t* timer
- ** return    : timer_error_t
+ ** parameters: spi_t* spi
+ ** return    : spi_error_t
  ***************************************************************************
- ** this function is used to initialize all the necessary sequence for timer
+ ** this function is used to initialize SPI if it is in master mode or slave
  **************************************************************************/
-timer_error_t mcal_timer_init(timer_config_t* timer);
+spi_error_t mcal_spi_init(spi_t *spi);
 
 /**************************************************************************
- ** mcal_timer_start()
+ ** mcal_spi_send_byte()
  **
- ** parameters: timer_config_t* timer
- ** return    : timer_error_t
+ ** parameters: u8_t data
+ ** return    : spi_error_t
  ***************************************************************************
- ** this function is used to start given timer
+ ** this function is used to send bytes "data"
  **************************************************************************/
-timer_error_t mcal_timer_start(timer_config_t* timer);
+spi_error_t mcal_spi_send_byte(u8_t data);
 
 /**************************************************************************
- ** mcal_timer_stop()
+ ** mcal_spi_receive_byte()
  **
- ** parameters: timer_config_t* timer
- ** return    : timer_error_t
+ ** parameters: u8_t* data
+ ** return    : spi_error_t
  ***************************************************************************
- ** this function is used to start given timer
+ ** this function is used to recieve bytes "data"
  **************************************************************************/
-timer_error_t mcal_timer_stop(timer_config_t* timer);
+spi_error_t mcal_spi_receive_byte(u8_t *data);
 
 /**************************************************************************
- ** timer_setCallBack()
+ ** mcal_spi_swap_byte()
  **
- ** parameters: void(*a_ptr)(void)
- ** return    : void
+ ** parameters: u8_t* data
+ ** return    : spi_error_t
  ***************************************************************************
- ** this function is used to register timer interrupts callback
+** this function returns the 8 bits in the slave buffer by sending 
+** dumb useless 8 bits to the buffer.
  **************************************************************************/
-void timer_setCallBack(void(*a_ptr)(void));
+spi_error_t mcal_spi_swap_byte(u8_t *data);
 
-/**************************************************************************
- ** set_timer_overflow()
- **
- ** parameters: u16_t overflow
- ** return    : void
- ***************************************************************************
- ** this function is used to update overflow value in callback file
- **************************************************************************/
-void set_timer_overflow(double overflow);
-
-
-#endif /* _TIMER_H_ */
+#endif /* SPI_H_ */
