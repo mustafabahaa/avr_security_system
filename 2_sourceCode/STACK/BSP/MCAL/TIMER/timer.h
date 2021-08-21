@@ -17,7 +17,7 @@
 /*************************************************************************/
 typedef enum
 {
-	TIMER_STATE_SUCCESS,
+	TIMER_STATE_SUCCESS=1,
 	TIMER_STATE_FAIL,
 	TIMER_STATE_INVALID_TIMER,
 	TIMER_STATE_INVALID_MODE,
@@ -26,13 +26,13 @@ typedef enum
 
 typedef enum
 {
-	TIMER_NORMAL_MODE,
+	TIMER_NORMAL_MODE=1,
 	TIMER_CTC_MODE,
 }timer_mode_t;
 
 typedef enum
 {
-	TIMER0,
+	TIMER0=1,
 	TIMER1_CHANNEL_1,
 	TIMER1_CHANNEL_2,
 	TIMER2,
