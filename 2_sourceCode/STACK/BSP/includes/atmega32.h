@@ -61,11 +61,6 @@
 #define setGlobalInterrupt set_bit(SREG, SREG_interrupt_bit)
 #define clearGlobalInterrupt clr_bit(SREG, SREG_interrupt_bit)
 
-/*enable and disable interrupt by setting and clearing I bit in SREG */
-#define SREG_interrupt_bit 7
-#define setGlobalInterrupt set_bit(SREG, SREG_interrupt_bit)
-#define clearGlobalInterrupt clr_bit(SREG, SREG_interrupt_bit)
-
 /* define interrupt registers */
 #define SREG 0X5F
 #define GIFR 0x5A

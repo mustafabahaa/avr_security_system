@@ -54,7 +54,7 @@ typedef struct
   u8_t ss_pin;
   u8_t mosi_pin;
   u8_t miso_pin;
-  u8_t sci_pin;
+  u8_t sck_pin;
 } spi_pinning_t;
 
 typedef struct

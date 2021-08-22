@@ -18,14 +18,14 @@ double interruptOverflow = 0;
 /*************************************************************************/
 /*                         Linker Attributes                             */
 /*************************************************************************/
-void __vector_3(void) __attribute__((signal, used, externally_visible));
 void __vector_4(void) __attribute__((signal, used, externally_visible));
 void __vector_5(void) __attribute__((signal, used, externally_visible));
 void __vector_6(void) __attribute__((signal, used, externally_visible));
 void __vector_7(void) __attribute__((signal, used, externally_visible));
 void __vector_8(void) __attribute__((signal, used, externally_visible));
 void __vector_9(void) __attribute__((signal, used, externally_visible));
-void __vector_19(void) __attribute__((signal, used, externally_visible));
+void __vector_10(void) __attribute__((signal, used, externally_visible));
+void __vector_11(void) __attribute__((signal, used, externally_visible));
 /*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
@@ -42,15 +42,6 @@ void set_timer_overflow(double overflow) {
 /*************************************************************************/
 
 /* TIMER2_COMP_vect */
-void __vector_3(void)
-{
-	if(g_callBackPtr != NULL_PTR)
-	{
-		(*g_callBackPtr)();
-	}
-}
-
-/* TIMER2_OVF_vect */
 void __vector_4(void)
 {
 	if(g_callBackPtr != NULL_PTR)
@@ -59,7 +50,7 @@ void __vector_4(void)
 	}
 }
 
-/* TIMER1_CAPT_vect */
+/* TIMER2_OVF_vect */
 void __vector_5(void)
 {
 	if(g_callBackPtr != NULL_PTR)
@@ -68,7 +59,7 @@ void __vector_5(void)
 	}
 }
 
-/* TIMER1_COMPA_vect */
+/* TIMER1_CAPT_vect */
 void __vector_6(void)
 {
 	if(g_callBackPtr != NULL_PTR)
@@ -77,7 +68,7 @@ void __vector_6(void)
 	}
 }
 
-/* TIMER1_COMPB_vect */
+/* TIMER1_COMPA_vect */
 void __vector_7(void)
 {
 	if(g_callBackPtr != NULL_PTR)
@@ -86,7 +77,7 @@ void __vector_7(void)
 	}
 }
 
-/* TIMER1_OVF_vect */
+/* TIMER1_COMPB_vect */
 void __vector_8(void)
 {
 	if(g_callBackPtr != NULL_PTR)
@@ -95,8 +86,26 @@ void __vector_8(void)
 	}
 }
 
-/* TIMER0_OVF_vect */
+/* TIMER1_OVF_vect */
 void __vector_9(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER0_COMP_vect */
+void __vector_10(void)
+{
+	if(g_callBackPtr != NULL_PTR)
+	{
+		(*g_callBackPtr)();
+	}
+}
+
+/* TIMER0_OVF_vect */
+void __vector_11(void)
 {
 	ticks++;
 	if(g_callBackPtr != NULL_PTR)
@@ -109,14 +118,6 @@ void __vector_9(void)
 	}
 }
 
-/* TIMER0_COMP_vect */
-void __vector_19(void)
-{
-	if(g_callBackPtr != NULL_PTR)
-	{
-		(*g_callBackPtr)();
-	}
-}
 
 
 
