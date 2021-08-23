@@ -18,66 +18,74 @@
 /*                               Types                                    */
 /**************************************************************************/
 typedef enum {
-	LOGGER_SUCCESS,
-	LOGGER_FAILED,
-}logger_type_t;
-
-typedef enum {
-	LOGGER_DEBUG,
+	LOGGER_DEBUG=1,
 	LOGGER_ERROR,
 	LOGGER_WARNING,
-	LOGGER_ALL,
+	LOGGER_FULL_VERBOSITY,
 }logger_verbosity_t;
+
+typedef enum {
+  LOG_MCAL=1,
+  LOG_HAL=2,
+  LOG_APP=3,
+  LOG_UTILITY=4,
+  LOG_SERVICES=5,
+  LOG_MANAGERS=6,
+  LOG_ALL_LAYERS=7,
+} logger_layers_t;
 
 /*************************************************************************/
 /*                           Public Functions                            */
 /**************************************************************************
  ** logger_init()
  **
- ** parameters: logger_verbosity_t verbosity
+ ** parameter: logger_verbosity_t verbosity , logger_layers_t layer
  ** return    : void
  **************************************************************************
  ** this function is used to initialize all the necessary sequence logger
  *************************************************************************/
-void logger_init(logger_verbosity_t verbosity);
+void logger_init(logger_verbosity_t verbosity,logger_layers_t layer);
 
 /**************************************************************************
  ** logger_write_debug()
  **
- ** parameters: const u8_t* tag
- ** parameters: const u8_t* data
+ ** parameter: logger_layers_t layer 
+ ** parameter: const u8_t* tag
+ ** parameter: const u8_t* data
  ** return    : void
  **************************************************************************
  ** this function is used to send data in debug mode
  *************************************************************************/
-void logger_write_debug(u8_t* tag ,u8_t* data);
+void logger_write_debug(logger_layers_t layer,u8_t* tag ,u8_t* data);
 
 /**************************************************************************
  ** logger_write_warning()
  **
- ** parameters: const u8_t* tag
- ** parameters: const u8_t* data
+ ** parameter: logger_layers_t layer
+ ** parameter: const u8_t* tag
+ ** parameter: const u8_t* data
  ** return    : void
  **************************************************************************
  ** this function is used to send data in warning mode
  *************************************************************************/
-void logger_write_warning(u8_t* tag ,u8_t* data);
+void logger_write_warning(logger_layers_t layer,u8_t* tag ,u8_t* data);
 
 /**************************************************************************
  ** logger_write_error()
  **
- ** parameters: const u8_t* tag
- ** parameters: const u8_t* data
+ ** parameter: logger_layers_t layer
+ ** parameter: const u8_t* tag
+ ** parameter: const u8_t* data
  ** return    : void
  **************************************************************************
  ** this function is used to send data in error mode
  *************************************************************************/
-void logger_write_error(u8_t* tag ,u8_t* data);
+void logger_write_error(logger_layers_t layer,u8_t* tag ,u8_t* data);
 
 /**************************************************************************
  ** logger_write_variable()
  **
- ** parameters: u8_t data
+ ** parameter: u8_t data
  ** return    : void
  **************************************************************************
  ** this function is used to send data in error mode

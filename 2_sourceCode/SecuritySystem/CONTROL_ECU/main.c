@@ -241,7 +241,7 @@ static system_error_t systemInit()
 	system_error_t error = SYSTEM_SUCCESS;
 
 	/* Initialize Services */
-	logger_init(LOGGER_ALL);
+	logger_init(LOGGER_FULL_VERBOSITY,LOG_ALL_LAYERS);
 
 	/* Initialize hardware devices */
   error = buzzerInit();
