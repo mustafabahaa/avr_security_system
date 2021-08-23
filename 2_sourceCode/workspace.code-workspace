@@ -13,7 +13,8 @@
       "delay.h": "c",
       "software_uart.h": "c",
       "SUART.C": "cpp",
-      "timer.h": "c"
+      "timer.h": "c",
+      "logger.h": "c"
     }
   }
 }

@@ -16,17 +16,6 @@ static void (*g_callBackPtr)(void) = NULL_PTR;
 volatile double ticks = 0;
 double interruptOverflow = 0;
 /*************************************************************************/
-/*                         Linker Attributes                             */
-/*************************************************************************/
-void __vector_4(void) __attribute__((signal, used, externally_visible));
-void __vector_5(void) __attribute__((signal, used, externally_visible));
-void __vector_6(void) __attribute__((signal, used, externally_visible));
-void __vector_7(void) __attribute__((signal, used, externally_visible));
-void __vector_8(void) __attribute__((signal, used, externally_visible));
-void __vector_9(void) __attribute__((signal, used, externally_visible));
-void __vector_10(void) __attribute__((signal, used, externally_visible));
-void __vector_11(void) __attribute__((signal, used, externally_visible));
-/*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
 void timer_setCallBack( void(*a_ptr)(void))

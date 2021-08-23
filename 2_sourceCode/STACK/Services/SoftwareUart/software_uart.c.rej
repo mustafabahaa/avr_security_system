@@ -1,0 +1,9 @@
+diff a/2_sourceCode/STACK/Services/SoftwareUart/software_uart.c b/2_sourceCode/STACK/Services/SoftwareUart/software_uart.c	(rejected hunks)
+@@ -59,7 +59,6 @@
+   //output LSB of the TX shift register at the TX pin
+   if (local_tx_shift_reg & 0x01)
+   {
+-    set_bit(UART_SOFT_PORT, UART_SOFT_PIN);
+     mcal_fast_set(BASE_B, 7);
+   }
+   else

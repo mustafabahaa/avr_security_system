@@ -10,8 +10,46 @@
 /*************************************************************************/
 /*                              Includes                                 */
 /*************************************************************************/
+
 #include "types.h"
 #include "atmega32.h"
+/*************************************************************************/
+/*                         Linker Attributes                             */
+/*************************************************************************/
+/* Timer/Counter2 Compare Match */
+void __vector_4(void) __attribute__((signal, used, externally_visible)); 
+
+/* Timer/Counter2 Overflow */
+void __vector_5(void) __attribute__((signal, used, externally_visible));
+
+/* Timer/Counter1 Capture Event */
+void __vector_6(void) __attribute__((signal, used, externally_visible));
+
+/* Timer/Counter1 Compare Match A */
+void __vector_7(void) __attribute__((signal, used, externally_visible));
+
+/* Timer/Counter1 Compare Match B */
+void __vector_8(void) __attribute__((signal, used, externally_visible));
+
+/* Timer/Counter1 Overflow */
+void __vector_9(void) __attribute__((signal, used, externally_visible));
+
+/* Timer/Counter0 Compare Match */
+void __vector_10(void) __attribute__((signal, used, externally_visible));
+
+/* Timer/Counter0 Overflow */
+void __vector_11(void) __attribute__((signal, used, externally_visible));
+/*************************************************************************/
+/*                              Macros                                   */
+/*************************************************************************/
+#define TIMER2_COMP_vect  __vector_4
+#define TIMER2_OVF_vect   __vector_5
+#define TIMER1_CAPT_vect  __vector_6
+#define TIMER1_COMPA_vect __vector_7
+#define TIMER1_COMPB_vect __vector_8
+#define TIMER1_OVF_vect   __vector_9
+#define TIMER0_COMP_vect  __vector_10 
+#define TIMER0_OVF_vect   __vector_11
 /*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/

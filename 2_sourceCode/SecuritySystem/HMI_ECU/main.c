@@ -19,7 +19,6 @@
 
 /* Service Includes */
 #include "logger.h"
-#include "software_uart.h"
 
 /*  utility includes */
 #include "pass_mng.h"
@@ -419,23 +418,16 @@ static system_error_t systemInit()
 	system_error_t error = SYSTEM_SUCCESS;
 
 	/* Initialize Services */
-	//logger_init(LOGGER_ALL);
+	logger_init(LOGGER_ALL);
 
 	/* Initialize hardware devices */
-  softuartInit();
+
+  
 	error = keypadInit();
 	error = LCDInit();
-	//timerInit();
-
-  u8_t x = '5';
-  while(1)
-  {
-    softUartSendChar(x);
-  }
-
-
+	error = timerInit();
+ 
 	/* Initialize Managers */
-
 	error = ms_manager_init();
 
 	return error;
@@ -512,7 +504,7 @@ static system_error_t timerInit()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	timer.timer_number = TIMER0;
+	timer.timer_number = TIMER2;
 	timer.mode = TIMER_NORMAL_MODE ;
 	timer.preScaler = F_CPU_1024;
 	timer.tick_ms_seconds = 5;

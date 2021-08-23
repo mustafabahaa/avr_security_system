@@ -1,82 +1,76 @@
- 
- /* --------------------------------------------------------*
- ** Copyright (C) 2016 Decrypt - All Rights Reserved You may
- ** use, distribute and modify this code under the terms and
- ** conditions of the Decrypt Team, You should have received
- ** a copy of the footbutton project license with this  file  
- ** If not, please
- ** write to: 
- ** or visit :
- **
- ** softuart.h
- ** This file contains functions prototype for softuart.c 
- ** also specifies the required enums and structures needed
- **
- ** Author: <Decrypt Technical Team>
- ** -------------------------------------------------------*/ 
+/**************************************************************************
+ ** This  software  is  in  the  public  domain , furnished "as is", without
+ ** technical support,  and with no  warranty, express or implied, as to its
+ ** usefulness for any purpose.
 
+ ** soft_uart.h
+ **************************************************************************/
  #ifndef SOFTUART_H_
  #define SOFTUART_H_
-
- 
- /* Custom-libraries needed for this module*/
+/**************************************************************************/
+/*                              Includes                                  */
+/**************************************************************************/
  #include "types.h"
  #include "atmega32.h"
  #include "delay.h"
  #include "timer.h"
-
-  /* Choose PORT and pin configuration */
- #define UART_SOFT_DDR  (BASE_B + OFFSET_DIR)
- #define UART_SOFT_PORT (BASE_B + OFFSET_PORT)
- #define UART_SOFT_PIN  7
- 
+ #include "gpio.h"
+/**************************************************************************/
+/*                              Macros                                    */
+/**************************************************************************/
  /* Choose required baud rate */
  #define UART_SOFT_BAUD 9600UL
- 
- /* Choose Data length */
- #define DATA_LENGTH 8
 
  /* Please don't modify this values , delay is in milli-seconds */
  #define UART_SOFT_DELAY_US (F_CPU / UART_SOFT_BAUD)
- 
- /* -- softuartInit ---------------------------------------------**
- ** led_intialization()
+/**************************************************************************/
+/*                              Types                                     */
+/**************************************************************************/
+typedef enum
+{
+	SOFT_BAUD_2400 = 2400,
+	SOFT_BAUD_4800 = 4800,
+	SOFT_BAUD_9600 = 9600,
+} soft_baud_rate_t;
+
+typedef struct
+{
+  soft_baud_rate_t baud;
+  u8_t base;
+  u8_t txPin;
+} soft_uart_t;
+/*************************************************************************/
+/*                           Public Functions                            */
+/**************************************************************************
+ ** service_soft_uart_init()
  **
- ** paramters : void 
- ** return    : void 
- **
- ** -- implementation ---------------------------------------
- ** this function intialize uart configurations specifed in 
- ** softuartconfig.h file such as baudrate and clock
- ** -------------------------------------------------------*/
- void softuartInit();
+ ** parameters: soft_uart_t *soft_uart_t
+ ** return    : void
+ ***************************************************************************
+ ** this function intialize software uart configurations
+ **************************************************************************/
+ void service_soft_uart_init(soft_uart_t *soft_uart_t);
  
  
- 
- /* -- Global ---------------------------------------------**
- ** softUartSendChar()
+ /**************************************************************************
+ ** service_soft_uart_send_byte()
  **
- ** paramters : u8_t txData 
- ** return    : void 
- **
- ** -- implementation ---------------------------------------
+ ** parameters: u8_t txData
+ ** return    : void
+ ***************************************************************************
  ** this function send u8_t with uart bit banging technique
- ** -------------------------------------------------------*/
- void softUartSendChar (u8_t txData);
+ **************************************************************************/
+ void service_soft_uart_send_byte (u8_t txData);
  
- 
- /* -- Global ---------------------------------------------**
- ** softUartSendString()
+  /**************************************************************************
+ ** service_soft_uart_send_string()
  **
- ** paramters : *txData 
- ** return    : void 
- **
- ** -- implementation ---------------------------------------
+ ** parameters: u8_t txData
+ ** return    : void
+ ***************************************************************************
  ** this function send string with uart bit banging technique
- ** -------------------------------------------------------*/
- void softUartSendString (u8_t *txData);
-
-
+ **************************************************************************/
+ void service_soft_uart_send_string (u8_t *txData);
 
  #endif /* SOFTUART_H_ */
  
