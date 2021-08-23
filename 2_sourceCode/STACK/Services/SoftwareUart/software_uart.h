@@ -23,6 +23,7 @@
  #include "types.h"
  #include "atmega32.h"
  #include "delay.h"
+ #include "timer.h"
 
   /* Choose PORT and pin configuration */
  #define UART_SOFT_DDR  (BASE_B + OFFSET_DIR)
@@ -35,9 +36,8 @@
  /* Choose Data length */
  #define DATA_LENGTH 8
 
- /* Please don't modify this values*/
- #define UART_SOFT_DELAY_US (int) (F_CPU/((float) UART_SOFT_BAUD)) /1000
- 
+ /* Please don't modify this values , delay is in milli-seconds */
+ #define UART_SOFT_DELAY_US (F_CPU / UART_SOFT_BAUD)
  
  /* -- softuartInit ---------------------------------------------**
  ** led_intialization()

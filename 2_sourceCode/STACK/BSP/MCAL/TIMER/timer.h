@@ -52,7 +52,7 @@ typedef struct
 	timer_preScaler_t preScaler;
 	timer_number_t timer_number;
 	timer_mode_t mode;
-	double tick_seconds;
+	double tick_ms_seconds;
 	double overflow;      /*used for normal mode only*/
 }timer_config_t;
 

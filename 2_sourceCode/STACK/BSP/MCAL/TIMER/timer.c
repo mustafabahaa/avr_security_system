@@ -57,7 +57,7 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			set_bit(TCCR0, FOC0);
 
 			/* attach overflow value to timer so we can use it in callback */
-			timer->overflow = timer->tick_seconds / (double)registerMaxTime;
+			timer->overflow = timer->tick_ms_seconds / (double)registerMaxTime;
 			set_timer_overflow(timer->overflow);
 
 		}
@@ -72,16 +72,17 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			 * 3. No need for OC0 so COM00=0 & COM01=0
 			 */
 
-			set_bit(TCCR0, FOC0);
+			//set_bit(TCCR0, FOC0);
 			set_bit(TCCR0, WGM01);
+			clr_bit(TCCR0, WGM00);
 
 			/* if the time we need to wait can be used with 8 bit timer in CTC mode
 			 * meaning that if the value of seconds to wait converted to digital number
 			 * less that 256 with the given pre-scaller */
-			if (timer->tick_seconds < registerMaxTime)
+			if (timer->tick_ms_seconds < (registerMaxTime * 1000))
 			{
 				// Set Compare Value
-				register(OCR0) = ((double)timer->tick_seconds * (double)F_CPU) / (double)preScallerValue;
+				register(OCR0) = (u8_t)(((timer->tick_ms_seconds /1000) * F_CPU) / timer->preScaler);
 			}
 			else
 			{
@@ -116,7 +117,7 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			set_bit(TCCR1A, FOC1B);
 
 			/* attach overflow value to timer so we can use it in callback */
-			timer->overflow = timer->tick_seconds / registerMaxTime;
+			timer->overflow = timer->tick_ms_seconds / registerMaxTime;
 			set_timer_overflow(timer->overflow);
 		}
 		else if ( TIMER_CTC_MODE == timer->mode)
@@ -134,10 +135,10 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			/* if the time we need to wait can be used with 8 bit timer in CTC mode
 			 * meaning that if the value of seconds to wait converted to digital number
 			 * less that 256 with the given pre-scaller */
-			if (timer->tick_seconds < registerMaxTime)
+			if (timer->tick_ms_seconds < registerMaxTime)
 			{
 				// Set Compare Value
-				register(OCR1A) = ((double)timer->tick_seconds * (double)F_CPU) / (double)preScallerValue;
+				register(OCR1A) = ((double)timer->tick_ms_seconds * (double)F_CPU) / (double)preScallerValue;
 			}
 			else
 			{
@@ -169,7 +170,7 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			set_bit(TCCR2, FOC2);
 
 			/* attach overflow value to timer so we can use it in callback */
-			timer->overflow = timer->tick_seconds / registerMaxTime;
+			timer->overflow = timer->tick_ms_seconds / registerMaxTime;
 			set_timer_overflow(timer->overflow);
 
 		}
@@ -189,10 +190,10 @@ timer_error_t mcal_timer_init(timer_config_t* timer)
 			/* if the time we need to wait can be used with 8 bit timer in CTC mode
 			 * meaning that if the value of seconds to wait converted to digital number
 			 * less that 256 with the given pre-scaller */
-			if (timer->tick_seconds < registerMaxTime)
+			if (timer->tick_ms_seconds < registerMaxTime)
 			{
 				// Set Compare Value
-				register(OCR2) = ((double)timer->tick_seconds * (double)F_CPU) / (double)preScallerValue;
+				register(OCR2) = ((double)timer->tick_ms_seconds * (double)F_CPU) / (double)preScallerValue;
 			}
 			else
 			{
@@ -336,6 +337,7 @@ timer_error_t mcal_timer_stop(timer_config_t* timer)
 		{
 			// Enable Timer1 channel 1 Compare Interrupt
 			clr_bit(TIMSK, OCIE1A);
+      register(TCNT0) = 0;
 		}
 		else
 		{

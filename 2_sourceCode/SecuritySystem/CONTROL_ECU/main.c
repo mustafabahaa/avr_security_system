@@ -283,7 +283,7 @@ static system_error_t timerInit()
 	timer.timer_number = TIMER0;
 	timer.mode = TIMER_NORMAL_MODE ;
 	timer.preScaler = F_CPU_1024;
-	timer.tick_seconds = 5;
+	timer.tick_ms_seconds = 5;
 
 	if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
 	{
