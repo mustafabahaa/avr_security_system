@@ -19,6 +19,7 @@
 
 /* Service Includes */
 #include "logger.h"
+#include "software_uart.h"
 
 /*  utility includes */
 #include "pass_mng.h"
@@ -421,9 +422,17 @@ static system_error_t systemInit()
 	//logger_init(LOGGER_ALL);
 
 	/* Initialize hardware devices */
+  softuartInit();
 	error = keypadInit();
 	error = LCDInit();
-	timerInit();
+	//timerInit();
+
+  u8_t x = '5';
+  while(1)
+  {
+    softUartSendChar(x);
+  }
+
 
 	/* Initialize Managers */
 

@@ -95,6 +95,7 @@ void __vector_9(void)
 	}
 }
 
+#if 0
 /* TIMER0_COMP_vect */
 void __vector_10(void)
 {
@@ -103,6 +104,7 @@ void __vector_10(void)
 		(*g_callBackPtr)();
 	}
 }
+#endif 
 
 /* TIMER0_OVF_vect */
 void __vector_11(void)

@@ -132,6 +132,7 @@
 	    <Value>../../../../STACK/BSP/MCAL/SPI</Value>
             <Value>../../../../STACK/Managers/MessagingUnit</Value>
             <Value>../../../../STACK/Services/Logger</Value>
+	    <Value>../../../../STACK/Services/SoftwareUart</Value>
             <Value>../../../../STACK/Utility/delay</Value>
             <Value>../../../../STACK/Utility/std_library</Value>
             <Value>../../../../STACK/Utility/password_management</Value>
@@ -318,6 +319,14 @@
       <SubType>compile</SubType>
       <Link>STACK\Services\Logger\logger.h</Link>
     </Compile>
+    <Compile Include="..\..\..\..\2_sourceCode\STACK\Services\SoftwareUart\software_uart.c">
+      <SubType>compile</SubType>
+      <Link>STACK\Services\SoftwareUart\software_uart.c</Link>
+    </Compile>
+        <Compile Include="..\..\..\..\2_sourceCode\STACK\Services\SoftwareUart\software_uart.h">
+      <SubType>compile</SubType>
+      <Link>STACK\Services\SoftwareUart\software_uart.h</Link>
+    </Compile>
     <Compile Include="..\..\..\..\2_sourceCode\STACK\Utility\delay\delay.c">
       <SubType>compile</SubType>
       <Link>STACK\Utility\delay\delay.c</Link>
@@ -364,11 +373,12 @@
     <Folder Include="STACK\BSP\MCAL\PWM\" />
     <Folder Include="STACK\BSP\MCAL\TIMER\" />
     <Folder Include="STACK\BSP\MCAL\UART\" />
-      <Folder Include="STACK\BSP\MCAL\SPI\" />
+    <Folder Include="STACK\BSP\MCAL\SPI\" />
     <Folder Include="STACK\Managers\" />
     <Folder Include="STACK\Managers\MessagingUnit\" />
     <Folder Include="STACK\Services\" />
     <Folder Include="STACK\Services\Logger\" />
+    <Folder Include="STACK\Services\SoftwareUart\" />
     <Folder Include="STACK\Utility\" />
     <Folder Include="STACK\Utility\delay\" />
     <Folder Include="STACK\Utility\std_library\" />

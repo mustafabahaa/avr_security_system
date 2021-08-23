@@ -41,10 +41,10 @@ typedef enum
 typedef enum
 {
 	F_CPU_CLOCK=1,
-	F_CPU_8,
-	F_CPU_64,
-	F_CPU_256,
-	F_CPU_1024
+	F_CPU_8=2,
+	F_CPU_64=3,
+	F_CPU_256=4,
+	F_CPU_1024=5
 }timer_preScaler_t;
 
 typedef struct

@@ -10,7 +10,10 @@
       "messagingunit.h": "c",
       "pass_mng.h": "c",
       "std_library.h": "c",
-      "delay.h": "c"
+      "delay.h": "c",
+      "software_uart.h": "c",
+      "SUART.C": "cpp",
+      "timer.h": "c"
     }
   }
 }
