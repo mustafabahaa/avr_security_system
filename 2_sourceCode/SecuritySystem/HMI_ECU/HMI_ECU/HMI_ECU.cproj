@@ -378,6 +378,7 @@
     <Folder Include="STACK\Managers\MessagingUnit\" />
     <Folder Include="STACK\Services\" />
     <Folder Include="STACK\Services\Logger\" />
+    <Folder Include="STACK\Services\SoftwareUart\" />
     <Folder Include="STACK\Utility\" />
     <Folder Include="STACK\Utility\delay\" />
     <Folder Include="STACK\Utility\std_library\" />
