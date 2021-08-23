@@ -33,9 +33,16 @@ typedef enum
 	SOFT_BAUD_9600 = 9600,
 } soft_baud_rate_t;
 
+typedef enum 
+{
+  BUSY=1,
+  READY
+} transmission_status_t;
+
 typedef struct
 {
   soft_baud_rate_t baud;
+  transmission_status_t status;
   u8_t base;
   u8_t txPin;
 } soft_uart_t;

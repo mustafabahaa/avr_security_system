@@ -86,7 +86,7 @@ uart_error_t mcal_UART_init(uart_t* uart)
 	}
 	else
 	{
-		error = UART_STATE_INVALID_STOP_BIT_NUMBER;
+		error = UART_STATE_INVALID_PARITY;
 	}
 
 	/* Initialize packet length */

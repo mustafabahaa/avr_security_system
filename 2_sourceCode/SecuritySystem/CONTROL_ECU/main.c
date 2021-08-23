@@ -18,6 +18,9 @@
 /* Managers Includes */
 #include "MessagingUnit.h"
 
+/* Service Includes */
+#include "logger.h"
+
 /* Utility Includes */
 #include "pass_mng.h"
 #include "delay.h"
@@ -238,11 +241,12 @@ static system_error_t systemInit()
 	system_error_t error = SYSTEM_SUCCESS;
 
 	/* Initialize Services */
-	//logger_init(LOGGER_ALL);
+	logger_init(LOGGER_ALL);
 
 	/* Initialize hardware devices */
   error = buzzerInit();
   error = servoMotorInit();
+  error = timerInit();
 
     /* Initialize Managers */
 	error = ms_manager_init();
@@ -256,7 +260,7 @@ static system_error_t servoMotorInit()
 	system_error_t error = SYSTEM_SUCCESS;
 
 	servo.channel->channel_port = BASE_B;
-	servo.channel->channel_pin = 3;
+	servo.channel->channel_pin = 1;
 
 	hal_servo_motor_init(&servo);
 	return error;
@@ -271,7 +275,6 @@ static system_error_t buzzerInit()
 	buzzer.wiring = BUZZER_CURRENT_SOURCING;
 
 	hal_buzzer_init(&buzzer);
-	timerInit();
 
 	return error;
 }
@@ -280,7 +283,7 @@ static system_error_t timerInit()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	timer.timer_number = TIMER0;
+	timer.timer_number = TIMER2;
 	timer.mode = TIMER_NORMAL_MODE ;
 	timer.preScaler = F_CPU_1024;
 	timer.tick_ms_seconds = 5;

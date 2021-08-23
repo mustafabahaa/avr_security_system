@@ -74,4 +74,14 @@ void logger_write_warning(u8_t* tag ,u8_t* data);
  *************************************************************************/
 void logger_write_error(u8_t* tag ,u8_t* data);
 
+/**************************************************************************
+ ** logger_write_variable()
+ **
+ ** parameters: u8_t data
+ ** return    : void
+ **************************************************************************
+ ** this function is used to send data in error mode
+ *************************************************************************/
+void logger_write_variable(u8_t data);
+
 #endif /*_LOGGER_H_*/

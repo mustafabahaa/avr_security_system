@@ -22,6 +22,7 @@ typedef enum
 	UART_STATE_INVALID_STOP_BIT_NUMBER,
 	UART_STATE_INVALID_BAUD_RATE,
 	UART_STATE_INVALID_PACKET_LENGTH,
+  UART_STATE_INVALID_PARITY,
 	UART_STATE_INVALID_ENDIAN,
 } uart_error_t;
 
@@ -34,13 +35,13 @@ typedef enum
 
 typedef enum
 {
-	STOP_BIT_1,
+	STOP_BIT_1=1,
 	STOP_BIT_2,
 }stop_bit_no_t;
 
 typedef enum
 {
-	DISABLE,
+	DISABLE=1,
 	ENABLE_EVEN,
 	ENABLE_ODD
 }parity_t;

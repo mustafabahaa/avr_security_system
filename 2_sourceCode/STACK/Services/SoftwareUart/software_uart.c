@@ -41,6 +41,7 @@ void service_soft_uart_init(soft_uart_t *soft_uart)
 
 void service_soft_uart_send_byte(u8_t txData)
 {
+  gl_soft_uart->status = BUSY;
   u16_t local_tx_shift_reg = tx_shift_reg;
   //if sending the previous character is not yet finished, return
   //transmission is finished when tx_shift_reg == 0
@@ -86,5 +87,6 @@ void TIMER0_COMP_vect(void)
   if (!local_tx_shift_reg)
   {
     mcal_timer_stop(&timer);
+    gl_soft_uart->status = READY;
   }
 }
