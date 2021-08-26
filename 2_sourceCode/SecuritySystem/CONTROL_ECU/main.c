@@ -29,6 +29,7 @@
 /*                               MACROS                                  */
 /*************************************************************************/
 #define PASSWORD_LOCATION_FLAG 0x09
+#define LOGGER
 /*************************************************************************/
 /*                               Types                                   */
 /*************************************************************************/
@@ -242,7 +243,7 @@ static system_error_t systemInit()
 
 	/* Initialize Services */
 #ifdef LOGGER
-  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
