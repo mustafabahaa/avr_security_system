@@ -61,7 +61,7 @@ void service_soft_uart_send_string(u8_t *txData)
   while (*txData != '\0')
   {
     service_soft_uart_send_byte(*txData++);
-    delay_ms(5);
+    delay_ms(3);
   }
 }
 /*************************************************************************/

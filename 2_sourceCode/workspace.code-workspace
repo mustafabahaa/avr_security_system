@@ -14,7 +14,8 @@
       "software_uart.h": "c",
       "SUART.C": "cpp",
       "timer.h": "c",
-      "logger.h": "c"
+      "logger.h": "c",
+      "gpio.h": "c"
     }
   }
 }

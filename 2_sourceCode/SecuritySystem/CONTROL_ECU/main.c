@@ -241,9 +241,11 @@ static system_error_t systemInit()
 	system_error_t error = SYSTEM_SUCCESS;
 
 	/* Initialize Services */
-	logger_init(LOGGER_FULL_VERBOSITY,LOG_ALL_LAYERS);
+#ifdef LOGGER
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
+#endif /* LOGGER */
 
-	/* Initialize hardware devices */
+  /* Initialize hardware devices */
   error = buzzerInit();
   error = servoMotorInit();
   error = timerInit();
