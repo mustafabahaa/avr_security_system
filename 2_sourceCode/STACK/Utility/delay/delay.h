@@ -17,7 +17,7 @@
 /***************************************************************************
  ** delay_ms()
  **
- ** parameters: double ms
+ ** parameter: double ms
  ** return    : void
  ***************************************************************************
  ** this function is used to halt the processor with ms value

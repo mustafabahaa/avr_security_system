@@ -13,7 +13,7 @@
 #include "types.h"
 #include "atmega32.h"
 #include "gpio.h"
-#include "./port.h"
+#include "port.h"
 #include "std_library.h"
 #include "delay.h"
 /**************************************************************************
@@ -69,7 +69,7 @@ typedef struct
 /**************************************************************************
  ** hal_lcd_init()
  **
- ** parameters: lcd_t
+ ** parameter: lcd_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for LCD
@@ -78,7 +78,7 @@ lcd_error_t hal_lcd_init(lcd_t *lcd);
 /**************************************************************************
  ** hal_lcd_sendData()
  **
- ** parameters: lcd_t , lcd_data_types_t , u8_t
+ ** parameter: lcd_t , lcd_data_types_t , u8_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to send command or data for LCD
@@ -87,7 +87,7 @@ lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data );
 /**************************************************************************
  ** hal_lcd_displaystring()
  **
- ** parameters: lcd_t , const u8_t
+ ** parameter: lcd_t , const u8_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to display strings for LCD
@@ -96,7 +96,7 @@ lcd_error_t hal_lcd_displayString(lcd_t *lcd, const u8_t *str);
 /**************************************************************************
  ** hal_lcd_goToRowColumn()
  **
- ** parameters: lcd_t , u8_t,u8_t
+ ** parameter: lcd_t , u8_t,u8_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to start cursor in specific location at LCD
@@ -105,7 +105,7 @@ lcd_error_t hal_lcd_goToRowColumn(lcd_t *lcd , u8_t row, u8_t col);
 /**************************************************************************
  ** hal_lcd_intgerToString()
  **
- ** parameters: lcd_t , u16_t
+ ** parameter: lcd_t , u16_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to display integers as string  at LCD
@@ -114,7 +114,7 @@ lcd_error_t hal_lcd_intgerToString(lcd_t *lcd,u16_t data);
 /**************************************************************************
  ** hal_lcd_clearScreen()
  **
- ** parameters: lcd_t
+ ** parameter: lcd_t
  ** return    : lcd_error_t
  ***************************************************************************
  ** this function is used to clear the LCD

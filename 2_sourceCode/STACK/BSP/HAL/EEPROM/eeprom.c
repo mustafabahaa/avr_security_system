@@ -19,8 +19,8 @@ eeprom_error_t hal_eeprom_init(void)
   i2c_t i2c;
   i2c.bitRate = RATE_400KB;
 
-  /* just initialize the I2C(TWI) module inside the MC */
-  if (I2C_STATE_SUCCESS != mcal_TWI_init(&i2c))
+  /* just initialize the I2C(i2c) module inside the MC */
+  if (I2C_STATE_SUCCESS != mcal_i2c_init(&i2c))
   {
     error = EEPROM_FAIL;
   }
@@ -36,42 +36,42 @@ eeprom_error_t hal_eeprom_writeByte(u8_t address, u8_t u8data)
   eeprom_error_t error = EEPROM_SUCCESS;
 
   /* Send the Start Bit */
-  if (I2C_STATE_SUCCESS != mcal_TWI_start())
+  if (I2C_STATE_SUCCESS != mcal_i2c_start())
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_START != mcal_TWI_getStatus())
+  else if (TW_START != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
-  else if (I2C_STATE_SUCCESS != mcal_TWI_write(EEPROM_ADDRESS + I2C_WRITE_COMMAND))
+  else if (I2C_STATE_SUCCESS != mcal_i2c_write(EEPROM_ADDRESS + I2C_WRITE_COMMAND))
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_MT_SLA_W_ACK != mcal_TWI_getStatus())
+  else if (TW_MT_SLA_W_ACK != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
   /* Send the required memory location address */
-  else if (I2C_STATE_SUCCESS != mcal_TWI_write(address))
+  else if (I2C_STATE_SUCCESS != mcal_i2c_write(address))
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_MT_DATA_ACK != mcal_TWI_getStatus())
+  else if (TW_MT_DATA_ACK != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
   /* write byte to eeprom */
-  else if (I2C_STATE_SUCCESS != mcal_TWI_write(u8data))
+  else if (I2C_STATE_SUCCESS != mcal_i2c_write(u8data))
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_MT_DATA_ACK != mcal_TWI_getStatus())
+  else if (TW_MT_DATA_ACK != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
   /* Send the Stop Bit */
-  else if (I2C_STATE_SUCCESS != mcal_TWI_stop())
+  else if (I2C_STATE_SUCCESS != mcal_i2c_stop())
   {
     error = EEPROM_FAIL;
   }
@@ -87,59 +87,59 @@ eeprom_error_t hal_eeprom_readByte(u8_t address, u8_t *u8data)
   eeprom_error_t error = EEPROM_SUCCESS;
 
   /* Send the Start Bit */
-  if (I2C_STATE_SUCCESS != mcal_TWI_start())
+  if (I2C_STATE_SUCCESS != mcal_i2c_start())
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_START != mcal_TWI_getStatus())
+  else if (TW_START != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
-  else if (I2C_STATE_SUCCESS != mcal_TWI_write(EEPROM_ADDRESS + I2C_WRITE_COMMAND))
+  else if (I2C_STATE_SUCCESS != mcal_i2c_write(EEPROM_ADDRESS + I2C_WRITE_COMMAND))
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_MT_SLA_W_ACK != mcal_TWI_getStatus())
+  else if (TW_MT_SLA_W_ACK != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
   /* write byte to eeprom */
-  else if (I2C_STATE_SUCCESS != mcal_TWI_write(address))
+  else if (I2C_STATE_SUCCESS != mcal_i2c_write(address))
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_MT_DATA_ACK != mcal_TWI_getStatus())
+  else if (TW_MT_DATA_ACK != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
   /* Send the Repeated Start Bit */
-  else if (I2C_STATE_SUCCESS != mcal_TWI_start())
+  else if (I2C_STATE_SUCCESS != mcal_i2c_start())
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_REP_START != mcal_TWI_getStatus())
+  else if (TW_REP_START != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
-  else if (I2C_STATE_SUCCESS != mcal_TWI_write(EEPROM_ADDRESS + I2C_READ_COMMAND))
+  else if (I2C_STATE_SUCCESS != mcal_i2c_write(EEPROM_ADDRESS + I2C_READ_COMMAND))
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_MT_SLA_R_ACK != mcal_TWI_getStatus())
+  else if (TW_MT_SLA_R_ACK != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
   /* Read Byte from Memory without send ACK */
-  else if (I2C_STATE_SUCCESS != mcal_TWI_readWithNACK(u8data))
+  else if (I2C_STATE_SUCCESS != mcal_i2c_read_nack(u8data))
   {
     error = EEPROM_FAIL;
   }
-  else if (TW_MR_DATA_NACK != mcal_TWI_getStatus())
+  else if (TW_MR_DATA_NACK != mcal_i2c_getStatus())
   {
     error = EEPROM_FAIL;
   }
   /* Send the Stop Bit */
-  else if (I2C_STATE_SUCCESS != mcal_TWI_stop())
+  else if (I2C_STATE_SUCCESS != mcal_i2c_stop())
   {
     error = EEPROM_FAIL;
   }

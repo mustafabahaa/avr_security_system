@@ -58,7 +58,7 @@ typedef struct
 /**************************************************************************
  ** hal_dc_motor_init()
  **
- ** parameters: motor_t *motor
+ ** parameter: motor_t *motor
  ** return    : motor_error_t
  ***************************************************************************
  ** this function is used to initialize all  sequence for DC motor
@@ -68,8 +68,8 @@ motor_error_t hal_dc_motor_init(motor_t *motor);
 /**************************************************************************
  ** hal_dc_motor_set_direction()
  **
- ** parameters: motor_t *motor
- ** parameters: motor_direction_t direction
+ ** parameter: motor_t *motor
+ ** parameter: motor_direction_t direction
  **
  ** return    : motor_error_t
  ***************************************************************************
@@ -80,8 +80,8 @@ motor_error_t hal_dc_motor_set_direction(motor_t *motor ,motor_direction_t direc
 /**************************************************************************
  ** hal_dc_motor_set_speed()
  **
- ** parameters: motor_t *motor
- ** parameters: motor_speed_t speed
+ ** parameter: motor_t *motor
+ ** parameter: motor_speed_t speed
  **
  ** return    : motor_error_t
  ***************************************************************************

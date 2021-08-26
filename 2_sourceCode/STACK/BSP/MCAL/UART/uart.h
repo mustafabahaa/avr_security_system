@@ -1,4 +1,4 @@
-/**************************************************************************
+/***************************************************************************
  ** This  software  is  in  the  public  domain , furnished "as is", without
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
@@ -7,14 +7,15 @@
  **************************************************************************/
 #ifndef _UART_H_
 #define _UART_H_
-/*************************************************************************/
-/*                              Includes                                 */
-/*************************************************************************/
+/**************************************************************************/
+/*                              Includes                                  */
+/**************************************************************************/
 #include "types.h"
 #include "atmega32.h"
-/*************************************************************************/
-/*                               Types                                   */
-/*************************************************************************/
+#include "logger.h"
+/**************************************************************************/
+/*                               Types                                    */
+/**************************************************************************/
 typedef enum
 {
 	UART_STATE_SUCCESS=1,
@@ -48,7 +49,7 @@ typedef enum
 
 typedef enum
 {
-	BIT_5,
+	BIT_5=1,
 	BIT_6,
 	BIT_7,
 	BIT_8,
@@ -57,7 +58,7 @@ typedef enum
 
 typedef enum
 {
-	BIG_ENDIAN,
+	BIG_ENDIAN=1,
 	LITTLE_ENDIAN,
 }endian_type_t;
 
@@ -68,58 +69,58 @@ typedef struct
 	parity_t parity;
 	packet_length_t packetLength;
 }uart_t;
-/*************************************************************************/
-/*                           Public Functions                            */
+/**************************************************************************/
+/*                           Public Functions                             */
 /**************************************************************************
- ** mcal_UART_init()
+ ** mcal_uart_init()
  **
- ** parameters: uart_t* uart
+ ** parameter: uart_t* uart
  ** return    : uart_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for uart
  **************************************************************************/
-uart_error_t mcal_UART_init(uart_t* uart);
+uart_error_t mcal_uart_init(uart_t* uart);
 
 
-/**************************************************************************
- ** mcal_UART_sendByte()
+/***************************************************************************
+ ** mcal_uart_send_byte()
  **
- ** parameters: u8_t data
+ ** parameter: u8_t data
  ** return    : uart_error_t
  ***************************************************************************
  ** this function is used to send bytes "data"
  **************************************************************************/
-uart_error_t mcal_UART_sendByte(u8_t data);
+uart_error_t mcal_uart_send_byte(u8_t data);
 
-/**************************************************************************
- ** mcal_UART_recieveByte()
+/***************************************************************************
+ ** mcal_uart_recieve_byte()
  **
- ** parameters: u8_t* data
+ ** parameter: u8_t* data
  ** return    : uart_error_t
  ***************************************************************************
  ** this function is used to receive bytes "data"
  **************************************************************************/
-uart_error_t mcal_UART_recieveByte(u8_t* data);
+uart_error_t mcal_uart_recieve_byte(u8_t* data);
 
-/**************************************************************************
- ** mcal_UART_sendString()
+/***************************************************************************
+ ** mcal_uart_send_string()
  **
- ** parameters: const u8_t *str
+ ** parameter: const u8_t *str
  ** return    : uart_error_t
  ***************************************************************************
  ** this function is used to to send String
  **************************************************************************/
-uart_error_t mcal_UART_sendString(const u8_t *str);
+uart_error_t mcal_uart_send_string(const u8_t *str);
 
 
-/**************************************************************************
+/***************************************************************************
  ** mcal_UART_recieveString()
  **
- ** parameters: const u8_t *str
+ ** parameter: const u8_t *str
  ** return    : uart_error_t
  ***************************************************************************
  ** this function is  to receive String
  **************************************************************************/
-uart_error_t mcal_UART_receiveString (u8_t *str);
+uart_error_t mcal_UART_receive_string (u8_t *str);
 
 #endif /* _UART_H_ */

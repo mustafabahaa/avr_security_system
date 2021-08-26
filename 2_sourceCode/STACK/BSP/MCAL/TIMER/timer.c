@@ -14,7 +14,7 @@
 /**************************************************************************
  ** getPreScaler()
  **
- ** parameters: timer_preScaler_t preScaller
+ ** parameter: timer_preScaler_t preScaller
  ** return    : u16_t
  ***************************************************************************
  ** this function is used to get the actual values of pre-scaller

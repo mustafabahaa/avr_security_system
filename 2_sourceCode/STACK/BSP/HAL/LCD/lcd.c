@@ -15,7 +15,7 @@
 lcd_error_t hal_lcd_init(lcd_t *lcd)
 {
 	lcd_error_t error = LCD_SUCCESS;
-	GPIO_STATE_ERROR_t gpioError = GPIO_STATE_SUCCESS;
+	gpio_state_error_t gpioError = GPIO_STATE_SUCCESS;
 
 	/* Configure the control pins(E,RS,RW) as output pins */
 	gpioError = mcal_gpio_pin_init(lcd->lcdControlPort, lcd->lcdE, DIR_OUTPUT);
@@ -106,7 +106,7 @@ lcd_error_t hal_lcd_init(lcd_t *lcd)
 lcd_error_t hal_lcd_sendData(lcd_t* lcd ,lcd_data_types_t type, u8_t data )
 {
 	lcd_error_t error = LCD_SUCCESS;
-	GPIO_STATE_ERROR_t gpioError = GPIO_STATE_SUCCESS;
+	gpio_state_error_t gpioError = GPIO_STATE_SUCCESS;
 	port_error_t portError = PORT_STATE_SUCCESS;
 
 	if (type == COMMAND)

@@ -114,7 +114,7 @@ static void send_packet(u8_t *tag, u8_t *data, u8_t *log_type, u16_t variable)
 
   if (variable != NULL)
   {
-    u8_t buff[1];
+    u8_t buff[5];
     std_itoa(variable, buff, 10);
     std_strcat(str, (u8_t *)": ");
     std_strcat(str, buff);

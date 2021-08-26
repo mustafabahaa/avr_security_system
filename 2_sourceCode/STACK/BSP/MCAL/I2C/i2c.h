@@ -1,4 +1,4 @@
-/**************************************************************************
+/***************************************************************************
  ** This  software  is  in  the  public  domain , furnished "as is", without
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
@@ -12,6 +12,7 @@
 /**************************************************************************/
 #include "types.h"
 #include "atmega32.h"
+#include "logger.h"
 /**************************************************************************/
 /*                              Macros                                    */
 /**************************************************************************/
@@ -59,85 +60,85 @@ typedef enum
 
 typedef enum
 {
-	RATE_100KB=1,
-	RATE_400KB,
+	RATE_100KB=100,
+	RATE_400KB=400,
 } i2c_bit_rate_t;
 
 typedef struct
 {
 	i2c_bit_rate_t bitRate;
 } i2c_t;
-/*************************************************************************/
-/*                           Public Functions                            */
-/**************************************************************************
- ** mcal_TWI_init()
+/**************************************************************************/
+/*                           Public Functions                             */
+/***************************************************************************
+ ** mcal_i2c_init()
  **
- ** parameters: i2c_t* i2c
+ ** parameter: i2c_t* i2c
  ** return    : i2c_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for i2c
  **************************************************************************/
-i2c_error_t mcal_TWI_init(i2c_t* i2c);
+i2c_error_t mcal_i2c_init(i2c_t* i2c);
 
-/**************************************************************************
- ** mcal_TWI_start()
+/***************************************************************************
+ ** mcal_i2c_start()
  **
- ** parameters: void
+ ** parameter: void
  ** return    : i2c_error_t
  ***************************************************************************
  ** this function is used to send i2c start bit
  **************************************************************************/
-i2c_error_t mcal_TWI_start(void);
+i2c_error_t mcal_i2c_start(void);
 
-/**************************************************************************
- ** mcal_TWI_stop()
+/***************************************************************************
+ ** mcal_i2c_stop()
  **
- ** parameters: void
+ ** parameter: void
  ** return    : i2c_error_t
  ***************************************************************************
  ** this function is used to send i2c stop bit
  **************************************************************************/
-i2c_error_t mcal_TWI_stop(void);
+i2c_error_t mcal_i2c_stop(void);
 
-/**************************************************************************
- ** mcal_TWI_write()
+/***************************************************************************
+ ** mcal_i2c_write()
  **
- ** parameters: u8_t data
+ ** parameter: u8_t data
  ** return    : i2c_error_t
  ***************************************************************************
  ** this function is used to send data over i2c
  **************************************************************************/
-i2c_error_t mcal_TWI_write(u8_t data);
+i2c_error_t mcal_i2c_write(u8_t data);
 
-/**************************************************************************
- ** mcal_TWI_readWithACK()
+/***************************************************************************
+ ** mcal_i2c_read_ack()
  **
- ** parameters: u8_t data
+ ** parameter: u8_t data
  ** return    : i2c_error_t
  ***************************************************************************
  ** this function is used to read with Acknowledge
  **************************************************************************/
-i2c_error_t mcal_TWI_readWithACK(u8_t* data);
+i2c_error_t mcal_i2c_read_ack(u8_t* data);
 
-/**************************************************************************
- ** mcal_TWI_readWithNACK()
+/***************************************************************************
+ ** mcal_i2c_read_nack()
  **
- ** parameters: u8_t* data
+ ** parameter: u8_t* data
  ** return    : i2c_error_t
  ***************************************************************************
  ** this function is used to read with NOT Acknowledge
  **************************************************************************/
-i2c_error_t mcal_TWI_readWithNACK(u8_t* data);
+i2c_error_t mcal_i2c_read_nack(u8_t* data);
 
-/**************************************************************************
- ** mcal_TWI_getStatus()
+/***************************************************************************
+ ** mcal_i2c_getStatus()
  **
- ** parameters: void
+ ** parameter: void
  ** return    : status
  ***************************************************************************
  ** this function is used to get status of I2C
  **************************************************************************/
-u8_t mcal_TWI_getStatus();
+u8_t mcal_i2c_getStatus();
 
 
 #endif /* _I2C_H_ */

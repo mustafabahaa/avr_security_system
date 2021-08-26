@@ -36,7 +36,7 @@ typedef enum
 
 typedef struct
 {
-	pwm_channel_t* channel;
+	pwm_channel_t channel;
 } servo_motor_t;
 
 /*************************************************************************/
@@ -44,7 +44,7 @@ typedef struct
 /**************************************************************************
  ** hal_servo_motor_init()
  **
- ** parameters: motor_t *motor
+ ** parameter: motor_t *motor
  ** return    : servo_motor_error_t
  ***************************************************************************
  ** this function is used to initialize all  sequence for SERVO motor
@@ -54,7 +54,7 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor);
 /***************************************************************************
  ** hal_servo_motor_set_direction()
  **
- ** parameters: u8_t degree
+ ** parameter: u8_t degree
  ** return    : servo_motor_error_t
  ***************************************************************************
  ** this function is used to change the direction of the motor

@@ -15,6 +15,8 @@
 /*************************************************************************/
 /*                          Common Macros                                */
 /*************************************************************************/
+#define LSB 0x0F
+#define MSB 0xF0
 #define HIGH 1
 #define LOW 0
 #define ON 1
@@ -214,13 +216,13 @@
 #define TWA6    7
 
 #define TWCR    0x56
-#define TWIE    0
+#define i2cE    0
 #define TWEN    2
 #define TWWC    3
 #define TWSTO   4
 #define TWSTA   5
 #define TWEA    6
-#define TWINT   7
+#define i2cNT   7
 
 #define TWDR    0x23
 /*************************************************************************/

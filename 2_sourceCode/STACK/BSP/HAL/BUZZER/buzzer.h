@@ -42,7 +42,7 @@ typedef struct
 /**************************************************************************
  ** hal_buzzer_init()
  **
- ** parameters: buzzer_t* the_buzzer
+ ** parameter: buzzer_t* the_buzzer
  ** return    : BUZZER_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for BUZZER
@@ -52,8 +52,8 @@ buzzer_error_t hal_buzzer_init(buzzer_t *the_buzzer);
 /**************************************************************************
  ** hal_buzzer_set_state()
  **
- ** parameters: buzzer_t* the_buzzer
- ** parameters: u8_t value
+ ** parameter: buzzer_t* the_buzzer
+ ** parameter: u8_t value
  ** return    : BUZZER_error_t
  ***************************************************************************
  ** this function set the states of the BUZZER on or off
@@ -63,7 +63,7 @@ buzzer_error_t hal_buzzer_set_state(buzzer_t *the_buzzer, u8_t value);
 /**************************************************************************
  ** hal_buzzer_toggle_state()
  **
- ** parameters: buzzer_t* the_buzzer
+ ** parameter: buzzer_t* the_buzzer
  ** return    : BUZZER_error_t
  ***************************************************************************
  ** this function toggle the BUZZER states
@@ -73,8 +73,8 @@ buzzer_error_t hal_buzzer_toggle_state(buzzer_t *the_buzzer);
 /**************************************************************************
  ** hal_buzzer_get_state()
  **
- ** parameters: buzzer_t* the_buzzer
- ** parameters: u8_t* value
+ ** parameter: buzzer_t* the_buzzer
+ ** parameter: u8_t* value
  ** return    : BUZZER_error_t
  ***************************************************************************
  ** this function get the states of the BUZZER on or off

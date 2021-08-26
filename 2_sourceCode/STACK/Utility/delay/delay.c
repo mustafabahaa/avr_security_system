@@ -14,7 +14,7 @@
  ***************************************************************************
  ** delay_loop()
  **
- ** parameters: u16_t __count
+ ** parameter: u16_t __count
  ** return    : void
  **************************************************************************
  ** this function is used to halt processor in loop

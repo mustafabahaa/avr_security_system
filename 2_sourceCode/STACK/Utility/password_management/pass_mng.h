@@ -24,7 +24,7 @@ typedef enum
 /***************************************************************************
  ** comparePasswords()
  **
- ** parameters: 8_t* firstPass,u8_t* secondPass
+ ** parameter: 8_t* firstPass,u8_t* secondPass
  ** return    : pass_status_t
  ***************************************************************************
  ** this function is used to compare passwords strings

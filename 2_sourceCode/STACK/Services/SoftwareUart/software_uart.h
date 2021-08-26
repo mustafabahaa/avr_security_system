@@ -51,7 +51,7 @@ typedef struct
 /**************************************************************************
  ** service_soft_uart_init()
  **
- ** parameters: soft_uart_t *soft_uart_t
+ ** parameter: soft_uart_t *soft_uart_t
  ** return    : void
  ***************************************************************************
  ** this function intialize software uart configurations
@@ -62,7 +62,7 @@ typedef struct
  /**************************************************************************
  ** service_soft_uart_send_byte()
  **
- ** parameters: u8_t txData
+ ** parameter: u8_t txData
  ** return    : void
  ***************************************************************************
  ** this function send u8_t with uart bit banging technique
@@ -72,7 +72,7 @@ typedef struct
   /**************************************************************************
  ** service_soft_uart_send_string()
  **
- ** parameters: u8_t txData
+ ** parameter: u8_t txData
  ** return    : void
  ***************************************************************************
  ** this function send string with uart bit banging technique

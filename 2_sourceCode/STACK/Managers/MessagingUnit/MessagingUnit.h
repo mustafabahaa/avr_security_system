@@ -37,7 +37,7 @@
 /**************************************************************************
  ** ms_manager_init()
  **
- ** parameters: void
+ ** parameter: void
  ** return    : system_error_t
  ***************************************************************************
  ** this function is used to initialize UART data between ECU on UART Bus
@@ -47,7 +47,7 @@ system_error_t ms_manager_init();
 /**************************************************************************
 ** ms_manager_send_signal()
 **
-** parameters: u8_t data
+** parameter: u8_t data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to send data between ECU on UART Bus
@@ -57,7 +57,7 @@ system_error_t ms_manager_send_signal(u8_t data );
 /**************************************************************************
 ** ms_manager_send_password()
 **
-** parameters: u8_t* data
+** parameter: u8_t* data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to send data string between ECU on UART Bus
@@ -67,7 +67,7 @@ system_error_t ms_manager_send_password(u8_t* data );
 /**************************************************************************
 ** ms_manager_receive_signal()
 **
-** parameters: u8_t* data
+** parameter: u8_t* data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to receive data between ECU on UART Bus
@@ -77,7 +77,7 @@ system_error_t ms_manager_receive_signal(u8_t* data);
 /**************************************************************************
 ** ms_manager_send_password()
 **
-** parameters: u8_t* data
+** parameter: u8_t* data
 ** return    : system_error_t
 ***************************************************************************
 ** this function is used to receive string data between ECU on UART Bus

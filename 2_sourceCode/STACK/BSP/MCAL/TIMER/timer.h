@@ -99,7 +99,7 @@ typedef struct
 /**************************************************************************
  ** mcal_timer_init()
  **
- ** parameters: timer_config_t* timer
+ ** parameter: timer_config_t* timer
  ** return    : timer_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for timer
@@ -109,7 +109,7 @@ timer_error_t mcal_timer_init(timer_config_t* timer);
 /**************************************************************************
  ** mcal_timer_start()
  **
- ** parameters: timer_config_t* timer
+ ** parameter: timer_config_t* timer
  ** return    : timer_error_t
  ***************************************************************************
  ** this function is used to start given timer
@@ -119,7 +119,7 @@ timer_error_t mcal_timer_start(timer_config_t* timer);
 /**************************************************************************
  ** mcal_timer_stop()
  **
- ** parameters: timer_config_t* timer
+ ** parameter: timer_config_t* timer
  ** return    : timer_error_t
  ***************************************************************************
  ** this function is used to start given timer
@@ -129,7 +129,7 @@ timer_error_t mcal_timer_stop(timer_config_t* timer);
 /**************************************************************************
  ** timer_setCallBack()
  **
- ** parameters: void(*a_ptr)(void)
+ ** parameter: void(*a_ptr)(void)
  ** return    : void
  ***************************************************************************
  ** this function is used to register timer interrupts callback
@@ -139,7 +139,7 @@ void timer_setCallBack(void(*a_ptr)(void));
 /**************************************************************************
  ** set_timer_overflow()
  **
- ** parameters: u16_t overflow
+ ** parameter: u16_t overflow
  ** return    : void
  ***************************************************************************
  ** this function is used to update overflow value in callback file

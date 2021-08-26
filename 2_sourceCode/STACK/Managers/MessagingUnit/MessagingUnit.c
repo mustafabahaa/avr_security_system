@@ -17,7 +17,7 @@
 /**************************************************************************
  ** ()
  **
- ** parameters: void
+ ** parameter: void
  ** return    : system_error_t
  **************************************************************************
  **
@@ -43,7 +43,7 @@ system_error_t ms_manager_init()
   uart.stopBitNo = STOP_BIT_1;
   uart.parity = DISABLE;
 
-  if (UART_STATE_SUCCESS != mcal_UART_init(&uart))
+  if (UART_STATE_SUCCESS != mcal_uart_init(&uart))
   {
     error = SYSTEM_FAIL;
     logger_write_error_println(LOG_MANAGERS,TAG, (u8_t *)"Failed to initialize messaging Unit");
@@ -60,7 +60,7 @@ system_error_t ms_manager_send_signal(u8_t data)
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	if(UART_STATE_SUCCESS != mcal_UART_sendByte(data))
+	if(UART_STATE_SUCCESS != mcal_uart_send_byte(data))
 	{
 		error = SYSTEM_FAIL;
 		logger_write_error_println(LOG_MANAGERS,TAG,(u8_t *)"Failed to send data");
@@ -79,7 +79,7 @@ system_error_t ms_manager_send_password(u8_t* data)
 
 	for (int i = 0; i < PASSWORD_LENGTH; i++)
 	{
-		if (UART_STATE_SUCCESS != mcal_UART_sendByte(data[i]))
+		if (UART_STATE_SUCCESS != mcal_uart_send_byte(data[i]))
 		{
 			error = SYSTEM_FAIL;
 			logger_write_error_println(LOG_MANAGERS,TAG, (u8_t *)"Failed to send string data");
@@ -96,7 +96,7 @@ system_error_t ms_manager_receive_signal(u8_t* data)
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	if(UART_STATE_SUCCESS != mcal_UART_recieveByte(data))
+	if(UART_STATE_SUCCESS != mcal_uart_recieve_byte(data))
 	{
 		error = SYSTEM_FAIL;
 		logger_write_error_println(LOG_MANAGERS,TAG,(u8_t *)"Failed to receive data");
@@ -115,7 +115,7 @@ system_error_t ms_manager_receive_password(u8_t* data)
 
   for (int i = 0; i < PASSWORD_LENGTH; i++)
   {
-    if (UART_STATE_SUCCESS != mcal_UART_recieveByte(data))
+    if (UART_STATE_SUCCESS != mcal_uart_recieve_byte(data))
     {
       error = SYSTEM_FAIL;
       logger_write_error_println(LOG_MANAGERS,TAG, (u8_t *)"Failed to receive string data");

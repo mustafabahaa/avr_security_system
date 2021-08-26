@@ -3,7 +3,7 @@
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
 
- ** GPIO.c
+ ** gpio.c
  **************************************************************************
  **                              Includes                                **
  *************************************************************************/
@@ -21,9 +21,9 @@ static void print_port_char(u8_t base);
 /*                     Functions Implementation                          */
 /*************************************************************************/
 
-GPIO_STATE_ERROR_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState dir)
+gpio_state_error_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState_t dir)
 {
-  GPIO_STATE_ERROR_t error = GPIO_STATE_SUCCESS;
+  gpio_state_error_t error = GPIO_STATE_SUCCESS;
 
   if (base != BASE_A && base != BASE_B && base != BASE_C && base != BASE_D)
   {
@@ -63,13 +63,12 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState dir)
       break;
     }
   }
-
   return error;
 }
 
-GPIO_STATE_ERROR_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value)
+gpio_state_error_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value)
 {
-  GPIO_STATE_ERROR_t error = GPIO_STATE_SUCCESS;
+  gpio_state_error_t error = GPIO_STATE_SUCCESS;
 
   if (base != BASE_A && base != BASE_B && base != BASE_C && base != BASE_D)
   {
@@ -106,9 +105,9 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value)
   return error;
 }
 
-GPIO_STATE_ERROR_t mcal_gpio_pin_toggle(u8_t base, u8_t pin)
+gpio_state_error_t mcal_gpio_pin_toggle(u8_t base, u8_t pin)
 {
-  GPIO_STATE_ERROR_t error = GPIO_STATE_SUCCESS;
+  gpio_state_error_t error = GPIO_STATE_SUCCESS;
 
   if (base != BASE_A && base != BASE_B && base != BASE_C && base != BASE_D)
   {
@@ -130,9 +129,9 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_toggle(u8_t base, u8_t pin)
   return error;
 }
 
-GPIO_STATE_ERROR_t mcal_gpio_pin_read(u8_t base, u8_t pin, u8_t *value)
+gpio_state_error_t mcal_gpio_pin_read(u8_t base, u8_t pin, u8_t *value)
 {
-  GPIO_STATE_ERROR_t error = GPIO_STATE_SUCCESS;
+  gpio_state_error_t error = GPIO_STATE_SUCCESS;
 
   if (base != BASE_A && base != BASE_B && base != BASE_C && base != BASE_D)
   {

@@ -47,7 +47,7 @@ typedef struct button
 /**************************************************************************
  ** hal_button_init()
  **
- ** parameters: button_t *the_button
+ ** parameter: button_t *the_button
  ** return    : button_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for button
@@ -57,8 +57,8 @@ button_error_t hal_button_init(button_t *the_button);
 /**************************************************************************
  ** hal_button_init()
  **
- ** parameters: button_t *the_button
- ** parameters: button_states_t *result
+ ** parameter: button_t *the_button
+ ** parameter: button_states_t *result
  ** return    : button_error_t
  ***************************************************************************
  ** this function return the states of the button On or off

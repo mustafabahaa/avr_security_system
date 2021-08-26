@@ -46,7 +46,7 @@ typedef struct
 **************************************************************************
  ** hal_keypad_init()
  **
- ** parameters: keypad_t keypad
+ ** parameter: keypad_t keypad
  ** return    : keypad_error_t
  **************************************************************************
  ** this function is used to init the keypad ports and pins

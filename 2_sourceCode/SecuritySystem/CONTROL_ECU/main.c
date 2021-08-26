@@ -254,6 +254,7 @@ static system_error_t systemInit()
     /* Initialize Managers */
 	error = ms_manager_init();
 
+
   error = EEPROM_SUCCESS == hal_eeprom_init() ? SYSTEM_SUCCESS : SYSTEM_FAIL;
 	return error;
 }
@@ -262,8 +263,8 @@ static system_error_t servoMotorInit()
 {
 	system_error_t error = SYSTEM_SUCCESS;
 
-	servo.channel->channel_port = BASE_B;
-	servo.channel->channel_pin = 1;
+	servo.channel.channel_port = BASE_D;
+	servo.channel.channel_pin = CHANNEL_4_PIN;
 
 	hal_servo_motor_init(&servo);
 	return error;

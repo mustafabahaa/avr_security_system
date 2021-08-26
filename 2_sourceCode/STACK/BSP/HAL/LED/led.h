@@ -42,7 +42,7 @@ typedef struct
 /**************************************************************************
  ** hal_led_init()
  **
- ** parameters: led_t* the_led
+ ** parameter: led_t* the_led
  ** return    : led_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for LED
@@ -52,8 +52,8 @@ led_error_t hal_led_init(led_t *the_led);
 /**************************************************************************
  ** hal_led_set_state()
  **
- ** parameters: led_t* the_led
- ** parameters: u8_t value
+ ** parameter: led_t* the_led
+ ** parameter: u8_t value
  ** return    : led_error_t
  ***************************************************************************
  ** this function set the states of the LED on or off
@@ -63,7 +63,7 @@ led_error_t hal_led_set_state(led_t *the_led, u8_t value);
 /**************************************************************************
  ** hal_led_toggle_state()
  **
- ** parameters: led_t* the_led
+ ** parameter: led_t* the_led
  ** return    : led_error_t
  ***************************************************************************
  ** this function toggle the led states
@@ -73,8 +73,8 @@ led_error_t hal_led_toggle_state(led_t *the_led);
 /**************************************************************************
  ** hal_led_get_state()
  **
- ** parameters: led_t* the_led
- ** parameters: u8_t* value
+ ** parameter: led_t* the_led
+ ** parameter: u8_t* value
  ** return    : led_error_t
  ***************************************************************************
  ** this function get the states of the LED on or off

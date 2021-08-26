@@ -32,7 +32,7 @@ typedef enum
 /**************************************************************************
  ** hal_eeprom_init()
  **
- ** parameters: void
+ ** parameter: void
  ** return    : eeprom_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for eeprom
@@ -42,7 +42,7 @@ eeprom_error_t hal_eeprom_init(void);
 /**************************************************************************
  ** hal_eeprom_writeByte()
  **
- ** parameters: u8_t address,u8_t u8data
+ ** parameter: u8_t address,u8_t u8data
  ** return    : eeprom_error_t
  ***************************************************************************
  ** this function is used to write 8bit data to specific address in eeprom
@@ -52,7 +52,7 @@ eeprom_error_t hal_eeprom_writeByte(u8_t address,u8_t u8data);
 /**************************************************************************
  ** hal_eeprom_readByte()
  **
- ** parameters: u8_t address,u8_t *u8data
+ ** parameter: u8_t address,u8_t *u8data
  ** return    : eeprom_error_t
  ***************************************************************************
  ** this function is used to read 8bit data to specific address from eeprom

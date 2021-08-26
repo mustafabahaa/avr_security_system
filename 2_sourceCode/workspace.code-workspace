@@ -16,7 +16,12 @@
       "timer.h": "c",
       "logger.h": "c",
       "gpio.h": "c",
-      "e_interrupt.h": "c"
+      "e_interrupt.h": "c",
+      "port.h": "c",
+      "pwm.h": "c",
+      "atmega32.h": "c",
+      "spi.h": "c",
+      "uart.h": "c"
     }
   }
 }

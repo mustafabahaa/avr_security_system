@@ -3,7 +3,7 @@
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
 
- ** GPIO.h
+ ** gpio.h
  **************************************************************************/
 #ifndef GPIO_H_
 #define GPIO_H_
@@ -12,7 +12,6 @@
 /**************************************************************************/
 #include "types.h"
 #include "atmega32.h"
-#include "port.h"
 #include "logger.h"
 /**************************************************************************/
 /*                              Macros                                    */
@@ -24,20 +23,20 @@
 /**************************************************************************/
 typedef enum
 {
-	DIR_INPUT_PULLUP,
+	DIR_INPUT_PULLUP=1,
 	DIR_INPUT_PULLDOWN,
 	DIR_OUTPUT
-} pinState;
+} pinState_t;
 
-typedef enum GPIO_STATE_ERROR_t
+typedef enum
 {
-	GPIO_STATE_SUCCESS,
+	GPIO_STATE_SUCCESS=1,
 	GPIO_STATE_ERROR,
 	GPIO_STATE_INVALID_ADDR,
 	GPIO_STATE_INVAILD_PIN,
 	GPIO_STATE_INVALID_DIR,
 	GPIO_STATE_INVALID_VALUE
-} GPIO_STATE_ERROR_t;
+} gpio_state_error_t;
 
 /**************************************************************************/
 /*                           Public Functions                             */
@@ -46,12 +45,12 @@ typedef enum GPIO_STATE_ERROR_t
  **
  ** parameter: u8_t base
  ** parameter: u8_t pin
- ** parameter: pinState dir
- ** return    : GPIO_STATE_ERROR_t
+ ** parameter: pinState_t dir
+ ** return    : gpio_state_error_t
  ***************************************************************************
  ** this function is used to initialize all the necessary sequence for pin
  **************************************************************************/
-GPIO_STATE_ERROR_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState dir);
+gpio_state_error_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState_t dir);
 
 /**************************************************************************
  ** mcal_gpio_pin_write()
@@ -59,22 +58,22 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState dir);
  ** parameter: u8_t base
  ** parameter: u8_t pin
  ** parameter: u8_t value
- ** return    : GPIO_STATE_ERROR_t
+ ** return    : gpio_state_error_t
  ***************************************************************************
  ** this function is used write a value to gpio pin
  **************************************************************************/
-GPIO_STATE_ERROR_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value);
+gpio_state_error_t mcal_gpio_pin_write(u8_t base, u8_t pin, u8_t value);
 
 /**************************************************************************
  ** mcal_gpio_pin_toggle()
  **
  ** parameter: u8_t base
  ** parameter: u8_t pin
- ** return    : GPIO_STATE_ERROR_t
+ ** return    : gpio_state_error_t
  ***************************************************************************
  ** this function is used to toggle gpio pin
  **************************************************************************/
-GPIO_STATE_ERROR_t mcal_gpio_pin_toggle(u8_t base, u8_t pin);
+gpio_state_error_t mcal_gpio_pin_toggle(u8_t base, u8_t pin);
 
 /**************************************************************************
  ** mcal_gpio_pin_read()
@@ -82,10 +81,10 @@ GPIO_STATE_ERROR_t mcal_gpio_pin_toggle(u8_t base, u8_t pin);
  ** parameter: u8_t base
  ** parameter: u8_t pin
  ** parameter: u8_t* value
- ** return    : GPIO_STATE_ERROR_t
+ ** return    : gpio_state_error_t
  ***************************************************************************
  ** this function is used read a value from gpio pin
  **************************************************************************/
-GPIO_STATE_ERROR_t mcal_gpio_pin_read(u8_t base, u8_t pin, u8_t *value);
+gpio_state_error_t mcal_gpio_pin_read(u8_t base, u8_t pin, u8_t *value);
 
 #endif /* GPIO_H_ */

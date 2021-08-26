@@ -14,9 +14,9 @@
  ***************************************************************************
  ** std_reverse()
  **
- ** parameters: u8_t *buffer
- ** parameters: u16_t i
- ** parameters: u16_t j
+ ** parameter: u8_t *buffer
+ ** parameter: u16_t i
+ ** parameter: u16_t j
  ** return    : void
  **************************************************************************
  ** this function is used to reverse buffer[i..j]
@@ -26,8 +26,8 @@ static u8_t* std_reverse(u8_t *buffer, u16_t i, u16_t j);
 /**************************************************************************
 ** std_swap()
 **
-** parameters: u8_t *x
-** parameters: u8_t *y
+** parameter: u8_t *x
+** parameter: u8_t *y
 ** return    : void
 **************************************************************************
 ** this function is used to swap two numbers
@@ -37,8 +37,8 @@ static inline void std_swap(u8_t *x, u8_t *y);
 /**************************************************************************
 ** std_abs()
 **
-** parameters: u16_t v
-** parameters: u8_t *y
+** parameter: u16_t v
+** parameter: u8_t *y
 ** return    : void
 **************************************************************************
 ** this function is used to get the absolute value of number
