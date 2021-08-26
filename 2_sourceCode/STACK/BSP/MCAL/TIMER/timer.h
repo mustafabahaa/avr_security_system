@@ -1,4 +1,4 @@
-/**************************************************************************
+/***************************************************************************
  ** This  software  is  in  the  public  domain , furnished "as is", without
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
@@ -7,9 +7,9 @@
  **************************************************************************/
 #ifndef _TIMER_H_
 #define _TIMER_H_
-/*************************************************************************/
-/*                              Includes                                 */
-/*************************************************************************/
+/**************************************************************************/
+/*                              Includes                                  */
+/**************************************************************************/
 
 #include "types.h"
 #include "atmega32.h"
@@ -106,7 +106,7 @@ typedef struct
  **************************************************************************/
 timer_error_t mcal_timer_init(timer_config_t* timer);
 
-/**************************************************************************
+/***************************************************************************
  ** mcal_timer_start()
  **
  ** parameter: timer_config_t* timer
@@ -116,7 +116,7 @@ timer_error_t mcal_timer_init(timer_config_t* timer);
  **************************************************************************/
 timer_error_t mcal_timer_start(timer_config_t* timer);
 
-/**************************************************************************
+/***************************************************************************
  ** mcal_timer_stop()
  **
  ** parameter: timer_config_t* timer
@@ -126,7 +126,7 @@ timer_error_t mcal_timer_start(timer_config_t* timer);
  **************************************************************************/
 timer_error_t mcal_timer_stop(timer_config_t* timer);
 
-/**************************************************************************
+/***************************************************************************
  ** timer_setCallBack()
  **
  ** parameter: void(*a_ptr)(void)
@@ -135,16 +135,5 @@ timer_error_t mcal_timer_stop(timer_config_t* timer);
  ** this function is used to register timer interrupts callback
  **************************************************************************/
 void timer_setCallBack(void(*a_ptr)(void));
-
-/**************************************************************************
- ** set_timer_overflow()
- **
- ** parameter: u16_t overflow
- ** return    : void
- ***************************************************************************
- ** this function is used to update overflow value in callback file
- **************************************************************************/
-void set_timer_overflow(double overflow);
-
 
 #endif /* _TIMER_H_ */

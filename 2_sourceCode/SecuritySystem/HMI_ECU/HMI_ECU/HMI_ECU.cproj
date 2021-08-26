@@ -283,10 +283,6 @@
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\TIMER\timer.h</Link>
     </Compile>
-    <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer_callbacks.c">
-      <SubType>compile</SubType>
-      <Link>STACK\BSP\MCAL\TIMER\timer_callbacks.c</Link>
-    </Compile>
     <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\MCAL\UART\uart.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\UART\uart.c</Link>
