@@ -40,7 +40,6 @@ pwm_error_t mcal_pwm_initialization(pwm_channel_t *channel)
     clr_bit(TCCR0, CS01);
     set_bit(TCCR0, CS00);
 
-    while(1);
     logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"channel 1 is confgiured in fast PWM mode");
     logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"channel 1 is confgiured in non inverted mode");
     logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"channel 1 no pre-scaller selected");
