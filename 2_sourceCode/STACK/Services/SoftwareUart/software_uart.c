@@ -24,8 +24,6 @@ void service_soft_uart_init(soft_uart_t *soft_uart)
   timer.timer_number = TIMER0;
   timer.mode = TIMER_CTC_MODE;
   timer.preScaler = F_CPU_CLOCK;
-  //timer.tick_ms_seconds = (double)UART_SOFT_DELAY_US / 1000;
-  // #define UART_SOFT_DELAY_US (F_CPU / UART_SOFT_BAUD)
 
   timer.tick_ms_seconds = (double)((F_CPU / timer.preScaler) / gl_soft_uart->baud) / 1000;
   mcal_timer_init(&timer);
@@ -37,11 +35,12 @@ void service_soft_uart_init(soft_uart_t *soft_uart)
   /* allocate port and pin for faster execution in interrupt */
   port = gl_soft_uart->base + OFFSET_PORT;
   pin = gl_soft_uart->txPin;
+
+  setGlobalInterrupt;
 }
 
 void service_soft_uart_send_byte(u8_t txData)
 {
-  gl_soft_uart->status = BUSY;
   u16_t local_tx_shift_reg = tx_shift_reg;
   //if sending the previous character is not yet finished, return
   //transmission is finished when tx_shift_reg == 0
@@ -87,6 +86,5 @@ void TIMER0_COMP_vect(void)
   if (!local_tx_shift_reg)
   {
     mcal_timer_stop(&timer);
-    gl_soft_uart->status = READY;
   }
 }
