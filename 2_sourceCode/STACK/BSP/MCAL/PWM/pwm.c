@@ -21,8 +21,8 @@ pwm_error_t mcal_pwm_initialization(pwm_channel_t *channel)
   pwm_error_t error = PWM_STATE_SUCCESS;
 
   /* making the pin of pwm output */
-  mcal_gpio_pin_init(channel->channel_port, channel->channel_pin, DIR_OUTPUT);
 
+  mcal_gpio_pin_init(channel->channel_port, channel->channel_pin, DIR_OUTPUT);
   switch (channel->channel_pin)
   {
   case CHANNEL_1_PIN:

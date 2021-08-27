@@ -86,7 +86,7 @@ uart_error_t mcal_uart_init(uart_t *uart)
     error = UART_STATE_INVALID_PARITY;
     logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"invalid parity mode");
   }
-
+  
   /* Initialize packet length */
   if (BIT_5 == uart->packetLength)
   {
@@ -128,6 +128,7 @@ uart_error_t mcal_uart_init(uart_t *uart)
     error = UART_STATE_INVALID_PACKET_LENGTH;
     logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"invalid packet length");
   }
+
   return error;
 }
 

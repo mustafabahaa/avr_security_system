@@ -26,7 +26,7 @@
 /*************************************************************************/
 /*                          Global Variables                             */
 /*************************************************************************/
-static u8_t* TAG = (u8_t*)"MESSAGING UNIT";
+static u8_t* TAG = (u8_t*)"MESSAGING_UNIT";
 /*************************************************************************/
 
 /*************************************************************************/
@@ -52,7 +52,6 @@ system_error_t ms_manager_init()
   {
     logger_write_debug_println(LOG_MANAGERS,TAG, (u8_t *)"Succeed to initialize messaging Unit");
   }
-
   return error;
 }
 
