@@ -11,7 +11,7 @@
 /*                              Includes                                 */
 /*************************************************************************/
 #include "types.h"
-#include "atmega32.h"
+#include "avr.h"
 #include "port.h"
 #include "gpio.h"
 #include "delay.h"

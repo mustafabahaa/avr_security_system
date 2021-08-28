@@ -9,7 +9,7 @@
 /*************************************************************************/
 /* BSP Includes */
 #include "types.h"
-#include "atmega32.h"
+#include "avr.h"
 #include "keypad.h"
 #include "lcd.h"
 #include "timer.h"
@@ -98,6 +98,7 @@ int main(void)
 
   systemInit();
 
+  #if 0
   while (1)
   {
     switch (state)
@@ -151,6 +152,7 @@ int main(void)
     }
     }
   }
+  #endif
 
   return 0;
 }
@@ -419,16 +421,16 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
-  logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
+  //logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
   error = keypadInit();
   error = LCDInit();
-  error = timerInit();
+//  error = timerInit();
 
   /* Initialize Managers */
-  error = ms_manager_init();
+//  error = ms_manager_init();
 
   return error;
 }

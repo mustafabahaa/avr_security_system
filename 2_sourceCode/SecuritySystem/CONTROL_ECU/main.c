@@ -9,7 +9,7 @@
 /*************************************************************************/
 /* BSP Includes */
 #include "types.h"
-#include "atmega32.h"
+#include "avr.h"
 #include "timer.h"
 #include "eeprom.h"
 #include "buzzer.h"
@@ -82,6 +82,7 @@ int main(void)
   state = HALT_STATE;
   systemInit();
 
+  #if 0
   while (1)
   {
     ms_manager_receive_signal(&state);
@@ -136,6 +137,7 @@ int main(void)
     }
     }
   }
+  #endif
 
   return 0;
 }
@@ -241,18 +243,18 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
-  logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
+ // logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
   error = buzzerInit();
-  error = servoMotorInit();
-  error = timerInit();
+ // error = servoMotorInit();
+ // error = timerInit();
 
   /* Initialize Managers */
-  error = ms_manager_init();
+ // error = ms_manager_init();
 
-  error = EEPROM_SUCCESS == hal_eeprom_init() ? SYSTEM_SUCCESS : SYSTEM_FAIL;
+ // error = EEPROM_SUCCESS == hal_eeprom_init() ? SYSTEM_SUCCESS : SYSTEM_FAIL;
   return error;
 }
 

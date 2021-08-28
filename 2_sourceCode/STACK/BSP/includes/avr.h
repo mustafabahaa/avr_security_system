@@ -3,10 +3,10 @@
  ** technical support,  and with no  warranty, express or implied, as to its
  ** usefulness for any purpose.
 
- ** atmega32.h
+ ** avr.h
  **************************************************************************/
-#ifndef ATMEGA_16_H_
-#define ATMEGA_16_H_
+#ifndef _AVR_H_
+#define _AVR_H_
 /*************************************************************************/
 /*                          Needed Includes                              */
 /*************************************************************************/
@@ -245,5 +245,5 @@
 
 #define SPDR    0x2F
 
-#endif /* ATMEGA_16_H_ */
+#endif /* _AVR_H_ */
 

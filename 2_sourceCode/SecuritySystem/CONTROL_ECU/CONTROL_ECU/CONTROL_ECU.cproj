@@ -202,9 +202,9 @@
       <SubType>compile</SubType>
       <Link>STACK\BSP\HAL\SERVO_MOTOR\servo_motor.h</Link>
     </Compile>
-    <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\includes\atmega32.h">
+    <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\includes\avr.h">
       <SubType>compile</SubType>
-      <Link>STACK\BSP\includes\atmega32.h</Link>
+      <Link>STACK\BSP\includes\avr.h</Link>
     </Compile>
     <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\includes\types.h">
       <SubType>compile</SubType>
