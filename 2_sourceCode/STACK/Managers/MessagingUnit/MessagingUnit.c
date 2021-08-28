@@ -26,7 +26,7 @@
 /*************************************************************************/
 /*                          Global Variables                             */
 /*************************************************************************/
-static u8_t* TAG = (u8_t*)"MESSAGING UNIT";
+static u8_t* TAG = (u8_t*)"MESSAGING_UNIT";
 /*************************************************************************/
 
 /*************************************************************************/
@@ -38,7 +38,7 @@ system_error_t ms_manager_init()
 	system_error_t error = SYSTEM_SUCCESS;
 
   uart_t uart;
-  uart.baudRate = 9600;
+  uart.baudRate = BAUD_9600;
   uart.packetLength = BIT_8;
   uart.stopBitNo = STOP_BIT_1;
   uart.parity = DISABLE;
@@ -52,7 +52,6 @@ system_error_t ms_manager_init()
   {
     logger_write_debug_println(LOG_MANAGERS,TAG, (u8_t *)"Succeed to initialize messaging Unit");
   }
-
   return error;
 }
 

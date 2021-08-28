@@ -121,8 +121,5 @@ static void send_packet(u8_t *tag, u8_t *data, u8_t *log_type, u16_t variable)
   }
 
   std_strcat(str, (u8_t *)"\r\n");
-
-  while (softUart.status == BUSY)
-    ;
   service_soft_uart_send_string(str);
 }

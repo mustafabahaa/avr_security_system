@@ -49,11 +49,11 @@ typedef enum
 
 typedef enum
 {
-	BIT_5=1,
-	BIT_6,
-	BIT_7,
-	BIT_8,
-	BIT_9
+	BIT_5=5,
+	BIT_6=6,
+	BIT_7=7,
+	BIT_8=8,
+	BIT_9=9,
 }packet_length_t;
 
 typedef enum
