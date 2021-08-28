@@ -23,22 +23,28 @@ pwm_error_t mcal_pwm_initialization(pwm_channel_t *channel)
   /* making the pin of pwm output */
 
   mcal_gpio_pin_init(channel->channel_port, channel->channel_pin, DIR_OUTPUT);
-  switch (channel->channel_pin)
+  switch (channel->timer_number)
   {
-  case CHANNEL_1_PIN:
+  case TIMER0_UNIT_1:
+  case TIMER0_UNIT_2:
   {
     /* choosing mode of operation fast pwm */
-    set_bit(TCCR0, WGM00);
-    set_bit(TCCR0, WGM01);
+    set_bit(TCCR0A, WGM00);
+    set_bit(TCCR0A, WGM01);
+    clr_bit(TCCR0B, WGM02);
 
     /*choose non inverting mode of pwm */
-    set_bit(TCCR0, COM01);
-    clr_bit(TCCR0, COM00);
+    set_bit(TCCR0A, COM0A1);
+    clr_bit(TCCR0A, COM0A0);
+
+    /*choose non inverting mode of pwm */
+    set_bit(TCCR2A, COM0B1);
+    clr_bit(TCCR2A, COM0B0);
 
     /*choose clock no pre scalling option*/
-    clr_bit(TCCR0, CS02);
-    clr_bit(TCCR0, CS01);
-    set_bit(TCCR0, CS00);
+    clr_bit(TCCR0A, CS02);
+    clr_bit(TCCR0A, CS01);
+    set_bit(TCCR0A, CS00);
 
     logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"channel 1 is confgiured in fast PWM mode");
     logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"channel 1 is confgiured in non inverted mode");
@@ -47,7 +53,7 @@ pwm_error_t mcal_pwm_initialization(pwm_channel_t *channel)
     break;
   }
 
-  case CHANNEL_2_PIN:
+  case TIMER1_UNIT_1:
   {
     /* choosing mode of operation fast pwm */
     set_bit(TCCR1A, WGM11);
@@ -69,7 +75,7 @@ pwm_error_t mcal_pwm_initialization(pwm_channel_t *channel)
     break;
   }
 
-  case CHANNEL_3_PIN:
+  case TIMER1_UNIT_2:
   {
     /* choosing mode of operation fast pwm */
     set_bit(TCCR1A, WGM11);
@@ -91,20 +97,26 @@ pwm_error_t mcal_pwm_initialization(pwm_channel_t *channel)
     break;
   }
 
-  case CHANNEL_4_PIN:
+  case TIMER2_UNIT_1:
+  case TIMER2_UNIT_2:
   {
     /* choosing mode of operation fast pwm */
-    set_bit(TCCR2, WGM20);
-    set_bit(TCCR2, WGM21);
+    set_bit(TCCR2A, WGM20);
+    set_bit(TCCR2A, WGM21);
+    clr_bit(TCCR2B, WGM22);
 
     /*choose non inverting mode of pwm */
-    set_bit(TCCR2, COM21);
-    clr_bit(TCCR2, COM20);
+    set_bit(TCCR2A, COM2A1);
+    clr_bit(TCCR2A, COM2A0);
+
+    /*choose non inverting mode of pwm */
+    set_bit(TCCR2A, COM2B1);
+    clr_bit(TCCR2A, COM2B0);
 
     /*choose clock no pre scalling option*/
-    clr_bit(TCCR2, CS22);
-    clr_bit(TCCR2, CS21);
-    set_bit(TCCR2, CS20);
+    clr_bit(TCCR2A, CS22);
+    clr_bit(TCCR2A, CS21);
+    set_bit(TCCR2A, CS20);
 
     logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"channel 4 is confgiured in fast PWM mode");
     logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"channel 4 is confgiured in non inverted mode");
@@ -127,29 +139,41 @@ pwm_error_t mcal_pwm_output(pwm_channel_t *channel, u16_t duty)
 {
   pwm_error_t error = PWM_STATE_SUCCESS;
 
-  switch (channel->channel_pin)
+  switch (channel->timer_number)
   {
-  case CHANNEL_1_PIN:
+  case TIMER0_UNIT_1:
   {
     /* OCR0 holds a value from 0 to 255
 		       that vary the output of ON PIN PB3
 		       between 0 and v maximum (5v)
 		 */
-    register(OCR0) = (u8_t)duty;
+    register(OCR0A) = (u8_t)duty;
     break;
   }
 
-  case CHANNEL_2_PIN:
+  case TIMER0_UNIT_2:
   {
     /* OCR1A holds a value from 0 to 1023
 	       that vary the output of ON PIN PD5
 	       between 0 and v maximum (5v)
 		 */
-    register(OCR1A) = duty;
+    register(OCR0B) = duty;
     break;
   }
 
-  case CHANNEL_3_PIN:
+  case TIMER1_UNIT_1:
+  {
+    /* OCR1B holds a value from 0 to 1023
+		       that vary the output of ON PIN PD5
+		       between 0 and v maximum (5v)
+		 */
+
+    register(OCR1AL) = duty & LSB;
+    register(OCR1AH) = duty & MSB;
+    break;
+  }
+
+  case TIMER1_UNIT_2:
   {
     /* OCR1B holds a value from 0 to 1023
 		       that vary the output of ON PIN PD5
@@ -161,13 +185,45 @@ pwm_error_t mcal_pwm_output(pwm_channel_t *channel, u16_t duty)
     break;
   }
 
-  case CHANNEL_4_PIN:
+  case TIMER2_UNIT_1:
   {
     /* OCR2 holds a value from 0 to 255
 		       that vary the output of ON PIN PB3
 		       between 0 and v maximum (5v)
 		 */
-    register(OCR2) = (u8_t)duty;
+    register(OCR2A) = (u8_t)duty;
+    break;
+  }
+
+  case TIMER2_UNIT_2:
+  {
+    /* OCR2 holds a value from 0 to 255
+		       that vary the output of ON PIN PB3
+		       between 0 and v maximum (5v)
+		 */
+    register(OCR2B) = (u8_t)duty;
+    break;
+  }
+
+  case TIMER3_UNIT_1:
+  {
+    /* OCR2 holds a value from 0 to 255
+		       that vary the output of ON PIN PB3
+		       between 0 and v maximum (5v)
+		 */
+    register(OCR3AL) = duty & LSB;
+    register(OCR3AH) = duty & MSB;
+    break;
+  }
+
+  case TIMER3_UNIT_2:
+  {
+    /* OCR2 holds a value from 0 to 255
+		       that vary the output of ON PIN PB3
+		       between 0 and v maximum (5v)
+		 */
+    register(OCR3BL) = duty & LSB;
+    register(OCR3BH) = duty & MSB;
     break;
   }
 

@@ -29,13 +29,13 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
   case INT0:
   {
     /*enable interrupt 0 */
-    set_bit(GICR, INT0);
+    set_bit(EIMSK, INT0);
 
     switch (mode)
     {
     case RISING_EDGE:
-      set_bit(MCUCR, ISC00);
-      set_bit(MCUCR, ISC01);
+      set_bit(EICRA, ISC00);
+      set_bit(EICRA, ISC01);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
@@ -46,8 +46,8 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
       break;
 
     case FALLING_EDGE:
-      set_bit(MCUCR, ISC01);
-      clr_bit(MCUCR, ISC00);
+      set_bit(EICRA, ISC01);
+      clr_bit(EICRA, ISC00);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
@@ -58,8 +58,8 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
       break;
 
     case CHANGING_EDGE:
-      set_bit(MCUCR, ISC00);
-      clr_bit(MCUCR, ISC01);
+      set_bit(EICRA, ISC00);
+      clr_bit(EICRA, ISC01);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
@@ -78,13 +78,13 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
   case INT1:
   {
     /*enable interrupt 1 */
-    set_bit(GICR, INT1);
+    set_bit(EIMSK, INT1);
 
     switch (mode)
     {
     case RISING_EDGE:
-      set_bit(MCUCR, ISC11);
-      set_bit(MCUCR, ISC10);
+      set_bit(EICRA, ISC11);
+      set_bit(EICRA, ISC10);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
@@ -95,8 +95,8 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
       break;
 
     case FALLING_EDGE:
-      set_bit(MCUCR, ISC11);
-      clr_bit(MCUCR, ISC10);
+      set_bit(EICRA, ISC11);
+      clr_bit(EICRA, ISC10);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
@@ -107,8 +107,8 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
       break;
 
     case CHANGING_EDGE:
-      set_bit(MCUCR, ISC10);
-      clr_bit(MCUCR, ISC11);
+      set_bit(EICRA, ISC10);
+      clr_bit(EICRA, ISC11);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
@@ -128,12 +128,13 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
   case INT2:
   {
     /*enable interrupt 2 */
-    set_bit(GICR, INT2);
+    set_bit(EIMSK, INT2);
 
     switch (mode)
     {
     case RISING_EDGE:
-      set_bit(MCUCR, ISC2);
+      set_bit(EICRA, ISC21);
+      set_bit(EICRA, ISC20);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
@@ -143,12 +144,25 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
       break;
 
     case FALLING_EDGE:
-      clr_bit(MCUCSR, ISC2);
+      set_bit(EICRA, ISC21);
+      clr_bit(EICRA, ISC20);
 
       logger_write_debug_println_with_variable(
           LOG_MCAL,
           TAG,
           (u8_t *)"configured in falling edge mode , interrupt number",
+          interruptNo);
+
+      break;
+
+    case CHANGING_EDGE:
+      set_bit(EICRA, ISC20);
+      clr_bit(EICRA, ISC21);
+
+      logger_write_debug_println_with_variable(
+          LOG_MCAL,
+          TAG,
+          (u8_t *)"configured in changing edge mode , interrupt number",
           interruptNo);
 
       break;
@@ -176,15 +190,15 @@ interrupt_error mcal_interrupt_read_flag(u8_t flag, u8_t *result)
   switch (flag)
   {
   case INTF0:
-    *result = bit_is_set(GIFR, INTF0);
+    *result = bit_is_set(EIFR, INTF0);
     break;
 
   case INTF1:
-    *result = bit_is_set(GIFR, INTF1);
+    *result = bit_is_set(EIFR, INTF1);
     break;
 
   case INTF2:
-    *result = bit_is_set(GIFR, INTF2);
+    *result = bit_is_set(EIFR, INTF2);
     break;
 
   default:
@@ -202,15 +216,15 @@ interrupt_error mcal_interrupt_clear_flag(u8_t flag)
   switch (flag)
   {
   case INTF0:
-    clr_bit(GIFR, INTF0);
+    clr_bit(EIFR, INTF0);
     break;
 
   case INTF1:
-    clr_bit(GIFR, INTF1);
+    clr_bit(EIFR, INTF1);
     break;
 
   case INTF2:
-    clr_bit(GIFR, INTF2);
+    clr_bit(EIFR, INTF2);
     break;
 
   default:

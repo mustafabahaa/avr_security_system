@@ -52,7 +52,7 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
  ** parameter: u8_t *result
  ** return    : interrupt_error
  ***************************************************************************
- ** this function is used read a interrupts flags from GIFR register
+ ** this function is used read a interrupts flags from EIFR register
  **************************************************************************/
 interrupt_error mcal_interrupt_read_flag(u8_t flag, u8_t *result);
 
@@ -62,7 +62,7 @@ interrupt_error mcal_interrupt_read_flag(u8_t flag, u8_t *result);
  ** parameter: u8_t flag
  ** return    : interrupt_error
  ***************************************************************************
- ** this function is used to clear flag from GIFR register
+ ** this function is used to clear flag from EIFR register
  **************************************************************************/
 interrupt_error mcal_interrupt_clear_flag(u8_t flag);
 

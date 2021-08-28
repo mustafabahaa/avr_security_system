@@ -21,7 +21,7 @@ static u8_t pin;
 void service_soft_uart_init(soft_uart_t *soft_uart)
 {
   gl_soft_uart = soft_uart;
-  timer.timer_number = TIMER0;
+  timer.timer_number = TIMER0_UNIT_1;
   timer.mode = TIMER_CTC_MODE;
   timer.preScaler = F_CPU_CLOCK;
 

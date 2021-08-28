@@ -82,7 +82,6 @@ int main(void)
   state = HALT_STATE;
   systemInit();
 
-  #if 0
   while (1)
   {
     ms_manager_receive_signal(&state);
@@ -137,7 +136,6 @@ int main(void)
     }
     }
   }
-  #endif
 
   return 0;
 }
@@ -243,18 +241,18 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
- // logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
   error = buzzerInit();
- // error = servoMotorInit();
- // error = timerInit();
+  error = servoMotorInit();
+  error = timerInit();
 
   /* Initialize Managers */
- // error = ms_manager_init();
+  error = ms_manager_init();
 
- // error = EEPROM_SUCCESS == hal_eeprom_init() ? SYSTEM_SUCCESS : SYSTEM_FAIL;
+  error = EEPROM_SUCCESS == hal_eeprom_init() ? SYSTEM_SUCCESS : SYSTEM_FAIL;
   return error;
 }
 
@@ -263,7 +261,8 @@ static system_error_t servoMotorInit()
   system_error_t error = SYSTEM_SUCCESS;
 
   servo.channel.channel_port = BASE_D;
-  servo.channel.channel_pin = CHANNEL_4_PIN;
+  servo.channel.channel_pin = CHANNEL_5_PIN;
+  servo.channel.timer_number = TIMER2_UNIT_1;
 
   hal_servo_motor_init(&servo);
   return error;
@@ -286,7 +285,7 @@ static system_error_t timerInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  timer.timer_number = TIMER2;
+  timer.timer_number = TIMER2_UNIT_1;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
   timer.tick_ms_seconds = 5;

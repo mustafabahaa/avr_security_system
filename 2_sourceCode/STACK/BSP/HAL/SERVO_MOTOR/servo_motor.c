@@ -34,7 +34,7 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
     switch (motor->channel.channel_pin)
     {
     // PB3
-    case CHANNEL_1_PIN:
+    case TIMER0_UNIT_1:
     {
       timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
       timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
@@ -42,7 +42,7 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
     }
 
     // PD4
-    case CHANNEL_2_PIN:
+    case TIMER1_UNIT_1:
     {
       timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
       timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
@@ -50,7 +50,7 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
     }
 
     // PD5
-    case CHANNEL_3_PIN:
+    case TIMER1_UNIT_2:
     {
       timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
       timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
@@ -58,7 +58,7 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
     }
 
     // PD7
-    case CHANNEL_4_PIN:
+    case TIMER2_UNIT_1:
     {
       timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
       timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
@@ -81,32 +81,33 @@ servo_motor_error_t hal_servo_motor_set_degree(servo_motor_t *motor, u8_t degree
 {
   servo_motor_error_t error = SERVO_MOTOR_STATE_SUCCESS;
 
-  switch (motor->channel.channel_pin)
+  switch (motor->channel.timer_number)
   {
   // PB3
-  case CHANNEL_1_PIN:
+  case TIMER0_UNIT_1:
+  {
+    register(OCR0A) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
+    break;
+  }
+
+  // PD4
+  case TIMER1_UNIT_1:
   {
     register(OCR1A) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
     break;
   }
 
-  // PD4
-  case CHANNEL_2_PIN:
+  // PD5
+  case TIMER1_UNIT_2:
   {
     register(OCR1B) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
     break;
   }
 
-  // PD5
-  case CHANNEL_3_PIN:
-  {
-    register(OCR2) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
-    break;
-  }
-
   // PD7
-  case CHANNEL_4_PIN:
+  case TIMER2_UNIT_1:
   {
+    register(OCR2A) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
     break;
   }
   }

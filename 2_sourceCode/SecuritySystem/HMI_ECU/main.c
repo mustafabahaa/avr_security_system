@@ -22,7 +22,10 @@
 
 /*  utility includes */
 #include "pass_mng.h"
-
+/*************************************************************************/
+/*                          Global Variables                             */
+/*************************************************************************/
+static u8_t *TAG = (u8_t *)"HMI_ECU_APP";
 /*************************************************************************/
 /*                               MACROS                                  */
 /*************************************************************************/
@@ -98,12 +101,10 @@ int main(void)
 
   systemInit();
 
-  #if 0
   while (1)
   {
     switch (state)
     {
-
     case CHECK_DEFAULT_PASSWORD_STATE:
     {
       checkDefaultPassword();
@@ -152,7 +153,6 @@ int main(void)
     }
     }
   }
-  #endif
 
   return 0;
 }
@@ -254,10 +254,12 @@ static void checkDefaultPassword()
 
   if (buffer == PASSWORD_NOT_EXICTED)
   {
+    logger_write_debug_println(LOG_APP, TAG, (u8_t *)"Password not existed");
     state = SET_NEW_PASSWORD_STATE;
   }
   else
   {
+    logger_write_debug_println(LOG_APP, TAG, (u8_t *)"Password exist");
     state = PASSWORD_INPUT_STATE;
   }
 }
@@ -421,16 +423,16 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
-  //logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
   error = keypadInit();
   error = LCDInit();
-//  error = timerInit();
+  error = timerInit();
 
   /* Initialize Managers */
-//  error = ms_manager_init();
+  error = ms_manager_init();
 
   return error;
 }
@@ -485,17 +487,18 @@ static system_error_t LCDInit()
   lcd.lcdControlPort = BASE_D;
   lcd.lcdDataPort = BASE_C;
   lcd.lcdMode = MODE_8_BIT;
-  lcd.lcdRS = 5;
-  lcd.lcdRW = 6;
-  lcd.lcdE = 7;
+  lcd.lcdE = PD5;
+  lcd.lcdRW = PD6;
+  lcd.lcdRS = PD7;
 
   if (LCD_SUCCESS != hal_lcd_init(&lcd))
   {
     error = SYSTEM_FAIL;
+    logger_write_error_println(LOG_APP, TAG, (u8_t *)"LCD initialization fail");
   }
   else
   {
-    /* LCD initialized */
+    logger_write_error_println(LOG_APP, TAG, (u8_t *)"LCD initialization success");
   }
 
   return error;
@@ -505,7 +508,7 @@ static system_error_t timerInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  timer.timer_number = TIMER2;
+  timer.timer_number = TIMER0_UNIT_1;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
   timer.tick_ms_seconds = 5;

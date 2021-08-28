@@ -70,10 +70,14 @@ typedef enum
 
 typedef enum
 {
-	TIMER0=1,
-	TIMER1_CHANNEL_1,
-	TIMER1_CHANNEL_2,
-	TIMER2,
+	TIMER0_UNIT_1=1,
+  TIMER0_UNIT_2,
+	TIMER1_UNIT_1,
+	TIMER1_UNIT_2,
+	TIMER2_UNIT_1,
+  TIMER2_UNIT_2,
+  TIMER3_UNIT_1,
+  TIMER3_UNIT_2,
 }timer_number_t;
 
 typedef enum

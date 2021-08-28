@@ -104,10 +104,10 @@
             <Value>../../../../STACK/BSP/MCAL/PWM</Value>
             <Value>../../../../STACK/BSP/MCAL/TIMER</Value>
             <Value>../../../../STACK/BSP/MCAL/UART</Value>
-	    <Value>../../../../STACK/BSP/MCAL/SPI</Value>
+	          <Value>../../../../STACK/BSP/MCAL/SPI</Value>
             <Value>../../../../STACK/Managers/MessagingUnit</Value>
             <Value>../../../../STACK/Services/Logger</Value>
-	    <Value>../../../../STACK/Services/SoftwareUart</Value>
+	          <Value>../../../../STACK/Services/SoftwareUart</Value>
             <Value>../../../../STACK/Utility/delay</Value>
             <Value>../../../../STACK/Utility/std_library</Value>
             <Value>../../../../STACK/Utility/password_management</Value>

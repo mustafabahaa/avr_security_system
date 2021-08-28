@@ -48,7 +48,6 @@ gpio_state_error_t mcal_gpio_pin_init(u8_t base, u8_t pin, pinState_t dir)
     case DIR_INPUT_PULLDOWN:
       clr_bit(base + OFFSET_DIR, pin);
       logger_write_debug_println_with_variable(LOG_MCAL, TAG, (u8_t *)"pin configured as input pulldown", pin);
-
       break;
 
     case DIR_INPUT_PULLUP:
@@ -157,6 +156,7 @@ gpio_state_error_t mcal_gpio_pin_read(u8_t base, u8_t pin, u8_t *value)
 
 static void print_port_char(u8_t base)
 {
+  /*
   u8_t str[6] = "";
   if (base == BASE_A)
     std_strcat(str, (u8_t *)"PORT A");
@@ -168,4 +168,5 @@ static void print_port_char(u8_t base)
     std_strcat(str, (u8_t *)"PORT D");
 
   logger_write_debug_println(LOG_MCAL, TAG, str);
+  */
 }

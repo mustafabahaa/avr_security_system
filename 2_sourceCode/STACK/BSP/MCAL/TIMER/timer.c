@@ -48,16 +48,16 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
 
   switch (timer->timer_number)
   {
-  case TIMER0:
+  case TIMER0_UNIT_1:
   {
-    reg_mask_write(TCCR0, 0xF8, timer->preScaler);
+    reg_mask_write(TCCR0A, 0xF8, timer->preScaler);
 
     registerMaxTime = resolution * 256 * 1000;
 
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       register(TCNT0) = 0;
-      set_bit(TCCR0, FOC0);
+      set_bit(TCCR0A, FOC0A);
 
       /* attach overflow value to timer so we can use it in callback */
       timer->overflow = timer->tick_ms_seconds / (double)registerMaxTime;
@@ -66,8 +66,8 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
     else if (TIMER_CTC_MODE == timer->mode)
     {
       register(TCNT0) = 0;
-      set_bit(TCCR0, WGM01);
-      clr_bit(TCCR0, WGM00);
+      set_bit(TCCR0A, WGM01);
+      clr_bit(TCCR0A, WGM00);
 
       /* if the time we need to wait can be used with 8 bit timer in CTC mode
 			 * meaning that if the value of seconds to wait converted to digital number
@@ -75,7 +75,7 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
       if (timer->tick_ms_seconds < (registerMaxTime))
       {
         // Set Compare Value
-        register(OCR0) = (u8_t)(((timer->tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+        register(OCR0A) = (u8_t)(((timer->tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
       }
       else
       {
@@ -88,8 +88,8 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
     }
     break;
   }
-  case TIMER1_CHANNEL_1:
-  case TIMER1_CHANNEL_2:
+  case TIMER1_UNIT_1:
+  case TIMER1_UNIT_2:
   {
     reg_mask_write(TCCR1B, 0xF8, timer->preScaler);
 
@@ -132,9 +132,9 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
     }
     break;
   }
-  case TIMER2:
+  case TIMER2_UNIT_1:
   {
-    reg_mask_write(TCCR2, 0xF8, timer->preScaler);
+    reg_mask_write(TCCR2A, 0xF8, timer->preScaler);
 
     registerMaxTime = resolution * 256 * 1000;
 
@@ -142,7 +142,7 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
     {
       // Set Timer initial value
       register(TCNT2) = 0;
-      set_bit(TCCR2, FOC2);
+      set_bit(TCCR2A, FOC2A);
 
       /* attach overflow value to timer so we can use it in callback */
       timer->overflow = timer->tick_ms_seconds / registerMaxTime;
@@ -152,8 +152,8 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
     {
       // Set Timer initial value
       register(TCNT2) = 0;
-      set_bit(TCCR2, FOC2);
-      set_bit(TCCR2, WGM21);
+      set_bit(TCCR2A, FOC2A);
+      set_bit(TCCR2A, WGM21);
 
       /* if the time we need to wait can be used with 8 bit timer in CTC mode
 			 * meaning that if the value of seconds to wait converted to digital number
@@ -161,7 +161,7 @@ timer_error_t mcal_timer_init(timer_config_t *timer)
       if (timer->tick_ms_seconds < registerMaxTime)
       {
         // Set Compare Value
-        register(OCR2) = (u8_t)(((timer->tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+        register(OCR2A) = (u8_t)(((timer->tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
       }
       else
       {
@@ -184,17 +184,17 @@ timer_error_t mcal_timer_start(timer_config_t *timer)
 
   switch (timer->timer_number)
   {
-  case TIMER0:
+  case TIMER0_UNIT_1:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       // Enable Timer0 Overflow Interrupt
-      set_bit(TIMSK, TOIE0);
+      set_bit(TIMSK0, TOIE0);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer0 Compare Interrupt
-      set_bit(TIMSK, OCIE0);
+      set_bit(TIMSK0, OCIE0A);
     }
     else
     {
@@ -202,17 +202,17 @@ timer_error_t mcal_timer_start(timer_config_t *timer)
     }
     break;
   }
-  case TIMER1_CHANNEL_1:
+  case TIMER1_UNIT_1:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       // Enable Timer1 channel 1 Overflow Interrupt
-      set_bit(TIMSK, TOIE1);
+      set_bit(TIMSK1, TOIE1);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer1 channel 1 Compare Interrupt
-      set_bit(TIMSK, OCIE1A);
+      set_bit(TIMSK1, OCIE1A);
     }
     else
     {
@@ -220,17 +220,17 @@ timer_error_t mcal_timer_start(timer_config_t *timer)
     }
     break;
   }
-  case TIMER1_CHANNEL_2:
+  case TIMER1_UNIT_2:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       // Enable Timer1 channel 2 Overflow Interrupt
-      set_bit(TIMSK, TOIE2);
+      set_bit(TIMSK3, TOIE2);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer1 channel 2 Compare Interrupt
-      set_bit(TIMSK, OCIE1B);
+      set_bit(TIMSK3, OCIE1B);
     }
     else
     {
@@ -238,18 +238,18 @@ timer_error_t mcal_timer_start(timer_config_t *timer)
     }
     break;
   }
-  case TIMER2:
+  case TIMER2_UNIT_1:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
 
       // Enable Timer2 Overflow Interrupt
-      set_bit(TIMSK, TOIE2);
+      set_bit(TIMSK2, TOIE2);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer2 Compare Interrupt
-      set_bit(TIMSK, OCIE2);
+      set_bit(TIMSK2, OCIE2A);
     }
     else
     {
@@ -274,17 +274,17 @@ timer_error_t mcal_timer_stop(timer_config_t *timer)
 
   switch (timer->timer_number)
   {
-  case TIMER0:
+  case TIMER0_UNIT_1:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       // Enable Timer0 Overflow Interrupt
-      clr_bit(TIMSK, TOIE0);
+      clr_bit(TIMSK0, TOIE0);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer0 Compare Interrupt
-      clr_bit(TIMSK, OCIE0);
+      clr_bit(TIMSK0, OCIE0A);
     }
     else
     {
@@ -292,17 +292,17 @@ timer_error_t mcal_timer_stop(timer_config_t *timer)
     }
     break;
   }
-  case TIMER1_CHANNEL_1:
+  case TIMER1_UNIT_1:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       // Enable Timer1 channel 1 Overflow Interrupt
-      clr_bit(TIMSK, TOIE1);
+      clr_bit(TIMSK1, TOIE1);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer1 channel 1 Compare Interrupt
-      clr_bit(TIMSK, OCIE1A);
+      clr_bit(TIMSK1, OCIE1A);
       register(TCNT0) = 0;
     }
     else
@@ -311,17 +311,17 @@ timer_error_t mcal_timer_stop(timer_config_t *timer)
     }
     break;
   }
-  case TIMER1_CHANNEL_2:
+  case TIMER1_UNIT_2:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       // Enable Timer1 channel 2 Overflow Interrupt
-      set_bit(TIMSK, TOIE2);
+      set_bit(TIMSK3, TOIE2);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer1 channel 2 Compare Interrupt
-      set_bit(TIMSK, OCIE1B);
+      set_bit(TIMSK3, OCIE1B);
     }
     else
     {
@@ -329,17 +329,17 @@ timer_error_t mcal_timer_stop(timer_config_t *timer)
     }
     break;
   }
-  case TIMER2:
+  case TIMER2_UNIT_1:
   {
     if (TIMER_NORMAL_MODE == timer->mode)
     {
       // Enable Timer2 Overflow Interrupt
-      clr_bit(TIMSK, TOIE2);
+      clr_bit(TIMSK2, TOIE2);
     }
     else if (TIMER_CTC_MODE == timer->mode)
     {
       // Enable Timer2 Compare Interrupt
-      clr_bit(TIMSK, OCIE2);
+      clr_bit(TIMSK2, OCIE2A);
     }
     else
     {
@@ -413,17 +413,17 @@ static void set_timer_overflow(timer_number_t timer_number, double overflow)
 {
   switch (timer_number)
   {
-  case TIMER0:
+  case TIMER0_UNIT_1:
     g_ovf_timer_0 = overflow;
     break;
 
-  case TIMER1_CHANNEL_1:
-  case TIMER1_CHANNEL_2:
+  case TIMER1_UNIT_1:
+  case TIMER1_UNIT_2:
 
     g_ovf_timer_1 = overflow;
     break;
 
-  case TIMER2:
+  case TIMER2_UNIT_1:
     g_ovf_timer_2 = overflow;
     break;
 

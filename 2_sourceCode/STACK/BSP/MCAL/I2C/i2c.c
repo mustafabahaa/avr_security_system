@@ -69,13 +69,13 @@ i2c_error_t mcal_i2c_start(void)
 	 * Enable i2c Module TWEN=1
 	 */
   reg_write(TWCR,
-            (en_bit(i2cNT) |
+            (en_bit(TWINT) |
              en_bit(TWSTA) |
              en_bit(TWEN)));
 
   /* Wait for i2cNT flag set in TWCR Register
 	 *  (start bit is send successfully) */
-  while (bit_is_clr(TWCR, i2cNT))
+  while (bit_is_clr(TWCR, TWINT))
     ;
 
   return error;
@@ -90,7 +90,7 @@ i2c_error_t mcal_i2c_stop(void)
 	 * send the stop bit by TWSTO=1
 	 * Enable i2c Module TWEN=1
 	 */
-  set_bit(TWCR, i2cNT);
+  set_bit(TWCR, TWINT);
   set_bit(TWCR, TWSTO);
   set_bit(TWCR, TWEN);
 
@@ -108,11 +108,11 @@ i2c_error_t mcal_i2c_write(u8_t data)
 	 * Enable i2c Module TWEN=1
 	 */
   reg_write(TWCR,
-            (en_bit(i2cNT) | en_bit(TWEN)));
+            (en_bit(TWINT) | en_bit(TWEN)));
 
   /* Wait for i2cNT flag set in TWCR Register(data is send successfully) */
   //while (bit_is_clr(TWCR,i2cNT));
-  while (bit_is_clr(TWCR, i2cNT))
+  while (bit_is_clr(TWCR, TWINT))
     ;
 
   return error;
@@ -127,12 +127,12 @@ i2c_error_t mcal_i2c_read_ack(u8_t *data)
 	 * Enable sending ACK after reading or receiving data TWEA=1
 	 * Enable i2c Module TWEN=1
 	 */
-  set_bit(TWCR, i2cNT);
+  set_bit(TWCR, TWINT);
   set_bit(TWCR, TWEN);
   set_bit(TWCR, TWEA);
 
   /* Wait for i2cNT flag set in TWCR Register (data received successfully) */
-  while (bit_is_clr(TWCR, i2cNT))
+  while (bit_is_clr(TWCR, TWINT))
     ;
 
   /* Read Data */
@@ -150,11 +150,11 @@ i2c_error_t mcal_i2c_read_nack(u8_t *data)
 	 * Enable i2c Module TWEN=1
 	 */
 
-  set_bit(TWCR, i2cNT);
+  set_bit(TWCR, TWINT);
   set_bit(TWCR, TWEN);
 
   /* Wait for i2cNT flag set in TWCR Register (data received successfully) */
-  while (bit_is_clr(TWCR, i2cNT))
+  while (bit_is_clr(TWCR, TWINT))
     ;
 
   /* Read Data */
