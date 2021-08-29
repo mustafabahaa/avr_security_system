@@ -31,6 +31,44 @@ typedef enum
   INTERRUPT_STATE_INVAILD_INTERRUPT_NUMBER
 } interrupt_error;
 
+typedef enum
+{
+  interrupt_unit_0 = 0,
+  interrupt_unit_1 = 1,
+  interrupt_unit_2 = 2,
+} interrupt_unit_number_t;
+
+typedef struct
+{
+  u8_t ctrl_reg;
+  u8_t edge_reg;
+  u8_t edge_bit_1;
+  u8_t edge_bit_2;
+} interrupt_reg_ctrl_t;
+
+typedef struct
+{
+  interrupt_error (*init)(u8_t, interrupt_mode_t);
+  interrupt_error (*read_flag)(u8_t, u8_t *);
+  interrupt_error (*clear_flag)(u8_t);
+
+} interrupt_handlers_t;
+
+typedef struct
+{
+  interrupt_unit_number_t unit;
+  interrupt_reg_ctrl_t ctrl_regs;
+  interrupt_handlers_t handler;
+} interrupt_unit_t;
+
+typedef struct
+{
+  interrupt_unit_t* unit0;
+  interrupt_unit_t* unit1;
+  interrupt_unit_t* unit2;
+} interrupt_driver_t;
+
+interrupt_error mcal_interrupt_get_driver_info(interrupt_driver_t *driver);
 /**************************************************************************/
 /*                           Public Functions                             */
 /***************************************************************************
