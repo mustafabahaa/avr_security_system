@@ -83,7 +83,8 @@ static volatile state_t state;
 /* HAL layer initialization devices */
 static keypad_t keypad;
 static lcd_t lcd;
-static timer_config_t timer;
+static timer_t timer;
+static timer_config_t timer_config;
 
 /* Authentication variables */
 static volatile u8_t passwordErrorCounter = 0;
@@ -511,7 +512,10 @@ static system_error_t timerInit()
   timer.timer_number = TIMER0_UNIT_1;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
-  timer.tick_ms_seconds = 5;
+
+  timer_config.tick_ms_seconds = 5;
+
+  timer.config = &timer_config;
 
   if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
   {

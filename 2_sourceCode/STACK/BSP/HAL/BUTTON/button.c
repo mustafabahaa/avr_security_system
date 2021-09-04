@@ -24,32 +24,34 @@ button_error_t hal_button_init(button_t *the_button)
   {
   case PULLUP_CONNECTION:
   {
-    if (GPIO_STATE_SUCCESS != mcal_gpio_pin_init(
+    if (GPIO_STATE_SUCCESS == mcal_gpio_pin_init(
                                   the_button->base_addr,
-                                  the_button->pin_num, DIR_INPUT_PULLUP))
+                                  the_button->pin_num,
+                                  DIR_INPUT_PULLUP))
     {
-      error = BUTTON_GPIO_STATE_ERROR;
-      logger_write_error_println(LOG_HAL, TAG, (u8_t *)"initialization fail");
+      logger_write_debug_println(LOG_HAL, TAG, (u8_t *)"initialization success");
     }
     else
     {
-      logger_write_debug_println(LOG_HAL, TAG, (u8_t *)"initialization success");
+      error = BUTTON_GPIO_STATE_ERROR;
+      logger_write_error_println(LOG_HAL, TAG, (u8_t *)"initialization fail");
     }
     break;
   }
 
   case PULLDOWN_CONNECTION:
   {
-    if (GPIO_STATE_SUCCESS != mcal_gpio_pin_init(
+    if (GPIO_STATE_SUCCESS == mcal_gpio_pin_init(
                                   the_button->base_addr,
-                                  the_button->pin_num, DIR_INPUT_PULLDOWN))
+                                  the_button->pin_num,
+                                  DIR_INPUT_PULLDOWN))
     {
-      error = BUTTON_GPIO_STATE_ERROR;
-      logger_write_error_println(LOG_HAL, TAG, (u8_t *)"initialization fail");
+      logger_write_debug_println(LOG_HAL, TAG, (u8_t *)"initialization success");
     }
     else
     {
-      logger_write_debug_println(LOG_HAL, TAG, (u8_t *)"initialization success");
+      error = BUTTON_GPIO_STATE_ERROR;
+      logger_write_error_println(LOG_HAL, TAG, (u8_t *)"initialization fail");
     }
     break;
   }
@@ -65,22 +67,16 @@ button_error_t hal_button_init(button_t *the_button)
   return error;
 }
 
-button_error_t hal_button_get_state(
-    button_t *the_button,
-    button_states_t *result)
+button_error_t hal_button_get_state(button_t *the_button,
+                                    button_states_t *result)
 {
   button_error_t error = BUTTON_GPIO_STATE_SUCCESS;
-
   button_states_t states;
 
-  if (GPIO_STATE_SUCCESS != mcal_gpio_pin_read(
+  if (GPIO_STATE_SUCCESS == mcal_gpio_pin_read(
                                 the_button->base_addr,
-                                the_button->pin_num, &states))
-  {
-    error = BUTTON_GPIO_STATE_ERROR;
-    logger_write_error_println(LOG_HAL, TAG, (u8_t *)"get status failure");
-  }
-  else
+                                the_button->pin_num,
+                                &states))
   {
     if (the_button->connection == PULLDOWN_CONNECTION)
     {
@@ -95,6 +91,11 @@ button_error_t hal_button_get_state(
       error = BUTTON_GPIO_INVALID_CONNECTION;
       logger_write_error_println(LOG_HAL, TAG, (u8_t *)"invalid connection type");
     }
+  }
+  else
+  {
+    error = BUTTON_GPIO_STATE_ERROR;
+    logger_write_error_println(LOG_HAL, TAG, (u8_t *)"get status failure");
   }
 
   return error;

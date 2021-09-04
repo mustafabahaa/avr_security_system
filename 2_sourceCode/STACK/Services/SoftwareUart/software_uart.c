@@ -11,9 +11,10 @@
  **                              Global Variable                         **
  *************************************************************************/
 static volatile u16_t tx_shift_reg = 0;
-static timer_config_t timer;
+static timer_t timer;
+static timer_config_t timer_config;
 static soft_uart_t *gl_soft_uart;
-static u8_t port; 
+static u8_t port;
 static u8_t pin;
 /*************************************************************************/
 /*                     Functions Implementation                          */
@@ -25,7 +26,9 @@ void service_soft_uart_init(soft_uart_t *soft_uart)
   timer.mode = TIMER_CTC_MODE;
   timer.preScaler = F_CPU_CLOCK;
 
-  timer.tick_ms_seconds = (double)((F_CPU / timer.preScaler) / gl_soft_uart->baud) / 1000;
+  timer_config.tick_ms_seconds = (double)((F_CPU / timer.preScaler) / gl_soft_uart->baud) / 1000;
+  timer.config = &timer_config;
+
   mcal_timer_init(&timer);
 
   /* initialize TX pin */

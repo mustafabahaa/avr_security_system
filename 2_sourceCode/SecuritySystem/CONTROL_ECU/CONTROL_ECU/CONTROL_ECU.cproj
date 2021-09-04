@@ -101,7 +101,6 @@
             <Value>../../../../STACK/BSP/MCAL/GPIO</Value>
             <Value>../../../../STACK/BSP/MCAL/I2C</Value>
             <Value>../../../../STACK/BSP/MCAL/PORT</Value>
-            <Value>../../../../STACK/BSP/MCAL/PWM</Value>
             <Value>../../../../STACK/BSP/MCAL/TIMER</Value>
             <Value>../../../../STACK/BSP/MCAL/UART</Value>
 	          <Value>../../../../STACK/BSP/MCAL/SPI</Value>
@@ -242,14 +241,6 @@
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\PORT\port.h</Link>
     </Compile>
-    <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\MCAL\PWM\pwm.c">
-      <SubType>compile</SubType>
-      <Link>STACK\BSP\MCAL\PWM\pwm.c</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\MCAL\PWM\pwm.h">
-      <SubType>compile</SubType>
-      <Link>STACK\BSP\MCAL\PWM\pwm.h</Link>
-    </Compile>
     <Compile Include="..\..\..\..\2_sourceCode\STACK\BSP\MCAL\TIMER\timer.c">
       <SubType>compile</SubType>
       <Link>STACK\BSP\MCAL\TIMER\timer.c</Link>
@@ -341,7 +332,6 @@
     <Folder Include="STACK\BSP\MCAL\GPIO\" />
     <Folder Include="STACK\BSP\MCAL\I2C\" />
     <Folder Include="STACK\BSP\MCAL\PORT\" />
-    <Folder Include="STACK\BSP\MCAL\PWM\" />
     <Folder Include="STACK\BSP\MCAL\TIMER\" />
     <Folder Include="STACK\BSP\MCAL\UART\" />
     <Folder Include="STACK\BSP\MCAL\SPI\" />

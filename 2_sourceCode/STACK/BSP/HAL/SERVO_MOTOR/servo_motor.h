@@ -13,7 +13,7 @@
 #include "avr.h"
 #include "types.h"
 #include "gpio.h"
-#include "pwm.h"
+#include "timer.h"
 
 /*************************************************************************/
 /*                                 Macros                                */
@@ -36,7 +36,8 @@ typedef enum
 
 typedef struct
 {
-	pwm_channel_t channel;
+	u8_t base;
+  u8_t pin;
 } servo_motor_t;
 
 /*************************************************************************/

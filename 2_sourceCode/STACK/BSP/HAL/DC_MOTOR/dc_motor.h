@@ -7,13 +7,13 @@
  **************************************************************************/
 #ifndef _DC_MOTOR_H_
 #define _DC_MOTOR_H_
+#if 0
 /**************************************************************************/
 /*                              Includes                                  */
 /**************************************************************************/
 #include "avr.h"
 #include "types.h"
 #include "gpio.h"
-#include "pwm.h"
 /*************************************************************************/
 /*                                 Types                                 */
 /*************************************************************************/
@@ -88,5 +88,5 @@ motor_error_t hal_dc_motor_set_direction(motor_t *motor ,motor_direction_t direc
  ** this function is used to change the speed of the motor
  **************************************************************************/
 motor_error_t hal_dc_motor_set_speed(motor_t *motor ,motor_speed_t speed);
-
+#endif
 #endif /* _DC_MOTOR_H_ */

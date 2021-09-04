@@ -70,7 +70,8 @@ static state_t state;
 
 /* HAL layer initialization devices */
 static buzzer_t buzzer;
-static timer_config_t timer;
+static timer_t timer;
+static timer_config_t timer_config;
 static servo_motor_t servo;
 
 /*************************************************************************/
@@ -260,9 +261,8 @@ static system_error_t servoMotorInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  servo.channel.channel_port = BASE_D;
-  servo.channel.channel_pin = CHANNEL_5_PIN;
-  servo.channel.timer_number = TIMER2_UNIT_1;
+  servo.base = BASE_D;
+  servo.pin = PD7;
 
   hal_servo_motor_init(&servo);
   return error;
@@ -288,7 +288,10 @@ static system_error_t timerInit()
   timer.timer_number = TIMER2_UNIT_1;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
-  timer.tick_ms_seconds = 5;
+
+  timer_config.tick_ms_seconds = 5;
+
+  timer.config = &timer_config;
 
   if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
   {
