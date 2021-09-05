@@ -12,7 +12,6 @@
  *************************************************************************/
 static volatile u16_t tx_shift_reg = 0;
 static timer_t timer;
-static timer_config_t timer_config;
 static soft_uart_t *gl_soft_uart;
 static u8_t port;
 static u8_t pin;
