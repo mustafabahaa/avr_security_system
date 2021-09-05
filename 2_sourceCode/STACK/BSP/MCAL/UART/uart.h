@@ -14,6 +14,49 @@
 #include "avr.h"
 #include "logger.h"
 /**************************************************************************/
+/*                         Registers                                      */
+/**************************************************************************/
+#define UCSR0A  0xC0
+#define UCSR0B  0xC1
+#define UCSR0C  0xC2
+#define UBRR0L  0xC4
+#define UBRR0H  0xC5
+#define UDR0    0xC6
+
+#define UCSR1A  0xC8
+#define UCSR1B  0xC9
+#define UCSR1C  0xCA
+#define UBRR1L  0xCC
+#define UBRR1H  0xCD
+#define UDR1    0xCE
+
+#define MPCMN   0
+#define U2XN    1
+#define UPEN    2
+#define DORN    3
+#define FEN     4
+#define UDREN   5
+#define TXCN    6
+#define RXCN    7
+
+#define TXB8N   0
+#define RXB8N   1
+#define UCSZN2  2
+#define TXENN   3
+#define RXENN   4
+#define UDRIEN  5
+#define TXCIEN  6
+#define RXCIEN  7
+
+#define UCPOLN  0
+#define UCSZN0  1
+#define UCSZN1  2
+#define USBSN   3
+#define UPMN0   4
+#define UPMN1   5
+#define UMSELN0 6
+#define UMSELN1 7
+/**************************************************************************/
 /*                               Types                                    */
 /**************************************************************************/
 typedef enum

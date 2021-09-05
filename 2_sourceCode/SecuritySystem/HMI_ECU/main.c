@@ -163,6 +163,8 @@ int main(void)
 
 static void requirePassword(u8_t *message, u8_t *password)
 {
+  hal_lcd_clearScreen(&lcd);
+
   u8_t keyPressed = NO_KEY_PRESSED;
   u8_t buffer[PASSWORD_LENGTH] = {0};
 
@@ -423,7 +425,7 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
-  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_APP);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */

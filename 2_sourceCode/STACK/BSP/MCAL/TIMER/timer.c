@@ -8,6 +8,23 @@
  *************************************************************************/
 #include "timer.h"
 /*************************************************************************/
+/*                          Static Types                                 */
+/*************************************************************************/
+typedef struct
+{
+  timer_number_t number;
+  double ticks;
+  double overflow;
+  void (*ovf_callback)(void);
+  void (*unit_a_callback)(void);
+  void (*unit_b_callback)(void);
+} timer_manage_t;
+/*************************************************************************/
+/*                          Global Variables                             */
+/*************************************************************************/
+static u8_t *TAG = (u8_t *)"TIMER";
+static timer_manage_t timer_manager[TIMERS_MAX_COUNT];
+/*************************************************************************/
 /*                     Static Functions Prototype                        */
 /**************************************************************************
  ** getPreScaler()
@@ -18,21 +35,6 @@
  ** this function is used to get the actual values of pre-scaller
  **************************************************************************/
 static double getPreScaler(timer_preScaler_t preScaller);
-
-typedef struct
-{
-  timer_number_t number;
-  double ticks;
-  double overflow;
-  void (*ovf_callback)(void);
-  void (*unit_a_callback)(void);
-  void (*unit_b_callback)(void);
-} timer_manage_t;
-
-/**************************************************************************
- **                              Global Variable                         **
- *************************************************************************/
-static timer_manage_t timer_manager[TIMERS_MAX_COUNT];
 /*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
@@ -51,6 +53,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
   {
   case TIMER_0:
   {
+    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configuring timer 0");
     reg_mask_write(TCCR0A, PRE_SCALER_MASK, timer->preScaler);
     registerMaxTime = resolution * TIMER_BIT_8_MAX * 1000;
     register(TCNT0) = 0;
@@ -74,6 +77,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
       clr_bit(TCCR0A, WGMN1);
       clr_bit(TCCR0B, WGMN2);
 
+      logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 0 in normal mode");
       break;
     }
     case TIMER_CTC_MODE:
@@ -92,49 +96,62 @@ timer_error_t mcal_timer_init(timer_t *timer)
           // Set Compare Value
           timer_manager[TIMER_0].unit_a_callback = timer->unit_a_callback;
           register(OCR0A) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 0 unit A in CTC mode");
         }
         else if (timer->unit == UNIT_B)
         {
           timer_manager[TIMER_0].unit_b_callback = timer->unit_b_callback;
           register(OCR0B) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 0 unit B in CTC mode");
         }
         else
         {
-          error = TIMER_STATE_INVALID_ARGUMENT;
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 0 unit Number");
         }
       }
       else
       {
         error = TIMER_STATE_INVALID_ARGUMENT;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Insufficient register max time for required tick for timer 0");
       }
       break;
     }
 
     case TIMER_PWM_MODE:
     {
-      mcal_gpio_pin_init(timer->pwm_config.channel_port,
-                         timer->pwm_config.channel_pin,
-                         DIR_OUTPUT);
-
-      /* choosing mode of operation fast pwm */
-      set_bit(TCCR0A, WGMN0);
-      set_bit(TCCR0A, WGMN1);
-      clr_bit(TCCR0B, WGMN2);
-
-      if (timer->unit == UNIT_A)
+      if (GPIO_STATE_SUCCESS == mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                                                   timer->pwm_config.channel_pin,
+                                                   DIR_OUTPUT))
       {
-        // Set Compare Value
-        clr_bit(TCCR0A, COMNA0);
-        set_bit(TCCR0A, COMNA1);
-      }
-      else if (timer->unit == UNIT_B)
-      {
-        clr_bit(TCCR0A, COMNB0);
-        set_bit(TCCR0A, COMNB1);
+        /* choosing mode of operation fast pwm */
+        set_bit(TCCR0A, WGMN0);
+        set_bit(TCCR0A, WGMN1);
+        clr_bit(TCCR0B, WGMN2);
+
+        if (timer->unit == UNIT_A)
+        {
+          // Set Compare Value
+          clr_bit(TCCR0A, COMNA0);
+          set_bit(TCCR0A, COMNA1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 0 unit A in PWM Mode ");
+        }
+        else if (timer->unit == UNIT_B)
+        {
+          clr_bit(TCCR0A, COMNB0);
+          set_bit(TCCR0A, COMNB1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 0 unit B in PWM Mode ");
+        }
+        else
+        {
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 0 unit Number");
+        }
       }
       else
       {
-        error = TIMER_STATE_INVALID_ARGUMENT;
+        error = TIMER_PWM_STATE_INVALID_CHANNEL;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Failed to initialize PWM GPIO pin for timer 0");
       }
 
       break;
@@ -143,14 +160,15 @@ timer_error_t mcal_timer_init(timer_t *timer)
     default:
     {
       error = TIMER_STATE_INVALID_MODE;
+      logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 0 mode");
       break;
     }
     }
-
     break;
   }
   case TIMER_1:
   {
+    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configuring timer 1");
     reg_mask_write(TCCR1A, PRE_SCALER_MASK, timer->preScaler);
     registerMaxTime = resolution * TIMER_BIT_16_MAX * 1000;
     register(TCNT1L) = 0;
@@ -175,6 +193,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
       clr_bit(TCCR1A, WGMN1);
       clr_bit(TCCR1B, WGMN2);
       clr_bit(TCCR1B, WGMN3);
+      logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 1 in normal mode");
       break;
     }
     case TIMER_CTC_MODE:
@@ -195,59 +214,74 @@ timer_error_t mcal_timer_init(timer_t *timer)
           timer_manager[TIMER_1].unit_a_callback = timer->unit_a_callback;
           register(OCR1AL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
           register(OCR1AH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 1 unit A in CTC mode");
         }
         else if (timer->unit == UNIT_B)
         {
           timer_manager[TIMER_1].unit_b_callback = timer->unit_b_callback;
           register(OCR1BL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
           register(OCR1BH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 1 unit B in CTC mode");
         }
         else
         {
-          error = TIMER_STATE_INVALID_ARGUMENT;
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 1 unit Number");
         }
       }
       else
       {
         error = TIMER_STATE_INVALID_ARGUMENT;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Insufficient register max time for required tick for timer 1");
       }
       break;
     }
 
     case TIMER_PWM_MODE:
     {
-      mcal_gpio_pin_init(timer->pwm_config.channel_port,
-                         timer->pwm_config.channel_pin,
-                         DIR_OUTPUT);
-
-      /* choosing mode of operation fast pwm */
-      set_bit(TCCR0A, WGMN0);
-      set_bit(TCCR0A, WGMN1);
-      clr_bit(TCCR0B, WGMN2);
-      set_bit(TCCR0B, WGMN3);
-
-      if (timer->unit == UNIT_A)
+      if (GPIO_STATE_SUCCESS == mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                                                   timer->pwm_config.channel_pin,
+                                                   DIR_OUTPUT))
       {
-        // Set Compare Value
-        clr_bit(TCCR1A, COMNA0);
-        set_bit(TCCR1A, COMNA1);
-      }
-      else if (timer->unit == UNIT_B)
-      {
-        clr_bit(TCCR1A, COMNB0);
-        set_bit(TCCR1A, COMNB1);
+        /* choosing mode of operation fast pwm */
+        set_bit(TCCR0A, WGMN0);
+        set_bit(TCCR0A, WGMN1);
+        clr_bit(TCCR0B, WGMN2);
+        set_bit(TCCR0B, WGMN3);
+
+        if (timer->unit == UNIT_A)
+        {
+          // Set Compare Value
+          clr_bit(TCCR1A, COMNA0);
+          set_bit(TCCR1A, COMNA1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 1 unit A in PWM Mode ");
+        }
+        else if (timer->unit == UNIT_B)
+        {
+          clr_bit(TCCR1A, COMNB0);
+          set_bit(TCCR1A, COMNB1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 1 unit B in PWM Mode ");
+        }
+        else
+        {
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 1 unit Number");
+        }
       }
       else
       {
-        error = TIMER_STATE_INVALID_ARGUMENT;
+        error = TIMER_PWM_STATE_INVALID_CHANNEL;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Failed to initialize PWM GPIO pin for timer 1");
       }
-
       break;
     }
 
     default:
     {
       error = TIMER_STATE_INVALID_MODE;
+      logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 1 mode");
       break;
     }
     }
@@ -256,6 +290,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
   }
   case TIMER_2:
   {
+    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configuring timer 2");
     reg_mask_write(TCCR2A, PRE_SCALER_MASK, timer->preScaler);
     registerMaxTime = resolution * TIMER_BIT_8_MAX * 1000;
     register(TCNT2) = 0;
@@ -278,7 +313,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
       clr_bit(TCCR2A, WGMN0);
       clr_bit(TCCR2A, WGMN1);
       clr_bit(TCCR2B, WGMN2);
-
+      logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 2 in normal mode");
       break;
     }
     case TIMER_CTC_MODE:
@@ -296,57 +331,70 @@ timer_error_t mcal_timer_init(timer_t *timer)
         {
           timer_manager[TIMER_2].unit_a_callback = timer->unit_a_callback;
           register(OCR2A) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 2 unit A in CTC mode");
         }
         else if (timer->unit == UNIT_B)
         {
           timer_manager[TIMER_2].unit_b_callback = timer->unit_b_callback;
           register(OCR2B) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 2 unit B in CTC mode");
         }
         else
         {
-          error = TIMER_STATE_INVALID_ARGUMENT;
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 2 unit Number");
         }
       }
       else
       {
         error = TIMER_STATE_INVALID_ARGUMENT;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Insufficient register max time for required tick for timer 2");
       }
       break;
     }
 
     case TIMER_PWM_MODE:
     {
-      mcal_gpio_pin_init(timer->pwm_config.channel_port,
-                         timer->pwm_config.channel_pin,
-                         DIR_OUTPUT);
-
-      /* choosing mode of operation fast pwm */
-      set_bit(TCCR2A, WGMN0);
-      set_bit(TCCR2A, WGMN1);
-      clr_bit(TCCR2B, WGMN2);
-
-      if (timer->unit == UNIT_A)
+      if (GPIO_STATE_SUCCESS == mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                                                   timer->pwm_config.channel_pin,
+                                                   DIR_OUTPUT))
       {
-        // Set Compare Value
-        clr_bit(TCCR2A, COMNA0);
-        set_bit(TCCR2A, COMNA1);
-      }
-      else if (timer->unit == UNIT_B)
-      {
-        clr_bit(TCCR2A, COMNB0);
-        set_bit(TCCR2A, COMNB1);
+        /* choosing mode of operation fast pwm */
+        set_bit(TCCR2A, WGMN0);
+        set_bit(TCCR2A, WGMN1);
+        clr_bit(TCCR2B, WGMN2);
+
+        if (timer->unit == UNIT_A)
+        {
+          // Set Compare Value
+          clr_bit(TCCR2A, COMNA0);
+          set_bit(TCCR2A, COMNA1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 2 unit A in PWM Mode ");
+        }
+        else if (timer->unit == UNIT_B)
+        {
+          clr_bit(TCCR2A, COMNB0);
+          set_bit(TCCR2A, COMNB1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 2 unit B in PWM Mode ");
+        }
+        else
+        {
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 2 unit Number");
+        }
       }
       else
       {
-        error = TIMER_STATE_INVALID_ARGUMENT;
+        error = TIMER_PWM_STATE_INVALID_CHANNEL;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Failed to initialize PWM GPIO pin for timer 2");
       }
-
       break;
     }
 
     default:
     {
       error = TIMER_STATE_INVALID_MODE;
+      logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 2 mode");
       break;
     }
     }
@@ -355,6 +403,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
   }
   case TIMER_3:
   {
+    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configuring timer 3");
     reg_mask_write(TCCR3A, PRE_SCALER_MASK, timer->preScaler);
     registerMaxTime = resolution * TIMER_BIT_16_MAX * 1000;
     register(TCNT3L) = 0;
@@ -379,6 +428,8 @@ timer_error_t mcal_timer_init(timer_t *timer)
       clr_bit(TCCR3A, WGMN1);
       clr_bit(TCCR3B, WGMN2);
       clr_bit(TCCR3B, WGMN3);
+      logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 1 in normal mode");
+
       break;
     }
     case TIMER_CTC_MODE:
@@ -398,51 +449,64 @@ timer_error_t mcal_timer_init(timer_t *timer)
           timer_manager[TIMER_3].unit_a_callback = timer->unit_a_callback;
           register(OCR3AL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
           register(OCR3AH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 3 unit A in CTC mode");
         }
         else if (timer->unit == UNIT_B)
         {
           timer_manager[TIMER_3].unit_b_callback = timer->unit_b_callback;
           register(OCR3BL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
           register(OCR3BH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 3 unit B in CTC mode");
         }
         else
         {
-          error = TIMER_STATE_INVALID_ARGUMENT;
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 3 unit Number");
         }
       }
       else
       {
         error = TIMER_STATE_INVALID_ARGUMENT;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Insufficient register max time for required tick for timer 3");
       }
       break;
     }
 
     case TIMER_PWM_MODE:
     {
-      mcal_gpio_pin_init(timer->pwm_config.channel_port,
-                         timer->pwm_config.channel_pin,
-                         DIR_OUTPUT);
-
-      /* choosing mode of operation fast pwm */
-      set_bit(TCCR3A, WGMN0);
-      set_bit(TCCR3A, WGMN1);
-      clr_bit(TCCR3B, WGMN2);
-      set_bit(TCCR3B, WGMN3);
-
-      if (timer->unit == UNIT_A)
+      if (GPIO_STATE_SUCCESS == mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                                                   timer->pwm_config.channel_pin,
+                                                   DIR_OUTPUT))
       {
-        // Set Compare Value
-        clr_bit(TCCR3A, COMNA0);
-        set_bit(TCCR3A, COMNA1);
-      }
-      else if (timer->unit == UNIT_B)
-      {
-        clr_bit(TCCR3A, COMNB0);
-        set_bit(TCCR3A, COMNB1);
+        /* choosing mode of operation fast pwm */
+        set_bit(TCCR3A, WGMN0);
+        set_bit(TCCR3A, WGMN1);
+        clr_bit(TCCR3B, WGMN2);
+        set_bit(TCCR3B, WGMN3);
+
+        if (timer->unit == UNIT_A)
+        {
+          // Set Compare Value
+          clr_bit(TCCR3A, COMNA0);
+          set_bit(TCCR3A, COMNA1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 3 unit A in PWM Mode ");
+        }
+        else if (timer->unit == UNIT_B)
+        {
+          clr_bit(TCCR3A, COMNB0);
+          set_bit(TCCR3A, COMNB1);
+          logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Configured timer 3 unit B in PWM Mode ");
+        }
+        else
+        {
+          error = TIMER_STATE_INVALID_UNIT_NUMBER;
+          logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 3 unit Number");
+        }
       }
       else
       {
-        error = TIMER_STATE_INVALID_ARGUMENT;
+        error = TIMER_PWM_STATE_INVALID_CHANNEL;
+        logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Failed to initialize PWM GPIO pin for timer 3");
       }
 
       break;
@@ -451,6 +515,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
     default:
     {
       error = TIMER_STATE_INVALID_MODE;
+      logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer 3 mode");
       break;
     }
     }
@@ -459,6 +524,7 @@ timer_error_t mcal_timer_init(timer_t *timer)
   }
   default:
     error = TIMER_STATE_INVALID_TIMER;
+    logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"Invalid timer number");
     break;
   }
 
@@ -499,7 +565,7 @@ timer_error_t mcal_timer_start(timer_t *timer)
 
       default:
       {
-        error = TIMER_STATE_INVALID_MODE;
+        error = TIMER_STATE_INVALID_UNIT_NUMBER;
         break;
       }
       }
@@ -542,7 +608,7 @@ timer_error_t mcal_timer_start(timer_t *timer)
 
       default:
       {
-        error = TIMER_STATE_INVALID_MODE;
+        error = TIMER_STATE_INVALID_UNIT_NUMBER;
         break;
       }
       }
@@ -580,12 +646,13 @@ timer_error_t mcal_timer_start(timer_t *timer)
       case UNIT_B:
       {
         set_bit(TIMSK2, OCIENB);
+
         break;
       }
 
       default:
       {
-        error = TIMER_STATE_INVALID_MODE;
+        error = TIMER_STATE_INVALID_UNIT_NUMBER;
         break;
       }
       }
@@ -628,7 +695,7 @@ timer_error_t mcal_timer_start(timer_t *timer)
 
       default:
       {
-        error = TIMER_STATE_INVALID_MODE;
+        error = TIMER_STATE_INVALID_UNIT_NUMBER;
         break;
       }
       }
@@ -645,7 +712,7 @@ timer_error_t mcal_timer_start(timer_t *timer)
   }
   default:
   {
-    error = TIMER_STATE_INVALID_ARGUMENT;
+    error = TIMER_STATE_INVALID_TIMER;
     break;
   }
   }

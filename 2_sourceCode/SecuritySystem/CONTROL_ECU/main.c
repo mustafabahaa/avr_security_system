@@ -239,7 +239,7 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
-  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_APP);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
