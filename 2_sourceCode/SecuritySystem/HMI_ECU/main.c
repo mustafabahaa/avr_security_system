@@ -9,7 +9,7 @@
 /*************************************************************************/
 /* BSP Includes */
 #include "types.h"
-#include "atmega32.h"
+#include "avr.h"
 #include "keypad.h"
 #include "lcd.h"
 #include "timer.h"
@@ -22,7 +22,10 @@
 
 /*  utility includes */
 #include "pass_mng.h"
-
+/*************************************************************************/
+/*                          Global Variables                             */
+/*************************************************************************/
+static u8_t *TAG = (u8_t *)"HMI_ECU_APP";
 /*************************************************************************/
 /*                               MACROS                                  */
 /*************************************************************************/
@@ -80,7 +83,7 @@ static volatile state_t state;
 /* HAL layer initialization devices */
 static keypad_t keypad;
 static lcd_t lcd;
-static timer_config_t timer;
+static timer_t timer;
 
 /* Authentication variables */
 static volatile u8_t passwordErrorCounter = 0;
@@ -102,7 +105,6 @@ int main(void)
   {
     switch (state)
     {
-
     case CHECK_DEFAULT_PASSWORD_STATE:
     {
       checkDefaultPassword();
@@ -252,10 +254,12 @@ static void checkDefaultPassword()
 
   if (buffer == PASSWORD_NOT_EXICTED)
   {
+    logger_write_debug_println(LOG_APP, TAG, (u8_t *)"Password not existed");
     state = SET_NEW_PASSWORD_STATE;
   }
   else
   {
+    logger_write_debug_println(LOG_APP, TAG, (u8_t *)"Password exist");
     state = PASSWORD_INPUT_STATE;
   }
 }
@@ -419,7 +423,7 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
-  logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
@@ -483,17 +487,18 @@ static system_error_t LCDInit()
   lcd.lcdControlPort = BASE_D;
   lcd.lcdDataPort = BASE_C;
   lcd.lcdMode = MODE_8_BIT;
-  lcd.lcdRS = 5;
-  lcd.lcdRW = 6;
-  lcd.lcdE = 7;
+  lcd.lcdE = PD5;
+  lcd.lcdRW = PD6;
+  lcd.lcdRS = PD7;
 
   if (LCD_SUCCESS != hal_lcd_init(&lcd))
   {
     error = SYSTEM_FAIL;
+    logger_write_error_println(LOG_APP, TAG, (u8_t *)"LCD initialization fail");
   }
   else
   {
-    /* LCD initialized */
+    logger_write_error_println(LOG_APP, TAG, (u8_t *)"LCD initialization success");
   }
 
   return error;
@@ -503,10 +508,11 @@ static system_error_t timerInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  timer.timer_number = TIMER2;
+  timer.number = TIMER_0;
+  timer.unit = UNIT_A;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
-  timer.tick_ms_seconds = 5;
+  timer.timer_config.tick_ms_seconds = 5;
 
   if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
   {
@@ -514,10 +520,9 @@ static system_error_t timerInit()
   }
   else
   {
-    timer_setCallBack(releaseSystem);
+    timer.ovf_callback = releaseSystem;
     error = SYSTEM_SUCCESS;
   }
-
   return error;
 }
 

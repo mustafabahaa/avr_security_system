@@ -5,7 +5,7 @@
 /*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
-
+#if 0
 motor_error_t hal_dc_motor_init(motor_t *motor)
 {
 	motor_error_t error = MOTOR_STATE_SUCCESS;
@@ -79,10 +79,10 @@ motor_error_t hal_dc_motor_set_speed(motor_t* motor ,motor_speed_t speed)
 {
 	motor_error_t error = MOTOR_STATE_SUCCESS;
 
-	if(motor->channel->channel_pin == CHANNEL_1_PIN ||
-			motor->channel->channel_pin == CHANNEL_4_PIN)
+	if(motor->channel->channel_pin == PB3_PWM ||
+			motor->channel->channel_pin == PD4_PWM)
 	{
-		if (PWM_STATE_SUCCESS == mcal_pwm_output(motor->channel,speed))
+		if (PWM_STATE_SUCCESS == mcal_timer_pwm_output(motor->channel,speed))
 		{
 			/* motor speed is updated */
 		}
@@ -91,10 +91,10 @@ motor_error_t hal_dc_motor_set_speed(motor_t* motor ,motor_speed_t speed)
 			error = MOTOR_STATE_ERROR;
 		}
 	}
-	else if (motor->channel->channel_pin == CHANNEL_2_PIN ||
-			motor->channel->channel_pin == CHANNEL_3_PIN)
+	else if (motor->channel->channel_pin == PB4_PWM ||
+			motor->channel->channel_pin == PD5_PWM)
 	{
-		if (PWM_STATE_SUCCESS == mcal_pwm_output(motor->channel,speed*4))
+		if (PWM_STATE_SUCCESS == mcal_timer_pwm_output(motor->channel,speed*4))
 		{
 			/* motor speed is updated */
 		}
@@ -111,5 +111,5 @@ motor_error_t hal_dc_motor_set_speed(motor_t* motor ,motor_speed_t speed)
 	return error;
 }
 
-
+#endif
 

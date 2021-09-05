@@ -11,7 +11,7 @@
 /*                              Includes                                 */
 /*************************************************************************/
 #include "types.h"
-#include "atmega32.h"
+#include "avr.h"
 #include "gpio.h"
 #include "port.h"
 #include "std_library.h"
@@ -40,6 +40,7 @@ typedef enum
 	LCD_data_ERROR,
 	LCD_MODE_ERROR,
 	LCD_INVALID_TYPE,
+  LCD_INVALID_MODE,
 } lcd_error_t;
 
 typedef enum

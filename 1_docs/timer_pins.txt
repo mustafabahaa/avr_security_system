@@ -1,0 +1,12 @@
+OC0A PB3 Timer/Counter 0 Output Compare Match A Output 8-BIT
+OC0B PB4 Timer/Counter 0 Output Compare Match B Output 8-BIT
+
+OC1A PD5 Timer/Counter1 Output Compare Match A Output 16-BIT
+OC1B PD4 Timer/Counter1 Output Compare Match B Output 16-BIT
+
+OC2A PD7 Timer/Counter2 Output Compare Match A Output 8-BIT
+OC2B PD6 Timer/Counter2 Output Compare Match B Output 8-BIT
+
+OC3A PB6 Timer/Counter 3 Output Compare Match A Output 16-BIT
+OC3B PB7 Timer/Counter 3 Output Compare Match B Output 16-BIT
+

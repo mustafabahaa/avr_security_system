@@ -19,7 +19,7 @@
       "e_interrupt.h": "c",
       "port.h": "c",
       "pwm.h": "c",
-      "atmega32.h": "c",
+      "avr.h": "c",
       "spi.h": "c",
       "uart.h": "c"
     }

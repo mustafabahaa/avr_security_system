@@ -11,8 +11,8 @@
 /*                              Includes                                  */
 /**************************************************************************/
 #include "types.h"
-#include "atmega32.h"
-#include "software_uart.h"
+#include "avr.h"
+#include "uart.h"
 #include "std_library.h"
 /**************************************************************************/
 /*                               Types                                    */
@@ -72,9 +72,9 @@ void logger_write_debug_println(logger_layers_t layer, u8_t *tag, u8_t *data);
  ** this function is used to send data in debug mode
  *************************************************************************/
 void logger_write_debug_println_with_variable(logger_layers_t layer,
-                                      u8_t *tag,
-                                      u8_t *data,
-                                      u16_t variable);
+                                              u8_t *tag,
+                                              u8_t *data,
+                                              u16_t variable);
 
 /**************************************************************************
  ** logger_write_warning_println()

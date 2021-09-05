@@ -9,7 +9,7 @@
 /*************************************************************************/
 /* BSP Includes */
 #include "types.h"
-#include "atmega32.h"
+#include "avr.h"
 #include "timer.h"
 #include "eeprom.h"
 #include "buzzer.h"
@@ -70,7 +70,7 @@ static state_t state;
 
 /* HAL layer initialization devices */
 static buzzer_t buzzer;
-static timer_config_t timer;
+static timer_t timer;
 static servo_motor_t servo;
 
 /*************************************************************************/
@@ -214,8 +214,7 @@ static void validatePassword()
 
 static void startAlarmSystem()
 {
-  timer_setCallBack(releaseSystem);
-
+  timer.ovf_callback = releaseSystem;
   mcal_timer_start(&timer);
   hal_buzzer_set_state(&buzzer, HIGH);
 
@@ -224,8 +223,7 @@ static void startAlarmSystem()
 
 static void motorOpen()
 {
-  timer_setCallBack(closeMotor);
-
+  timer.ovf_callback = closeMotor;
   mcal_timer_start(&timer);
   hal_servo_motor_set_degree(&servo, 180);
   state = HALT_STATE;
@@ -241,7 +239,7 @@ static system_error_t systemInit()
 
   /* Initialize Services */
 #ifdef LOGGER
-  logger_init(LOGGER_FULL_VERBOSITY, LOG_MCAL);
+  logger_init(LOGGER_FULL_VERBOSITY, LOG_ALL_LAYERS);
 #endif /* LOGGER */
 
   /* Initialize hardware devices */
@@ -260,8 +258,8 @@ static system_error_t servoMotorInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  servo.channel.channel_port = BASE_D;
-  servo.channel.channel_pin = CHANNEL_4_PIN;
+  servo.base = BASE_D;
+  servo.pin = PD7;
 
   hal_servo_motor_init(&servo);
   return error;
@@ -284,10 +282,11 @@ static system_error_t timerInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  timer.timer_number = TIMER2;
+  timer.number = TIMER_2;
+  timer.unit = UNIT_A;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
-  timer.tick_ms_seconds = 5;
+  timer.timer_config.tick_ms_seconds = 5;
 
   if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
   {

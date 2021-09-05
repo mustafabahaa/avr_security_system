@@ -20,151 +20,263 @@ uart_error_t mcal_uart_init(uart_t *uart)
 {
   uart_error_t error = UART_STATE_SUCCESS;
 
-  /* U2X = 1 for double transmission speed */
-  set_bit(UCSRA, U2X);
-  logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"double transimission speed is enabled");
+  switch (uart->channel)
+  {
 
-  set_bit(UCSRB, RXEN);
-  set_bit(UCSRB, TXEN);
-  logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"Transmitter and Receiver are enabled");
+  case CHANNEL_0:
+  {
+    /* U2X = 1 for double transmission speed */
+    set_bit(UCSR0A, U2X0);
 
-  /* The URSEL must be zero when writing the UBRRH */
-  set_bit(UCSRC, URSEL);
+    set_bit(UCSR0B, RXEN0);
+    set_bit(UCSR0B, TXEN0);
 
-  /* First 8 bits from the BAUD_PRESCALE inside UBRRL and last 4 bits in UBRRH*/
-  /* Initialize baud rate */
-  if (uart->baudRate == BAUD_2400 || uart->baudRate == BAUD_4800 || uart->baudRate == BAUD_9600)
-  {
-    register(UBRRH) = (((F_CPU / (uart->baudRate * 8UL))) - 1) >> 8;
-    register(UBRRL) = (((F_CPU / (uart->baudRate * 8UL))) - 1);
-    logger_write_debug_println_with_variable(LOG_MCAL, TAG, (u8_t *)"configured baud rate", uart->baudRate);
-  }
-  else
-  {
-    error = UART_STATE_INVALID_BAUD_RATE;
-    logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"invalid baud rate");
+    /* First 8 bits from the BAUD_PRESCALE inside UBRRL and last 4 bits in UBRRH*/
+    /* Initialize baud rate */
+    if (uart->baudRate == BAUD_2400 || uart->baudRate == BAUD_4800 || uart->baudRate == BAUD_9600)
+    {
+      register(UBRR0H) = (((F_CPU / (uart->baudRate * 8UL))) - 1) >> 8;
+      register(UBRR0L) = (((F_CPU / (uart->baudRate * 8UL))) - 1);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_BAUD_RATE;
+    }
+
+    /* Initialize stop bit numbers */
+    if (STOP_BIT_1 == uart->stopBitNo)
+    {
+      clr_bit(UCSR0C, USBS0);
+    }
+    else if (STOP_BIT_2 == uart->stopBitNo)
+    {
+      set_bit(UCSR0C, USBS0);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_STOP_BIT_NUMBER;
+    }
+
+    /* Initialize parity mode */
+    if (DISABLE == uart->parity)
+    {
+      clr_bit(UCSR0C, UPM00);
+      clr_bit(UCSR0C, UPM01);
+    }
+    else if (ENABLE_EVEN == uart->parity)
+    {
+      clr_bit(UCSR0C, UPM00);
+      set_bit(UCSR0C, UPM01);
+    }
+    else if (ENABLE_ODD == uart->parity)
+    {
+      set_bit(UCSR0C, UPM00);
+      set_bit(UCSR0C, UPM01);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_PARITY;
+    }
+
+    /* Initialize packet length */
+    if (BIT_5 == uart->packetLength)
+    {
+      clr_bit(UCSR0C, UCSZ00);
+      clr_bit(UCSR0C, UCSZ10);
+      clr_bit(UCSR0C, UCSZ02);
+    }
+    else if (BIT_6 == uart->packetLength)
+    {
+      set_bit(UCSR0C, UCSZ00);
+      clr_bit(UCSR0C, UCSZ10);
+      clr_bit(UCSR0B, UCSZ02);
+    }
+    else if (BIT_7 == uart->packetLength)
+    {
+      clr_bit(UCSR0C, UCSZ00);
+      set_bit(UCSR0C, UCSZ10);
+      clr_bit(UCSR0B, UCSZ02);
+    }
+    else if (BIT_8 == uart->packetLength)
+    {
+      set_bit(UCSR0C, UCSZ00);
+      set_bit(UCSR0C, UCSZ10);
+      clr_bit(UCSR0B, UCSZ02);
+    }
+    else if (BIT_9 == uart->packetLength)
+    {
+      set_bit(UCSR0C, UCSZ00);
+      set_bit(UCSR0C, UCSZ10);
+      set_bit(UCSR0B, UCSZ02);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_PACKET_LENGTH;
+    }
+
+    break;
   }
 
-  /* Initialize stop bit numbers */
-  if (STOP_BIT_1 == uart->stopBitNo)
+  case CHANNEL_1:
   {
-    clr_bit(UCSRC, USBS);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured with 1 stop bit");
-  }
-  else if (STOP_BIT_2 == uart->stopBitNo)
-  {
-    set_bit(UCSRC, USBS);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured with 2 stop bit");
-  }
-  else
-  {
-    error = UART_STATE_INVALID_STOP_BIT_NUMBER;
-    logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"invalid stop bits number support only 1 or 2");
+    /* U2X = 1 for double transmission speed */
+    set_bit(UCSR1A, U2X1);
+
+    set_bit(UCSR1B, RXEN1);
+    set_bit(UCSR1B, TXEN1);
+
+    /* First 8 bits from the BAUD_PRESCALE inside UBRRL and last 4 bits in UBRRH*/
+    /* Initialize baud rate */
+    if (uart->baudRate == BAUD_2400 || uart->baudRate == BAUD_4800 || uart->baudRate == BAUD_9600)
+    {
+      register(UBRR1H) = (((F_CPU / (uart->baudRate * 8UL))) - 1) >> 8;
+      register(UBRR1L) = (((F_CPU / (uart->baudRate * 8UL))) - 1);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_BAUD_RATE;
+    }
+
+    /* Initialize stop bit numbers */
+    if (STOP_BIT_1 == uart->stopBitNo)
+    {
+      clr_bit(UCSR1C, USBS1);
+    }
+    else if (STOP_BIT_2 == uart->stopBitNo)
+    {
+      set_bit(UCSR1C, USBS1);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_STOP_BIT_NUMBER;
+    }
+
+    /* Initialize parity mode */
+    if (DISABLE == uart->parity)
+    {
+      clr_bit(UCSR1C, UPM10);
+      clr_bit(UCSR1C, UPM11);
+    }
+    else if (ENABLE_EVEN == uart->parity)
+    {
+      clr_bit(UCSR1C, UPM10);
+      set_bit(UCSR1C, UPM11);
+    }
+    else if (ENABLE_ODD == uart->parity)
+    {
+      set_bit(UCSR1C, UPM10);
+      set_bit(UCSR1C, UPM11);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_PARITY;
+    }
+
+    /* Initialize packet length */
+    if (BIT_5 == uart->packetLength)
+    {
+      clr_bit(UCSR1C, UCSZ00);
+      clr_bit(UCSR1C, UCSZ10);
+      clr_bit(UCSR1C, UCSZ02);
+    }
+    else if (BIT_6 == uart->packetLength)
+    {
+      set_bit(UCSR1C, UCSZ00);
+      clr_bit(UCSR1C, UCSZ10);
+      clr_bit(UCSR1B, UCSZ02);
+    }
+    else if (BIT_7 == uart->packetLength)
+    {
+      clr_bit(UCSR1C, UCSZ00);
+      set_bit(UCSR1C, UCSZ10);
+      clr_bit(UCSR1B, UCSZ02);
+    }
+    else if (BIT_8 == uart->packetLength)
+    {
+      set_bit(UCSR1C, UCSZ00);
+      set_bit(UCSR1C, UCSZ10);
+      clr_bit(UCSR1B, UCSZ02);
+    }
+    else if (BIT_9 == uart->packetLength)
+    {
+      set_bit(UCSR1C, UCSZ00);
+      set_bit(UCSR1C, UCSZ10);
+      set_bit(UCSR1B, UCSZ02);
+    }
+    else
+    {
+      error = UART_STATE_INVALID_PACKET_LENGTH;
+    }
+
+    break;
   }
 
-  /* Initialize parity mode */
-  if (DISABLE == uart->parity)
+  default:
   {
-    clr_bit(UCSRC, UPM0);
-    clr_bit(UCSRC, UPM1);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to disable parity");
+    error = UART_STATE_INVALID_CHANNEL_NUMBER;
+    break;
   }
-  else if (ENABLE_EVEN == uart->parity)
-  {
-    clr_bit(UCSRC, UPM0);
-    set_bit(UCSRC, UPM1);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to even parity");
-  }
-  else if (ENABLE_ODD == uart->parity)
-  {
-    set_bit(UCSRC, UPM0);
-    set_bit(UCSRC, UPM1);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to odd parity");
-  }
-  else
-  {
-    error = UART_STATE_INVALID_PARITY;
-    logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"invalid parity mode");
-  }
-  
-  /* Initialize packet length */
-  if (BIT_5 == uart->packetLength)
-  {
-    clr_bit(UCSRC, UCSZ0);
-    clr_bit(UCSRC, UCSZ1);
-    clr_bit(UCSRB, UCSZ2);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to to 5 bits packet length");
-  }
-  else if (BIT_6 == uart->packetLength)
-  {
-    set_bit(UCSRC, UCSZ0);
-    clr_bit(UCSRC, UCSZ1);
-    clr_bit(UCSRB, UCSZ2);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to to 6 bits packet length");
-  }
-  else if (BIT_7 == uart->packetLength)
-  {
-    clr_bit(UCSRC, UCSZ0);
-    set_bit(UCSRC, UCSZ1);
-    clr_bit(UCSRB, UCSZ2);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to to 7 bits packet length");
-  }
-  else if (BIT_8 == uart->packetLength)
-  {
-    set_bit(UCSRC, UCSZ0);
-    set_bit(UCSRC, UCSZ1);
-    clr_bit(UCSRB, UCSZ2);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to to 8 bits packet length");
-  }
-  else if (BIT_9 == uart->packetLength)
-  {
-    set_bit(UCSRC, UCSZ0);
-    set_bit(UCSRC, UCSZ1);
-    set_bit(UCSRB, UCSZ2);
-    logger_write_debug_println(LOG_MCAL, TAG, (u8_t *)"configured to to 9 bits packet length");
-  }
-  else
-  {
-    error = UART_STATE_INVALID_PACKET_LENGTH;
-    logger_write_error_println(LOG_MCAL, TAG, (u8_t *)"invalid packet length");
   }
 
   return error;
 }
 
-uart_error_t mcal_uart_send_byte(const u8_t data)
+uart_error_t mcal_uart_send_byte(uart_t *uart, const u8_t data)
 {
   uart_error_t error = UART_STATE_SUCCESS;
 
-  /* UDRE flag is set when the Tx buffer (UDR) is empty and ready for
-	 * transmitting a new byte so wait until this flag is set to one */
-  while (bit_is_clr(UCSRA, UDRE))
+  switch (uart->channel)
   {
+  case CHANNEL_0:
+  {
+    while (bit_is_clr(UCSR0A, UDRE0))
+      ;
+    register(UDR0) = data;
+    break;
   }
-  /* Put the required data in the UDR register and it also clear the UDRE flag as
-	 * the UDR register is not empty now */
-  register(UDR) = data;
+
+  case CHANNEL_1:
+    while (bit_is_clr(UCSR1A, UDRE1))
+      ;
+    register(UDR1) = data;
+    break;
+
+  default:
+    error = UART_STATE_INVALID_CHANNEL_NUMBER;
+    break;
+  }
 
   return error;
 }
 
-uart_error_t mcal_uart_recieve_byte(u8_t *data)
+uart_error_t mcal_uart_recieve_byte(uart_t *uart, u8_t *data)
 {
   uart_error_t error = UART_STATE_SUCCESS;
 
-  /* RXC flag is set when the UART receive data so wait until this
-	 * flag is set to one */
-  while (bit_is_clr(UCSRA, RXC))
+  switch (uart->channel)
   {
+  case CHANNEL_0:
+  {
+    while (bit_is_clr(UCSR0A, RXC0))
+      ;
+    *data = register(UDR0);
+    break;
   }
-  /* Read the received data from the Rx buffer (UDR) and the RXC flag
-	   will be cleared after read this data */
-  *data = register(UDR);
 
+  case CHANNEL_1:
+    while (bit_is_clr(UCSR1A, RXC1))
+      ;
+    *data = register(UDR1);
+    break;
+
+  default:
+    error = UART_STATE_INVALID_CHANNEL_NUMBER;
+    break;
+  }
   return error;
 }
 
-uart_error_t mcal_uart_send_string(const u8_t *str)
+uart_error_t mcal_uart_send_string(uart_t *uart, const u8_t *str)
 {
 
   uart_error_t error = UART_STATE_SUCCESS;
@@ -173,7 +285,7 @@ uart_error_t mcal_uart_send_string(const u8_t *str)
 
   while (str[i] != '\0')
   {
-    if (UART_STATE_SUCCESS == mcal_uart_send_byte(str[i]))
+    if (UART_STATE_SUCCESS == mcal_uart_send_byte(uart, str[i]))
     {
       i++;
     }
@@ -184,12 +296,12 @@ uart_error_t mcal_uart_send_string(const u8_t *str)
   }
 
   /*send the null of the string after finish */
-  mcal_uart_send_byte('\0');
+  mcal_uart_send_byte(uart,'\0');
 
   return error;
 }
 
-uart_error_t mcal_UART_receive_string(u8_t *str)
+uart_error_t mcal_UART_receive_string(uart_t *uart, u8_t *str)
 {
   uart_error_t error = UART_STATE_SUCCESS;
 
@@ -197,7 +309,7 @@ uart_error_t mcal_UART_receive_string(u8_t *str)
 
   while (str[i] != '\0')
   {
-    if (UART_STATE_SUCCESS == mcal_uart_recieve_byte(&str[i]))
+    if (UART_STATE_SUCCESS == mcal_uart_recieve_byte(uart, &str[i]))
     {
       i++;
     }

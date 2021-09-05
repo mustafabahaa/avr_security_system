@@ -11,12 +11,31 @@
 /*                              Includes                                  */
 /**************************************************************************/
 #include "types.h"
-#include "atmega32.h"
+#include "avr.h"
 #include "logger.h"
+/**************************************************************************/
+/*                              Registers                                 */
+/**************************************************************************/
+#define EICRA   0x69
+#define ISC00   0
+#define ISC01   1
+#define ISC10   2
+#define ISC11   3
+#define ISC20   4
+#define ISC21   5
+
+#define EIFR    0x3C
+#define INTF0   0
+#define INTF1   1
+#define INTF2   2
+
+#define EIMSK   0x3D
+#define INT0    0
+#define INT1    1
+#define INT2    2
 /**************************************************************************/
 /*                               Types                                    */
 /**************************************************************************/
-
 typedef enum
 {
   RISING_EDGE = 1,
@@ -52,7 +71,7 @@ interrupt_error mcal_interrupt_initialize(u8_t interruptNo,
  ** parameter: u8_t *result
  ** return    : interrupt_error
  ***************************************************************************
- ** this function is used read a interrupts flags from GIFR register
+ ** this function is used read a interrupts flags from EIFR register
  **************************************************************************/
 interrupt_error mcal_interrupt_read_flag(u8_t flag, u8_t *result);
 
@@ -62,7 +81,7 @@ interrupt_error mcal_interrupt_read_flag(u8_t flag, u8_t *result);
  ** parameter: u8_t flag
  ** return    : interrupt_error
  ***************************************************************************
- ** this function is used to clear flag from GIFR register
+ ** this function is used to clear flag from EIFR register
  **************************************************************************/
 interrupt_error mcal_interrupt_clear_flag(u8_t flag);
 

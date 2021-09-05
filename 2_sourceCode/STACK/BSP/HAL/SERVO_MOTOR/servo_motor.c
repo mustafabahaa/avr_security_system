@@ -12,6 +12,8 @@ static u32_t map(u32_t x, u32_t in_min, u32_t in_max,
 
 static u16_t timer_min_duty = 0;
 static u16_t timer_max_duty = 0;
+static timer_t timer;
+
 /*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
@@ -20,7 +22,14 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
 {
   servo_motor_error_t error = SERVO_MOTOR_STATE_SUCCESS;
 
-  if (PWM_STATE_SUCCESS == mcal_pwm_initialization(&(motor->channel)))
+  timer.mode = TIMER_PWM_MODE;
+  timer.preScaler = F_CPU_CLOCK;
+  timer.number = TIMER_2;
+  timer.unit = UNIT_A;
+  timer.pwm_config.channel_pin = motor->pin;
+  timer.pwm_config.channel_port = motor->base;
+
+  if (TIMER_STATE_SUCCESS == mcal_timer_init(&timer))
   {
     /*define TOP value to reset at to adjust the frequency
 		  note that  Fpwm = Fcpu / (N * 256)  and f or optimal
@@ -31,37 +40,27 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
 		  we won't assign a Top value here
 		 */
 
-    switch (motor->channel.channel_pin)
+    switch (timer.number)
     {
     // PB3
-    case CHANNEL_1_PIN:
+    case TIMER_0:
+    case TIMER_2:
     {
-      timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
+      timer_min_duty = (TIMER_BIT_8_MAX * SERVO_MIN_PERIOD) / SERVO_PERIOD;
+      timer_max_duty = (TIMER_BIT_8_MAX * SERVO_MAX_PERIOD) / SERVO_PERIOD;
+      break;
+    }
+    case TIMER_1:
+    case TIMER_3:
+    {
+      timer_min_duty = (TIMER_BIT_16_MAX * SERVO_MIN_PERIOD) / SERVO_PERIOD;
+      timer_max_duty = (TIMER_BIT_16_MAX * SERVO_MAX_PERIOD) / SERVO_PERIOD;
       break;
     }
 
-    // PD4
-    case CHANNEL_2_PIN:
+    default:
     {
-      timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
-      break;
-    }
-
-    // PD5
-    case CHANNEL_3_PIN:
-    {
-      timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
-      break;
-    }
-
-    // PD7
-    case CHANNEL_4_PIN:
-    {
-      timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
+      error = SERVO_MOTOR_STATE_INVALID_MOTOR_PIN;
       break;
     }
     }
@@ -81,34 +80,22 @@ servo_motor_error_t hal_servo_motor_set_degree(servo_motor_t *motor, u8_t degree
 {
   servo_motor_error_t error = SERVO_MOTOR_STATE_SUCCESS;
 
-  switch (motor->channel.channel_pin)
+  if (degree >= 0 && degree <= 180)
   {
-  // PB3
-  case CHANNEL_1_PIN:
-  {
-    register(OCR1A) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
-    break;
+    if (TIMER_STATE_SUCCESS == mcal_timer_pwm_output(
+                                   &timer,
+                                   map(degree, 0, 180, timer_min_duty, timer_max_duty)))
+    {
+      /* do nothing */
+    }
+    else
+    {
+      error = SERVO_MOTOR_STATE_ERROR;
+    }
   }
-
-  // PD4
-  case CHANNEL_2_PIN:
+  else
   {
-    register(OCR1B) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
-    break;
-  }
-
-  // PD5
-  case CHANNEL_3_PIN:
-  {
-    register(OCR2) = map(degree, 0, 180, timer_min_duty, timer_max_duty);
-    break;
-  }
-
-  // PD7
-  case CHANNEL_4_PIN:
-  {
-    break;
-  }
+    error = SERVO_MOTOR_STATE_INVALID_DEGREE;
   }
 
   return error;

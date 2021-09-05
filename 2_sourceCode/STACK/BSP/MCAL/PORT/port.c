@@ -103,6 +103,7 @@ port_error_t mcal_port_read(u8_t base, u8_t *value)
 
 static void print_port_char(u8_t base)
 {
+  /*
   u8_t str[6] = "";
   if (base == BASE_A)
     std_strcat(str, (u8_t *)"PORT A");
@@ -114,4 +115,5 @@ static void print_port_char(u8_t base)
     std_strcat(str, (u8_t *)"PORT D");
 
   logger_write_debug_println(LOG_MCAL, TAG, str);
+  */
 }

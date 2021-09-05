@@ -13,7 +13,7 @@
 /**************************************************************************/
 static logger_verbosity_t g_verbosity;
 static logger_layers_t g_layers;
-static soft_uart_t softUart;
+static uart_t uart;
 /**************************************************************************/
 /*                      static functions prototype                        */
 /**************************************************************************/
@@ -24,13 +24,16 @@ static void send_packet(u8_t *tag, u8_t *data, u8_t *log_type, u16_t variable);
 
 void logger_init(logger_verbosity_t verbosity, logger_layers_t layers)
 {
-  softUart.base = BASE_B;
-  softUart.baud = SOFT_BAUD_9600;
-  softUart.txPin = 7;
+
+  uart.baudRate = BAUD_9600;
+  uart.packetLength = BIT_8;
+  uart.stopBitNo = STOP_BIT_1;
+  uart.parity = DISABLE;
+  uart.channel = CHANNEL_1;
 
   g_verbosity = verbosity;
   g_layers = layers;
-  service_soft_uart_init(&softUart);
+  mcal_uart_init(&uart);
 }
 
 void logger_write_debug_println(logger_layers_t layer, u8_t *tag, u8_t *data)
@@ -121,5 +124,5 @@ static void send_packet(u8_t *tag, u8_t *data, u8_t *log_type, u16_t variable)
   }
 
   std_strcat(str, (u8_t *)"\r\n");
-  service_soft_uart_send_string(str);
+  mcal_uart_send_string(&uart, str);
 }
