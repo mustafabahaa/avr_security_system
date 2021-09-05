@@ -22,14 +22,12 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
 {
   servo_motor_error_t error = SERVO_MOTOR_STATE_SUCCESS;
 
-  timer_pwm_config_t pwm_config;
-  pwm_config.channel_pin = motor->pin;
-  pwm_config.channel_port = motor->base;
-
   timer.mode = TIMER_PWM_MODE;
   timer.preScaler = F_CPU_CLOCK;
-  timer.timer_number = TIMER2_UNIT_1;
-  timer.config = &pwm_config;
+  timer.number = TIMER_2;
+  timer.unit = UNIT_A;
+  timer.pwm_config.channel_pin = motor->pin;
+  timer.pwm_config.channel_port = motor->base;
 
   if (TIMER_STATE_SUCCESS == mcal_timer_init(&timer))
   {
@@ -42,66 +40,27 @@ servo_motor_error_t hal_servo_motor_init(servo_motor_t *motor)
 		  we won't assign a Top value here
 		 */
 
-    switch (timer.timer_number)
+    switch (timer.number)
     {
     // PB3
-    case TIMER0_UNIT_1:
+    case TIMER_0:
+    case TIMER_2:
     {
-      timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
+      timer_min_duty = (TIMER_BIT_8_MAX * SERVO_MIN_PERIOD) / SERVO_PERIOD;
+      timer_max_duty = (TIMER_BIT_8_MAX * SERVO_MAX_PERIOD) / SERVO_PERIOD;
       break;
     }
-    case TIMER0_UNIT_2:
+    case TIMER_1:
+    case TIMER_3:
     {
-      timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
-      break;
-    }
-
-    // PD4
-    case TIMER1_UNIT_1:
-    {
-      timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
+      timer_min_duty = (TIMER_BIT_16_MAX * SERVO_MIN_PERIOD) / SERVO_PERIOD;
+      timer_max_duty = (TIMER_BIT_16_MAX * SERVO_MAX_PERIOD) / SERVO_PERIOD;
       break;
     }
 
-    // PD5
-    case TIMER1_UNIT_2:
+    default:
     {
-      timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
-      break;
-    }
-
-    // PD7
-    case TIMER2_UNIT_1:
-    {
-      timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
-      break;
-    }
-
-    case TIMER2_UNIT_2:
-    {
-      timer_min_duty = (256 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (256 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
-      break;
-    }
-
-      // PD4
-    case TIMER3_UNIT_1:
-    {
-      timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
-      break;
-    }
-
-    // PD5
-    case TIMER3_UNIT_2:
-    {
-      timer_min_duty = (65536 * SERVO_MIN_PERIOD) / SERVO_PERIOD;
-      timer_max_duty = (65536 * SERVO_MAX_PERIOD) / SERVO_PERIOD;
+      error = SERVO_MOTOR_STATE_INVALID_MOTOR_PIN;
       break;
     }
     }

@@ -84,7 +84,6 @@ static volatile state_t state;
 static keypad_t keypad;
 static lcd_t lcd;
 static timer_t timer;
-static timer_config_t timer_config;
 
 /* Authentication variables */
 static volatile u8_t passwordErrorCounter = 0;
@@ -509,13 +508,11 @@ static system_error_t timerInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  timer.timer_number = TIMER0_UNIT_1;
+  timer.number = TIMER_0;
+  timer.unit = UNIT_A;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
-
-  timer_config.tick_ms_seconds = 5;
-
-  timer.config = &timer_config;
+  timer.timer_config.tick_ms_seconds = 5;
 
   if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
   {
@@ -523,10 +520,9 @@ static system_error_t timerInit()
   }
   else
   {
-    timer_setCallBack(releaseSystem);
+    timer.ovf_callback = releaseSystem;
     error = SYSTEM_SUCCESS;
   }
-
   return error;
 }
 

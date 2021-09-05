@@ -71,7 +71,6 @@ static state_t state;
 /* HAL layer initialization devices */
 static buzzer_t buzzer;
 static timer_t timer;
-static timer_config_t timer_config;
 static servo_motor_t servo;
 
 /*************************************************************************/
@@ -215,8 +214,7 @@ static void validatePassword()
 
 static void startAlarmSystem()
 {
-  timer_setCallBack(releaseSystem);
-
+  timer.ovf_callback = releaseSystem;
   mcal_timer_start(&timer);
   hal_buzzer_set_state(&buzzer, HIGH);
 
@@ -225,8 +223,7 @@ static void startAlarmSystem()
 
 static void motorOpen()
 {
-  timer_setCallBack(closeMotor);
-
+  timer.ovf_callback = closeMotor;
   mcal_timer_start(&timer);
   hal_servo_motor_set_degree(&servo, 180);
   state = HALT_STATE;
@@ -285,13 +282,11 @@ static system_error_t timerInit()
 {
   system_error_t error = SYSTEM_SUCCESS;
 
-  timer.timer_number = TIMER2_UNIT_1;
+  timer.number = TIMER_2;
+  timer.unit = UNIT_A;
   timer.mode = TIMER_NORMAL_MODE;
   timer.preScaler = F_CPU_1024;
-
-  timer_config.tick_ms_seconds = 5;
-
-  timer.config = &timer_config;
+  timer.timer_config.tick_ms_seconds = 5;
 
   if (TIMER_STATE_SUCCESS != mcal_timer_init(&timer))
   {

@@ -18,85 +18,21 @@
  ** this function is used to get the actual values of pre-scaller
  **************************************************************************/
 static double getPreScaler(timer_preScaler_t preScaller);
+
+typedef struct
+{
+  timer_number_t number;
+  double ticks;
+  double overflow;
+  void (*ovf_callback)(void);
+  void (*unit_a_callback)(void);
+  void (*unit_b_callback)(void);
+} timer_manage_t;
+
 /**************************************************************************
  **                              Global Variable                         **
  *************************************************************************/
-timer_module_t timer_0 =
-    {
-        .type = TIMER_BIT_8,
-        .number = TIMER_0,
-        .ctr_regs_config = (timer_8_bit_ctrl_regs *){
-            TCCR0A,
-            TCCR0B,
-            TIMSK0,
-            OCR0A,
-            OCR0B,
-            TCNT0,
-        },
-        .ticks = 0,
-        .overflow = 0,
-        .a_ptr = NULL_PTR};
-
-timer_module_t timer_1 =
-    {
-        .type = TIMER_BIT_16,
-        .number = TIMER_1,
-        .ctr_regs_config = (timer_16_bit_ctrl_regs *){
-            TCCR1A,
-            TCCR1B,
-            TCCR1C,
-            TIMSK1,
-            OCR1AL,
-            OCR1AH,
-            OCR1BL,
-            OCR1BH,
-            TCNT1L,
-            TCNT1H},
-        .ticks = 0,
-        .overflow = 0,
-        .a_ptr = NULL_PTR};
-
-timer_module_t timer_2 =
-    {
-        .type = TIMER_BIT_8,
-        .number = TIMER_2,
-        .ctr_regs_config = (timer_8_bit_ctrl_regs *){
-            TCCR2A,
-            TCCR2B,
-            TIMSK2,
-            OCR2A,
-            OCR2B,
-            TCNT2,
-        },
-        .ticks = 0,
-        .overflow = 0,
-        .a_ptr = NULL_PTR};
-
-timer_module_t timer_3 =
-    {
-        .type = TIMER_BIT_16,
-        .number = TIMER_3,
-        .ctr_regs_config = (timer_16_bit_ctrl_regs *){
-            TCCR3A,
-            TCCR3B,
-            TCCR3C,
-            TIMSK3,
-            OCR3AL,
-            OCR3AH,
-            OCR3BL,
-            OCR3BH,
-            TCNT3L,
-            TCNT3H},
-        .ticks = 0,
-        .overflow = 0,
-        .a_ptr = NULL_PTR};
-
-timer_device_t timer_device =
-    {
-        .timers[TIMER_0] = &timer_0,
-        .timers[TIMER_2] = &timer_2,
-        .timers[TIMER_1] = &timer_1,
-        .timers[TIMER_3] = &timer_3};
+static timer_manage_t timer_manager[TIMERS_MAX_COUNT];
 /*************************************************************************/
 /*                     Functions Implementation                          */
 /*************************************************************************/
@@ -105,71 +41,62 @@ timer_error_t mcal_timer_init(timer_t *timer)
 {
   timer_error_t error = TIMER_STATE_SUCCESS;
 
-  timer_config_t timer_config;
-  timer_pwm_config_t pwm_config;
-
-  timer_module_t *timer_module = (timer_device.timers[timer->timer_number]);
-
   setGlobalInterrupt;
 
   double preScallerValue = (double)getPreScaler(timer->preScaler);
   double resolution = (double)preScallerValue / (double)F_CPU;
   double registerMaxTime = 0;
 
-  /*************************************************************************/
-  /* configure configs for pwm and normal mode
-  /*************************************************************************/
-
-  /*************************************************************************/
-  /* configure types
-  /*************************************************************************/
-
-  switch (timer->type)
+  switch (timer->number)
   {
-  case TIMER_BIT_8:
+  case TIMER_0:
   {
-    timer_8_bit_ctrl_regs *regs = (timer_8_bit_ctrl_regs *)timer_module->ctr_regs_config;
-    reg_mask_write(regs->ctrl_reg_0, PRE_SCALER_MASK, timer->preScaler);
+    reg_mask_write(TCCR0A, PRE_SCALER_MASK, timer->preScaler);
     registerMaxTime = resolution * TIMER_BIT_8_MAX * 1000;
-    register(regs->counter) = 0;
+    register(TCNT0) = 0;
+
+    timer_manager[TIMER_0].ticks = 0;
+    timer_manager[TIMER_0].overflow = 0;
+    timer_manager[TIMER_0].number = TIMER_0;
+    timer_manager[TIMER_0].ovf_callback = NULL_PTR;
+    timer_manager[TIMER_0].unit_a_callback = NULL_PTR;
+    timer_manager[TIMER_0].unit_b_callback = NULL_PTR;
 
     switch (timer->mode)
     {
     case TIMER_NORMAL_MODE:
     {
-      timer_config = *((timer_config_t *)timer->config);
+      /* attach overflow value to timer so we can use it in unit_a_callback */
+      timer_manager[TIMER_0].overflow = timer->timer_config.tick_ms_seconds / (double)registerMaxTime;
+      timer_manager[TIMER_0].ovf_callback = timer->ovf_callback;
 
-      /* attach overflow value to timer so we can use it in callback */
-      timer_module->overflow = timer_config.tick_ms_seconds / (double)registerMaxTime;
-
-      clr_bit(regs->ctrl_reg_0, WGMN0);
-      clr_bit(regs->ctrl_reg_0, WGMN1);
-      clr_bit(regs->ctrl_reg_1, WGMN2);
+      clr_bit(TCCR0A, WGMN0);
+      clr_bit(TCCR0A, WGMN1);
+      clr_bit(TCCR0B, WGMN2);
 
       break;
     }
     case TIMER_CTC_MODE:
     {
-      timer_config = *((timer_config_t *)timer->config);
-
-      register(regs->counter) = 0;
-      clr_bit(regs->ctrl_reg_0, WGMN0);
-      set_bit(regs->ctrl_reg_0, WGMN1);
-      clr_bit(regs->ctrl_reg_1, WGMN2);
+      clr_bit(TCCR0A, WGMN0);
+      set_bit(TCCR0A, WGMN1);
+      clr_bit(TCCR0B, WGMN2);
 
       /* if the time we need to wait can be used with 8 bit timer in CTC mode
 			 * meaning that if the value of seconds to wait converted to digital number
 			 * less that 256 with the given pre-scaller */
-      if (timer_config.tick_ms_seconds < (registerMaxTime))
+      if (timer->timer_config.tick_ms_seconds < (registerMaxTime))
       {
         if (timer->unit == UNIT_A)
         {
           // Set Compare Value
-          register(regs->cmp_reg_A) = (u8_t)(((timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+          timer_manager[TIMER_0].unit_a_callback = timer->unit_a_callback;
+          register(OCR0A) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
         }
         else if (timer->unit == UNIT_B)
         {
-          register(regs->cmp_reg_B) = (u8_t)(((timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+          timer_manager[TIMER_0].unit_b_callback = timer->unit_b_callback;
+          register(OCR0B) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
         }
         else
         {
@@ -185,27 +112,25 @@ timer_error_t mcal_timer_init(timer_t *timer)
 
     case TIMER_PWM_MODE:
     {
-      pwm_config = *((timer_pwm_config_t *)timer->config);
-
-      mcal_gpio_pin_init(pwm_config.channel_port,
-                         pwm_config.channel_pin,
+      mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                         timer->pwm_config.channel_pin,
                          DIR_OUTPUT);
 
       /* choosing mode of operation fast pwm */
-      set_bit(regs->ctrl_reg_0, WGMN0);
-      set_bit(regs->ctrl_reg_0, WGMN1);
-      clr_bit(regs->ctrl_reg_1, WGMN2);
+      set_bit(TCCR0A, WGMN0);
+      set_bit(TCCR0A, WGMN1);
+      clr_bit(TCCR0B, WGMN2);
 
       if (timer->unit == UNIT_A)
       {
         // Set Compare Value
-        clr_bit(regs->ctrl_reg_0, COMNA0);
-        set_bit(regs->ctrl_reg_0, COMNA1);
+        clr_bit(TCCR0A, COMNA0);
+        set_bit(TCCR0A, COMNA1);
       }
       else if (timer->unit == UNIT_B)
       {
-        clr_bit(regs->ctrl_reg_0, COMNB0);
-        set_bit(regs->ctrl_reg_0, COMNB1);
+        clr_bit(TCCR0A, COMNB0);
+        set_bit(TCCR0A, COMNB1);
       }
       else
       {
@@ -221,58 +146,61 @@ timer_error_t mcal_timer_init(timer_t *timer)
       break;
     }
     }
+
     break;
   }
-
-  case TIMER_BIT_16:
+  case TIMER_1:
   {
-    timer_16_bit_ctrl_regs *regs = (timer_16_bit_ctrl_regs *)timer_module->ctr_regs_config;
-    reg_mask_write(regs->ctrl_reg_0, PRE_SCALER_MASK, timer->preScaler);
-    registerMaxTime = resolution * TIMER_BIT_8_MAX * 1000;
+    reg_mask_write(TCCR1A, PRE_SCALER_MASK, timer->preScaler);
+    registerMaxTime = resolution * TIMER_BIT_16_MAX * 1000;
+    register(TCNT1L) = 0;
+    register(TCNT1H) = 0;
 
-    register(regs->counter_L) = 0;
-    register(regs->counter_H) = 0;
+    timer_manager[TIMER_1].ticks = 0;
+    timer_manager[TIMER_1].overflow = 0;
+    timer_manager[TIMER_1].number = TIMER_1;
+    timer_manager[TIMER_1].ovf_callback = NULL_PTR;
+    timer_manager[TIMER_1].unit_a_callback = NULL_PTR;
+    timer_manager[TIMER_1].unit_b_callback = NULL_PTR;
 
     switch (timer->mode)
     {
     case TIMER_NORMAL_MODE:
     {
-      timer_config = *((timer_config_t *)timer->config);
+      /* attach overflow value to timer so we can use it in unit_a_callback */
+      timer_manager[TIMER_1].overflow = timer->timer_config.tick_ms_seconds / (double)registerMaxTime;
+      timer_manager[TIMER_1].ovf_callback = timer->ovf_callback;
 
-      /* attach overflow value to timer so we can use it in callback */
-      timer_module->overflow = timer_config.tick_ms_seconds / (double)registerMaxTime;
-
-      clr_bit(regs->ctrl_reg_0, WGMN0);
-      clr_bit(regs->ctrl_reg_0, WGMN1);
-      clr_bit(regs->ctrl_reg_1, WGMN2);
-      clr_bit(regs->ctrl_reg_1, WGMN3);
-
+      clr_bit(TCCR1A, WGMN0);
+      clr_bit(TCCR1A, WGMN1);
+      clr_bit(TCCR1B, WGMN2);
+      clr_bit(TCCR1B, WGMN3);
       break;
     }
     case TIMER_CTC_MODE:
     {
-      timer_config = *((timer_config_t *)timer->config);
-
-      clr_bit(regs->ctrl_reg_0, WGMN0);
-      clr_bit(regs->ctrl_reg_0, WGMN1);
-      set_bit(regs->ctrl_reg_1, WGMN2);
-      clr_bit(regs->ctrl_reg_1, WGMN3);
+      clr_bit(TCCR0A, WGMN0);
+      set_bit(TCCR0A, WGMN1);
+      clr_bit(TCCR0B, WGMN2);
+      clr_bit(TCCR0B, WGMN3);
 
       /* if the time we need to wait can be used with 8 bit timer in CTC mode
 			 * meaning that if the value of seconds to wait converted to digital number
 			 * less that 256 with the given pre-scaller */
-      if (timer_config.tick_ms_seconds < (registerMaxTime))
+      if (timer->timer_config.tick_ms_seconds < (registerMaxTime))
       {
         if (timer->unit == UNIT_A)
         {
           // Set Compare Value
-          register(regs->cmp_reg_A_L) = ((u8_t)(((timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
-          register(regs->cmp_reg_A_H) = ((u16_t)(((timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+          timer_manager[TIMER_1].unit_a_callback = timer->unit_a_callback;
+          register(OCR1AL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
+          register(OCR1AH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
         }
         else if (timer->unit == UNIT_B)
         {
-          register(regs->cmp_reg_B_L) = ((u8_t)(((timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
-          register(regs->cmp_reg_B_H) = ((u16_t)(((timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+          timer_manager[TIMER_1].unit_b_callback = timer->unit_b_callback;
+          register(OCR1BL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
+          register(OCR1BH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
         }
         else
         {
@@ -288,33 +216,32 @@ timer_error_t mcal_timer_init(timer_t *timer)
 
     case TIMER_PWM_MODE:
     {
-      pwm_config = *((timer_pwm_config_t *)timer->config);
-
-      mcal_gpio_pin_init(pwm_config.channel_port,
-                         pwm_config.channel_pin,
+      mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                         timer->pwm_config.channel_pin,
                          DIR_OUTPUT);
 
       /* choosing mode of operation fast pwm */
-      set_bit(regs->ctrl_reg_0, WGMN0);
-      set_bit(regs->ctrl_reg_0, WGMN1);
-      set_bit(regs->ctrl_reg_1, WGMN2);
-      set_bit(regs->ctrl_reg_1, WGMN3);
+      set_bit(TCCR0A, WGMN0);
+      set_bit(TCCR0A, WGMN1);
+      clr_bit(TCCR0B, WGMN2);
+      set_bit(TCCR0B, WGMN3);
 
       if (timer->unit == UNIT_A)
       {
         // Set Compare Value
-        clr_bit(regs->ctrl_reg_0, COMNA0);
-        set_bit(regs->ctrl_reg_0, COMNA1);
+        clr_bit(TCCR1A, COMNA0);
+        set_bit(TCCR1A, COMNA1);
       }
       else if (timer->unit == UNIT_B)
       {
-        clr_bit(regs->ctrl_reg_0, COMNB0);
-        set_bit(regs->ctrl_reg_0, COMNB1);
+        clr_bit(TCCR1A, COMNB0);
+        set_bit(TCCR1A, COMNB1);
       }
       else
       {
         error = TIMER_STATE_INVALID_ARGUMENT;
       }
+
       break;
     }
 
@@ -324,15 +251,216 @@ timer_error_t mcal_timer_init(timer_t *timer)
       break;
     }
     }
+
+    break;
+  }
+  case TIMER_2:
+  {
+    reg_mask_write(TCCR2A, PRE_SCALER_MASK, timer->preScaler);
+    registerMaxTime = resolution * TIMER_BIT_8_MAX * 1000;
+    register(TCNT2) = 0;
+
+    timer_manager[TIMER_2].ticks = 0;
+    timer_manager[TIMER_2].overflow = 0;
+    timer_manager[TIMER_2].number = TIMER_2;
+    timer_manager[TIMER_2].ovf_callback = NULL_PTR;
+    timer_manager[TIMER_2].unit_a_callback = NULL_PTR;
+    timer_manager[TIMER_2].unit_b_callback = NULL_PTR;
+
+    switch (timer->mode)
+    {
+    case TIMER_NORMAL_MODE:
+    {
+      /* attach overflow value to timer so we can use it in unit_a_callback */
+      timer_manager[TIMER_2].overflow = timer->timer_config.tick_ms_seconds / (double)registerMaxTime;
+      timer_manager[TIMER_2].ovf_callback = timer->ovf_callback;
+
+      clr_bit(TCCR2A, WGMN0);
+      clr_bit(TCCR2A, WGMN1);
+      clr_bit(TCCR2B, WGMN2);
+
+      break;
+    }
+    case TIMER_CTC_MODE:
+    {
+      clr_bit(TCCR2A, WGMN0);
+      set_bit(TCCR2A, WGMN1);
+      clr_bit(TCCR2B, WGMN2);
+
+      /* if the time we need to wait can be used with 8 bit timer in CTC mode
+			 * meaning that if the value of seconds to wait converted to digital number
+			 * less that 256 with the given pre-scaller */
+      if (timer->timer_config.tick_ms_seconds < (registerMaxTime))
+      {
+        if (timer->unit == UNIT_A)
+        {
+          timer_manager[TIMER_2].unit_a_callback = timer->unit_a_callback;
+          register(OCR2A) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+        }
+        else if (timer->unit == UNIT_B)
+        {
+          timer_manager[TIMER_2].unit_b_callback = timer->unit_b_callback;
+          register(OCR2B) = (u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue);
+        }
+        else
+        {
+          error = TIMER_STATE_INVALID_ARGUMENT;
+        }
+      }
+      else
+      {
+        error = TIMER_STATE_INVALID_ARGUMENT;
+      }
+      break;
+    }
+
+    case TIMER_PWM_MODE:
+    {
+      mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                         timer->pwm_config.channel_pin,
+                         DIR_OUTPUT);
+
+      /* choosing mode of operation fast pwm */
+      set_bit(TCCR2A, WGMN0);
+      set_bit(TCCR2A, WGMN1);
+      clr_bit(TCCR2B, WGMN2);
+
+      if (timer->unit == UNIT_A)
+      {
+        // Set Compare Value
+        clr_bit(TCCR2A, COMNA0);
+        set_bit(TCCR2A, COMNA1);
+      }
+      else if (timer->unit == UNIT_B)
+      {
+        clr_bit(TCCR2A, COMNB0);
+        set_bit(TCCR2A, COMNB1);
+      }
+      else
+      {
+        error = TIMER_STATE_INVALID_ARGUMENT;
+      }
+
+      break;
+    }
+
+    default:
+    {
+      error = TIMER_STATE_INVALID_MODE;
+      break;
+    }
+    }
+
+    break;
+  }
+  case TIMER_3:
+  {
+    reg_mask_write(TCCR3A, PRE_SCALER_MASK, timer->preScaler);
+    registerMaxTime = resolution * TIMER_BIT_16_MAX * 1000;
+    register(TCNT3L) = 0;
+    register(TCNT3H) = 0;
+
+    timer_manager[TIMER_3].ticks = 0;
+    timer_manager[TIMER_3].overflow = 0;
+    timer_manager[TIMER_3].number = TIMER_3;
+    timer_manager[TIMER_3].ovf_callback = NULL_PTR;
+    timer_manager[TIMER_3].unit_a_callback = NULL_PTR;
+    timer_manager[TIMER_3].unit_b_callback = NULL_PTR;
+
+    switch (timer->mode)
+    {
+    case TIMER_NORMAL_MODE:
+    {
+      /* attach overflow value to timer so we can use it in unit_a_callback */
+      timer_manager[TIMER_3].overflow = timer->timer_config.tick_ms_seconds / (double)registerMaxTime;
+      timer_manager[TIMER_3].ovf_callback = timer->ovf_callback;
+
+      clr_bit(TCCR3A, WGMN0);
+      clr_bit(TCCR3A, WGMN1);
+      clr_bit(TCCR3B, WGMN2);
+      clr_bit(TCCR3B, WGMN3);
+      break;
+    }
+    case TIMER_CTC_MODE:
+    {
+      clr_bit(TCCR3A, WGMN0);
+      set_bit(TCCR3A, WGMN1);
+      clr_bit(TCCR3B, WGMN2);
+      clr_bit(TCCR3B, WGMN3);
+
+      /* if the time we need to wait can be used with 8 bit timer in CTC mode
+			 * meaning that if the value of seconds to wait converted to digital number
+			 * less that 256 with the given pre-scaller */
+      if (timer->timer_config.tick_ms_seconds < (registerMaxTime))
+      {
+        if (timer->unit == UNIT_A)
+        {
+          timer_manager[TIMER_3].unit_a_callback = timer->unit_a_callback;
+          register(OCR3AL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
+          register(OCR3AH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+        }
+        else if (timer->unit == UNIT_B)
+        {
+          timer_manager[TIMER_3].unit_b_callback = timer->unit_b_callback;
+          register(OCR3BL) = ((u8_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue));
+          register(OCR3BH) = ((u16_t)(((timer->timer_config.tick_ms_seconds / 1000) * F_CPU) / preScallerValue) >> 8);
+        }
+        else
+        {
+          error = TIMER_STATE_INVALID_ARGUMENT;
+        }
+      }
+      else
+      {
+        error = TIMER_STATE_INVALID_ARGUMENT;
+      }
+      break;
+    }
+
+    case TIMER_PWM_MODE:
+    {
+      mcal_gpio_pin_init(timer->pwm_config.channel_port,
+                         timer->pwm_config.channel_pin,
+                         DIR_OUTPUT);
+
+      /* choosing mode of operation fast pwm */
+      set_bit(TCCR3A, WGMN0);
+      set_bit(TCCR3A, WGMN1);
+      clr_bit(TCCR3B, WGMN2);
+      set_bit(TCCR3B, WGMN3);
+
+      if (timer->unit == UNIT_A)
+      {
+        // Set Compare Value
+        clr_bit(TCCR3A, COMNA0);
+        set_bit(TCCR3A, COMNA1);
+      }
+      else if (timer->unit == UNIT_B)
+      {
+        clr_bit(TCCR3A, COMNB0);
+        set_bit(TCCR3A, COMNB1);
+      }
+      else
+      {
+        error = TIMER_STATE_INVALID_ARGUMENT;
+      }
+
+      break;
+    }
+
+    default:
+    {
+      error = TIMER_STATE_INVALID_MODE;
+      break;
+    }
+    }
+
+    break;
   }
   default:
     error = TIMER_STATE_INVALID_TIMER;
     break;
   }
-
-  /*************************************************************************/
-  /* configure modes of operations
-  /*************************************************************************/
 
   return error;
 }
@@ -340,18 +468,16 @@ timer_error_t mcal_timer_init(timer_t *timer)
 timer_error_t mcal_timer_start(timer_t *timer)
 {
   timer_error_t error = TIMER_STATE_SUCCESS;
-  timer_module_t *timer_module = (timer_module_t *)(timer_device.timers[timer->timer_number]);
 
-  switch (timer->type)
+  switch (timer->number)
   {
-  case TIMER_BIT_8:
+  case TIMER_0:
   {
-    timer_8_bit_ctrl_regs *regs = (timer_8_bit_ctrl_regs *)timer_module->ctr_regs_config;
     switch (timer->mode)
     {
     case TIMER_NORMAL_MODE:
     {
-      set_bit(regs->int_reg_0, TOIEN);
+      set_bit(TIMSK0, TOIEN);
       break;
     }
 
@@ -361,13 +487,13 @@ timer_error_t mcal_timer_start(timer_t *timer)
       {
       case UNIT_A:
       {
-        set_bit(regs->int_reg_0, OCIENA);
+        set_bit(TIMSK0, OCIENA);
         break;
       }
 
       case UNIT_B:
       {
-        set_bit(regs->int_reg_0, OCIENB);
+        set_bit(TIMSK0, OCIENB);
         break;
       }
 
@@ -388,16 +514,13 @@ timer_error_t mcal_timer_start(timer_t *timer)
     }
     break;
   }
-
-  case TIMER_BIT_16:
+  case TIMER_1:
   {
-    timer_16_bit_ctrl_regs *regs = (timer_16_bit_ctrl_regs *)timer_module->ctr_regs_config;
-
     switch (timer->mode)
     {
     case TIMER_NORMAL_MODE:
     {
-      set_bit(regs->int_reg_0, TOIEN);
+      set_bit(TIMSK1, TOIEN);
       break;
     }
 
@@ -407,13 +530,13 @@ timer_error_t mcal_timer_start(timer_t *timer)
       {
       case UNIT_A:
       {
-        set_bit(timer_16_bit->int_reg_0, OCIENA);
+        set_bit(TIMSK1, OCIENA);
         break;
       }
 
       case UNIT_B:
       {
-        set_bit(timer_16_bit->int_reg_0, OCIENB);
+        set_bit(TIMSK1, OCIENB);
         break;
       }
 
@@ -434,7 +557,92 @@ timer_error_t mcal_timer_start(timer_t *timer)
     }
     break;
   }
+  case TIMER_2:
+  {
+    switch (timer->mode)
+    {
+    case TIMER_NORMAL_MODE:
+    {
+      set_bit(TIMSK2, TOIEN);
+      break;
+    }
 
+    case TIMER_CTC_MODE:
+    {
+      switch (timer->unit)
+      {
+      case UNIT_A:
+      {
+        set_bit(TIMSK2, OCIENA);
+        break;
+      }
+
+      case UNIT_B:
+      {
+        set_bit(TIMSK2, OCIENB);
+        break;
+      }
+
+      default:
+      {
+        error = TIMER_STATE_INVALID_MODE;
+        break;
+      }
+      }
+      break;
+    }
+
+    default:
+    {
+      error = TIMER_STATE_INVALID_MODE;
+      break;
+    }
+    }
+    break;
+  }
+  case TIMER_3:
+  {
+    switch (timer->mode)
+    {
+    case TIMER_NORMAL_MODE:
+    {
+      set_bit(TIMSK3, TOIEN);
+      break;
+    }
+
+    case TIMER_CTC_MODE:
+    {
+      switch (timer->unit)
+      {
+      case UNIT_A:
+      {
+        set_bit(TIMSK3, OCIENA);
+        break;
+      }
+
+      case UNIT_B:
+      {
+        set_bit(TIMSK3, OCIENB);
+        break;
+      }
+
+      default:
+      {
+        error = TIMER_STATE_INVALID_MODE;
+        break;
+      }
+      }
+      break;
+    }
+
+    default:
+    {
+      error = TIMER_STATE_INVALID_MODE;
+      break;
+    }
+    }
+    break;
+  }
   default:
   {
     error = TIMER_STATE_INVALID_ARGUMENT;
@@ -448,17 +656,16 @@ timer_error_t mcal_timer_start(timer_t *timer)
 timer_error_t mcal_timer_stop(timer_t *timer)
 {
   timer_error_t error = TIMER_STATE_SUCCESS;
-  switch (timer->type)
-  {
-  case TIMER_BIT_8:
-  {
-    timer_8_module_t *timer_8_bit = (timer_8_module_t *)(timer_device.timers[timer->timer_number]);
 
+  switch (timer->number)
+  {
+  case TIMER_0:
+  {
     switch (timer->mode)
     {
     case TIMER_NORMAL_MODE:
     {
-      clr_bit(timer_8_bit->int_reg_0, TOIEN);
+      clr_bit(TIMSK0, TOIEN);
       break;
     }
 
@@ -468,13 +675,13 @@ timer_error_t mcal_timer_stop(timer_t *timer)
       {
       case UNIT_A:
       {
-        clr_bit(timer_8_bit->int_reg_0, OCIENA);
+        clr_bit(TIMSK0, OCIENA);
         break;
       }
 
       case UNIT_B:
       {
-        clr_bit(timer_8_bit->int_reg_0, OCIENB);
+        clr_bit(TIMSK0, OCIENB);
         break;
       }
 
@@ -495,16 +702,13 @@ timer_error_t mcal_timer_stop(timer_t *timer)
     }
     break;
   }
-
-  case TIMER_BIT_16:
+  case TIMER_1:
   {
-    timer_16_module_t *timer_16_bit = (timer_16_module_t *)(timer_device.timers[timer->timer_number]);
-
     switch (timer->mode)
     {
     case TIMER_NORMAL_MODE:
     {
-      clr_bit(timer_16_bit->int_reg_0, TOIEN);
+      clr_bit(TIMSK1, TOIEN);
       break;
     }
 
@@ -514,13 +718,13 @@ timer_error_t mcal_timer_stop(timer_t *timer)
       {
       case UNIT_A:
       {
-        clr_bit(timer_16_bit->int_reg_0, OCIENA);
+        clr_bit(TIMSK1, OCIENA);
         break;
       }
 
       case UNIT_B:
       {
-        clr_bit(timer_16_bit->int_reg_0, OCIENB);
+        clr_bit(TIMSK1, OCIENB);
         break;
       }
 
@@ -541,7 +745,92 @@ timer_error_t mcal_timer_stop(timer_t *timer)
     }
     break;
   }
+  case TIMER_2:
+  {
+    switch (timer->mode)
+    {
+    case TIMER_NORMAL_MODE:
+    {
+      clr_bit(TIMSK2, TOIEN);
+      break;
+    }
 
+    case TIMER_CTC_MODE:
+    {
+      switch (timer->unit)
+      {
+      case UNIT_A:
+      {
+        clr_bit(TIMSK2, OCIENA);
+        break;
+      }
+
+      case UNIT_B:
+      {
+        clr_bit(TIMSK2, OCIENB);
+        break;
+      }
+
+      default:
+      {
+        error = TIMER_STATE_INVALID_MODE;
+        break;
+      }
+      }
+      break;
+    }
+
+    default:
+    {
+      error = TIMER_STATE_INVALID_MODE;
+      break;
+    }
+    }
+    break;
+  }
+  case TIMER_3:
+  {
+    switch (timer->mode)
+    {
+    case TIMER_NORMAL_MODE:
+    {
+      clr_bit(TIMSK3, TOIEN);
+      break;
+    }
+
+    case TIMER_CTC_MODE:
+    {
+      switch (timer->unit)
+      {
+      case UNIT_A:
+      {
+        clr_bit(TIMSK3, OCIENA);
+        break;
+      }
+
+      case UNIT_B:
+      {
+        clr_bit(TIMSK3, OCIENB);
+        break;
+      }
+
+      default:
+      {
+        error = TIMER_STATE_INVALID_MODE;
+        break;
+      }
+      }
+      break;
+    }
+
+    default:
+    {
+      error = TIMER_STATE_INVALID_MODE;
+      break;
+    }
+    }
+    break;
+  }
   default:
   {
     error = TIMER_STATE_INVALID_ARGUMENT;
@@ -556,22 +845,21 @@ timer_error_t mcal_timer_pwm_output(timer_t *timer, u16_t duty)
 {
   timer_error_t error = TIMER_STATE_SUCCESS;
 
-  switch (timer->type)
+  switch (timer->number)
   {
-  case TIMER_BIT_8:
+  case TIMER_0:
   {
-    timer_8_module_t *timer_8_bit = (timer_8_module_t *)(timer_device.timers[timer->timer_number]);
     switch (timer->unit)
     {
     case UNIT_A:
     {
-      register(timer_8_bit->cmp_reg_A) = (u8_t)duty;
+      register(OCR0A) = (u8_t)duty;
       break;
     }
 
     case UNIT_B:
     {
-      register(timer_8_bit->cmp_reg_B) = (u8_t)duty;
+      register(OCR0B) = (u8_t)duty;
       break;
     }
 
@@ -583,22 +871,72 @@ timer_error_t mcal_timer_pwm_output(timer_t *timer, u16_t duty)
     break;
   }
 
-  case TIMER_BIT_16:
+  case TIMER_1:
   {
-    timer_16_module_t *timer_16_bit = (timer_16_module_t *)(timer_device.timers[timer->timer_number]);
     switch (timer->unit)
     {
     case UNIT_A:
     {
-      register(timer_16_bit->cmp_reg_A_L) = (u8_t)duty;
-      register(timer_16_bit->cmp_reg_A_H) = (u8_t)duty >> 8;
+      register(OCR1AL) = (u8_t)duty;
+      register(OCR1AH) = (u8_t)duty >> 8;
       break;
     }
 
     case UNIT_B:
     {
-      register(timer_16_bit->cmp_reg_B_L) = (u8_t)duty;
-      register(timer_16_bit->cmp_reg_B_H) = (u8_t)duty >> 8;
+      register(OCR1BL) = (u8_t)duty;
+      register(OCR1BH) = (u8_t)duty >> 8;
+      break;
+    }
+
+    default:
+    {
+      error = TIMER_STATE_INVALID_ARGUMENT;
+      break;
+    }
+    }
+    break;
+  }
+
+  case TIMER_2:
+  {
+    switch (timer->unit)
+    {
+    case UNIT_A:
+    {
+      register(OCR2A) = (u8_t)duty;
+      break;
+    }
+
+    case UNIT_B:
+    {
+      register(OCR2B) = (u8_t)duty;
+      break;
+    }
+
+    default:
+    {
+      break;
+    }
+    }
+    break;
+  }
+
+  case TIMER_3:
+  {
+    switch (timer->unit)
+    {
+    case UNIT_A:
+    {
+      register(OCR3AL) = (u8_t)duty;
+      register(OCR3AH) = (u8_t)duty >> 8;
+      break;
+    }
+
+    case UNIT_B:
+    {
+      register(OCR3BL) = (u8_t)duty;
+      register(OCR3BH) = (u8_t)duty >> 8;
       break;
     }
 
@@ -666,80 +1004,154 @@ static double getPreScaler(timer_preScaler_t preScaller)
 /*                     Interrupts Implementation                         */
 /*************************************************************************/
 
-/* TIMER2_COMP_vect */
-void __vector_4(void)
+/**************************************************************************/
+/*                               Timer 0                                  */
+/**************************************************************************/
+/* Timer/Counter0 Compare Match A */
+void TIMER0_COMPA_vect(void)
 {
-  if (g_callBackPtr != NULL_PTR)
+  if (timer_manager[TIMER_0].unit_a_callback != NULL_PTR)
   {
-    (*g_callBackPtr)();
+    (*timer_manager[TIMER_0].unit_a_callback)();
   }
 }
 
-/* TIMER2_OVF_vect */
-void __vector_5(void)
+/* Timer/Counter0 Compare Match B */
+void TIMER0_COMPB_vect(void)
 {
-  g_ticks_timer_2++;
-  if (g_callBackPtr != NULL_PTR)
+  if (timer_manager[TIMER_0].unit_b_callback != NULL_PTR)
   {
-    if (g_ticks_timer_2 >= overflow_2)
+    (*timer_manager[TIMER_0].unit_b_callback)();
+  }
+}
+
+/* Timer/Counter0 Overflow */
+void TIMER0_OVF_vect(void)
+{
+  timer_manager[TIMER_0].ticks++;
+  if (timer_manager[TIMER_0].ovf_callback != NULL_PTR)
+  {
+    if (timer_manager[TIMER_0].ticks >= timer_manager[TIMER_0].overflow)
     {
-      g_ticks_timer_2 = 0;
-      (*g_callBackPtr)();
+      timer_manager[TIMER_0].ticks = 0;
+      (*timer_manager[TIMER_0].ovf_callback)();
     }
   }
 }
 
-/* TIMER1_CAPT_vect */
-void __vector_6(void)
+/**************************************************************************/
+/*                               Timer 1                                  */
+/**************************************************************************/
+/* Timer/Counter1 Capture Event */
+void TIMER1_CAPT_vect(void)
 {
-  if (g_callBackPtr != NULL_PTR)
+  /* not implemented */
+}
+
+/* Timer/Counter1 Compare Match A */
+void TIMER1_COMPA_vect(void)
+{
+  if (timer_manager[TIMER_1].unit_a_callback != NULL_PTR)
   {
-    (*g_callBackPtr)();
+    (*timer_manager[TIMER_1].unit_a_callback)();
   }
 }
 
-/* TIMER1_COMPA_vect */
-void __vector_7(void)
+/* Timer/Counter1 Compare Match B */
+void TIMER1_COMPB_vect(void)
 {
-  if (g_callBackPtr != NULL_PTR)
+  if (timer_manager[TIMER_1].unit_b_callback != NULL_PTR)
   {
-    (*g_callBackPtr)();
+    (*timer_manager[TIMER_1].unit_b_callback)();
   }
 }
 
-/* TIMER1_COMPB_vect */
-void __vector_8(void)
+/* Timer/Counter1 Overflow */
+void TIMER1_OVF_vect(void)
 {
-  if (g_callBackPtr != NULL_PTR)
+  timer_manager[TIMER_1].ticks++;
+  if (timer_manager[TIMER_1].ovf_callback != NULL_PTR)
   {
-    (*g_callBackPtr)();
-  }
-}
-
-/* TIMER1_OVF_vect */
-void __vector_9(void)
-{
-  g_ticks_timer_1++;
-  if (g_callBackPtr != NULL_PTR)
-  {
-    if (g_ticks_timer_1 >= overflow_1)
+    if (timer_manager[TIMER_1].ticks >= timer_manager[TIMER_1].overflow)
     {
-      g_ticks_timer_1 = 0;
-      (*g_callBackPtr)();
+      timer_manager[TIMER_1].ticks = 0;
+      (*timer_manager[TIMER_1].ovf_callback)();
     }
   }
 }
 
-/* TIMER0_OVF_vect */
-void __vector_11(void)
+/**************************************************************************/
+/*                               Timer 2                                  */
+/**************************************************************************/
+/* Timer/Counter2 Compare Match A */
+void TIMER2_COMPA_vect(void)
 {
-  g_ticks_timer_0++;
-  if (g_callBackPtr != NULL_PTR)
+  if (timer_manager[TIMER_2].unit_a_callback != NULL_PTR)
   {
-    if (g_ticks_timer_0 >= overflow_0)
+    (*timer_manager[TIMER_2].unit_a_callback)();
+  }
+}
+
+/* Timer/Counter2 Compare Match B */
+void TIMER2_COMPB_vect(void)
+{
+  if (timer_manager[TIMER_2].unit_b_callback != NULL_PTR)
+  {
+    (*timer_manager[TIMER_2].unit_b_callback)();
+  }
+}
+
+/* Timer/Counter2 Overflow */
+void TIMER2_OVF_vect(void)
+{
+  timer_manager[TIMER_2].ticks++;
+  if (timer_manager[TIMER_2].ovf_callback != NULL_PTR)
+  {
+    if (timer_manager[TIMER_2].ticks >= timer_manager[TIMER_2].overflow)
     {
-      g_ticks_timer_0 = 0;
-      (*g_callBackPtr)();
+      timer_manager[TIMER_2].ticks = 0;
+      (*timer_manager[TIMER_2].ovf_callback)();
+    }
+  }
+}
+
+/**************************************************************************/
+/*                               Timer 3                                  */
+/**************************************************************************/
+/* Timer/Counter3 Capture Event */
+void TIMER3_CAPT_vect(void)
+{
+  /* not implemented */
+}
+
+/* Timer/Counter3 Compare Match A */
+void TIMER3_COMPA_vect(void)
+{
+  if (timer_manager[TIMER_3].unit_a_callback != NULL_PTR)
+  {
+    (*timer_manager[TIMER_3].unit_a_callback)();
+  }
+}
+
+/* Timer/Counter3 Compare Match B */
+void TIMER3_COMPB_vect(void)
+{
+  if (timer_manager[TIMER_3].unit_b_callback != NULL_PTR)
+  {
+    (*timer_manager[TIMER_3].unit_b_callback)();
+  }
+}
+
+/* Timer/Counter3 Overflow */
+void TIMER3_OVF_vect(void)
+{
+  timer_manager[TIMER_3].ticks++;
+  if (timer_manager[TIMER_3].ovf_callback != NULL_PTR)
+  {
+    if (timer_manager[TIMER_3].ticks >= timer_manager[TIMER_3].overflow)
+    {
+      timer_manager[TIMER_3].ticks = 0;
+      (*timer_manager[TIMER_3].ovf_callback)();
     }
   }
 }
