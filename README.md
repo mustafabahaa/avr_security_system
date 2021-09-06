@@ -16,6 +16,13 @@ CTRL-unit verfiy the password and lock or unlock the system using the servo moto
 The servo motor in real mechanical system act as the actucator for the door opening or closing.
 The system accepts 3 wrong password entries , if it's consumed the system will go to Alarm and freeze state.
 
+### Microcontroller 
+Atmega-1284
+
+### Tools 
+Atmel studio 7
+Proteus 8.10 SP3
+
 ## Folder Structure 
 
 ### 1_docs
